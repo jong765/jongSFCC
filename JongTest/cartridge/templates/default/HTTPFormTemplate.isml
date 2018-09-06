@@ -1,0 +1,18 @@
+<!--- TEMPLATENAME: HTTPFormTemplate.isml --->
+<isinclude template="util/modules">
+<form action="${URLUtils.httpContinue()}" method="post" id="${pdict.CurrentForms.httpform.htmlName}">
+		<fieldset>
+		    <div class="formfield">
+		      <isinputfield formfield="${pdict.CurrentForms.httpform.testDataPost}" type="input">
+		    </div>
+		    <br>
+		    <div class="formfield">
+		      <isinputfield formfield="${pdict.CurrentForms.httpform.numberCalls}" type="input">
+		    </div>
+		    <br>
+			<div class="formactions">
+			  <input type="submit" value="${Resource.msg('global.submit','locale',null)}" 
+			    name="${pdict.CurrentForms.httpform.submit.htmlName}"/>
+			</div>
+		</fieldset>
+</form>

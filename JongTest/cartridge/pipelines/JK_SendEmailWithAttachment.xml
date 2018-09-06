@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<?demandware-pipeline version="2.0"?>
+
+<pipeline type="process">
+  <branch basename="Send">
+    <segment>
+      <node>
+        <start-node call-mode="public" name="Send" secure="false"/>
+        <node-display x="1" y="0"/>
+      </node>
+      <simple-transition>
+        <transition-display>
+          <bend-point relative-to="source" x="0" y="1"/>
+        </transition-display>
+      </simple-transition>
+      <node>
+        <pipelet-node pipelet-name="SendMail" pipelet-set-identifier="bc_api">
+          <key-binding alias="CurrentHttpParameterMap.emailFrom.value" key="MailFrom"/>
+          <key-binding alias="&quot;mail/mail_with_attachment&quot;" key="MailTemplate"/>
+          <key-binding alias="CurrentHttpParameterMap.emailTo.value" key="MailTo"/>
+          <key-binding alias="null" key="LocaleID"/>
+          <key-binding alias="CurrentHttpParameterMap.emailCC.value" key="MailCC"/>
+          <key-binding alias="null" key="MailBCC"/>
+          <key-binding alias="CurrentHttpParameterMap.emailSubject.value" key="MailSubject"/>
+        </pipelet-node>
+        <node-display x="0" y="1"/>
+      </node>
+      <simple-transition>
+        <transition-display>
+          <bend-point relative-to="source" x="0" y="1"/>
+        </transition-display>
+      </simple-transition>
+      <node>
+        <interaction-node transaction-required="false">
+          <template buffered="true" dynamic="false" name="common/http_200.isml"/>
+        </interaction-node>
+        <node-display x="0" y="1"/>
+      </node>
+    </segment>
+  </branch>
+  <branch basename="Test">
+    <segment>
+      <node>
+        <start-node call-mode="public" name="Test" secure="false"/>
+        <node-display x="3" y="0"/>
+      </node>
+      <simple-transition>
+        <transition-display>
+          <bend-point relative-to="source" x="0" y="1"/>
+        </transition-display>
+      </simple-transition>
+      <node>
+        <pipelet-node pipelet-name="Script" pipelet-set-identifier="bc_api">
+          <config-property key="Transactional" value="false"/>
+          <config-property key="OnError" value="PIPELET_ERROR"/>
+          <config-property key="ScriptFile" value="JK_SendEmailWithAttachment.ds"/>
+          <key-binding alias="null" key="ScriptLog"/>
+          <key-binding alias="EmailSubject" key="EmailSubject"/>
+          <key-binding alias="&quot;Jong Test email subject&quot;" key="EMailSubject"/>
+          <key-binding alias="&quot;Test Subject&quot;" key="MailSubject"/>
+          <key-binding alias="&quot;jkim@pacsun.com&quot;" key="MailTo"/>
+          <key-binding alias="&quot;Hello world!&quot;" key="MailBodyText"/>
+          <key-binding alias="&quot;ip_category_Test.xml&quot;" key="FileName"/>
+          <key-binding alias="&quot;sample email body text&quot;" key="EMailBodyText"/>
+          <key-binding alias="&quot;jkim@pacsun.com;mandresen@pacsun.com&quot;" key="EmailTo"/>
+          <key-binding alias="&quot;sample email body text&quot;" key="EmailBodyText"/>
+          <key-binding alias="&quot;IMPEX/src/catalog/ip_category_Test.xml&quot;" key="FullFileName"/>
+        </pipelet-node>
+        <node-display x="0" y="1"/>
+        <branch basename="b2" source-connector="error">
+          <transition target-connector="in">
+            <transition-display>
+              <bend-point relative-to="source" x="2" y="0"/>
+              <bend-point relative-to="target" x="0" y="-1"/>
+            </transition-display>
+          </transition>
+          <segment>
+            <node>
+              <end-node name="Error"/>
+              <node-display x="1" y="1"/>
+            </node>
+          </segment>
+        </branch>
+      </node>
+      <simple-transition>
+        <transition-display>
+          <bend-point relative-to="source" x="0" y="1"/>
+        </transition-display>
+      </simple-transition>
+      <node>
+        <end-node name="Success"/>
+        <node-display x="0" y="1"/>
+      </node>
+    </segment>
+  </branch>
+</pipeline>

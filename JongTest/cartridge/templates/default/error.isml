@@ -1,0 +1,40 @@
+<!--- TEMPLATENAME: error.isml --->
+<h3>There was an error processing this pipeline request. If you are here, throwOnError() must have been called, or there was a script issue.</h3>
+<br>
+
+<isscript>
+  var logMsg = pdict.Log;
+  var logMsgSplit = logMsg.split(":"); 
+  var pipeline = logMsgSplit[0];
+</isscript>
+
+<style>
+table {
+  border-collapse: collapse;
+}
+th,
+td {
+  border: 1px solid #c6c7cc;
+  padding: 10px 15px;
+}
+th {
+  font-weight: bold;
+}
+span {
+  font-size: small;
+}
+</style>
+
+<table>
+
+<tr>
+<th scope="col">PIPELINE</th>
+<th scope="col">ERROR DETAILS</th>
+</tr>
+
+<tr>
+<td>${pipeline}</td>
+<td>${logMsg}</td>
+</tr>
+
+</table>

@@ -1,0 +1,2492 @@
+<?xml version="1.0" encoding="UTF-8"?><!-- Published by JAX-WS RI at http://jax-ws.dev.java.net. RI's version is JAX-WS RI 2.2.7-b01  svn-revision#${svn.Last.Changed.Rev}. --><xs:schema xmlns:tns="http://v3_0.customer.webservices.csx.dtv.com/" xmlns:xs="http://www.w3.org/2001/XMLSchema" version="1.0" targetNamespace="http://v3_0.customer.webservices.csx.dtv.com/">
+
+<xs:element name="RelateProcessingException" type="tns:RelateProcessingException"></xs:element>
+
+<xs:element name="addCustomerNote" type="tns:addCustomerNote"></xs:element>
+
+<xs:element name="addCustomerNoteResponse" type="tns:addCustomerNoteResponse"></xs:element>
+
+<xs:element name="addOrDeleteCustomerFranchisees" type="tns:addOrDeleteCustomerFranchisees"></xs:element>
+
+<xs:element name="addOrDeleteCustomerFranchiseesResponse" type="tns:addOrDeleteCustomerFranchiseesResponse"></xs:element>
+
+<xs:element name="addOrUpdateCustomer" type="tns:addOrUpdateCustomer"></xs:element>
+
+<xs:element name="addOrUpdateCustomerResponse" type="tns:addOrUpdateCustomerResponse"></xs:element>
+
+<xs:element name="addOrUpdatePreferenceCenter" type="tns:addOrUpdatePreferenceCenter"></xs:element>
+
+<xs:element name="addOrUpdatePreferenceCenterResponse" type="tns:addOrUpdatePreferenceCenterResponse"></xs:element>
+
+<xs:element name="addWishlistItems" type="tns:addWishlistItems"></xs:element>
+
+<xs:element name="addWishlistItemsResponse" type="tns:addWishlistItemsResponse"></xs:element>
+
+<xs:element name="associateCardToCustomer" type="tns:associateCardToCustomer"></xs:element>
+
+<xs:element name="associateCardToCustomerResponse" type="tns:associateCardToCustomerResponse"></xs:element>
+
+<xs:element name="changeItemDisplayStatus" type="tns:changeItemDisplayStatus"></xs:element>
+
+<xs:element name="changeItemDisplayStatusResponse" type="tns:changeItemDisplayStatusResponse"></xs:element>
+
+<xs:element name="deleteCustomer" type="tns:deleteCustomer"></xs:element>
+
+<xs:element name="deleteCustomerResponse" type="tns:deleteCustomerResponse"></xs:element>
+
+<xs:element name="deleteWishlistItems" type="tns:deleteWishlistItems"></xs:element>
+
+<xs:element name="deleteWishlistItemsResponse" type="tns:deleteWishlistItemsResponse"></xs:element>
+
+<xs:element name="getAssociateAssignment" type="tns:getAssociateAssignment"></xs:element>
+
+<xs:element name="getAssociateAssignmentResponse" type="tns:getAssociateAssignmentResponse"></xs:element>
+
+<xs:element name="getCustomerImage" type="tns:getCustomerImage"></xs:element>
+
+<xs:element name="getCustomerImageResponse" type="tns:getCustomerImageResponse"></xs:element>
+
+<xs:element name="getCustomerNotes" type="tns:getCustomerNotes"></xs:element>
+
+<xs:element name="getCustomerNotesResponse" type="tns:getCustomerNotesResponse"></xs:element>
+
+<xs:element name="getItemHistory" type="tns:getItemHistory"></xs:element>
+
+<xs:element name="getItemHistoryResponse" type="tns:getItemHistoryResponse"></xs:element>
+
+<xs:element name="getPreferenceCenter" type="tns:getPreferenceCenter"></xs:element>
+
+<xs:element name="getPreferenceCenterResponse" type="tns:getPreferenceCenterResponse"></xs:element>
+
+<xs:element name="getPreferenceTypes" type="tns:getPreferenceTypes"></xs:element>
+
+<xs:element name="getPreferenceTypesResponse" type="tns:getPreferenceTypesResponse"></xs:element>
+
+<xs:element name="getPromotionHistoryWithDateRange" type="tns:getPromotionHistoryWithDateRange"></xs:element>
+
+<xs:element name="getPromotionHistoryWithDateRangeMaxResult" type="tns:getPromotionHistoryWithDateRangeMaxResult"></xs:element>
+
+<xs:element name="getPromotionHistoryWithDateRangeMaxResultResponse" type="tns:getPromotionHistoryWithDateRangeMaxResultResponse"></xs:element>
+
+<xs:element name="getPromotionHistoryWithDateRangeResponse" type="tns:getPromotionHistoryWithDateRangeResponse"></xs:element>
+
+<xs:element name="getTransactionHistory" type="tns:getTransactionHistory"></xs:element>
+
+<xs:element name="getTransactionHistoryResponse" type="tns:getTransactionHistoryResponse"></xs:element>
+
+<xs:element name="getVisualizerItems" type="tns:getVisualizerItems"></xs:element>
+
+<xs:element name="getVisualizerItemsResponse" type="tns:getVisualizerItemsResponse"></xs:element>
+
+<xs:element name="mergeCustomers" type="tns:mergeCustomers"></xs:element>
+
+<xs:element name="mergeCustomersResponse" type="tns:mergeCustomersResponse"></xs:element>
+
+<xs:element name="retrieveCustomer" type="tns:retrieveCustomer"></xs:element>
+
+<xs:element name="retrieveCustomerResponse" type="tns:retrieveCustomerResponse"></xs:element>
+
+<xs:element name="searchCustomers" type="tns:searchCustomers"></xs:element>
+
+<xs:element name="searchCustomersResponse" type="tns:searchCustomersResponse"></xs:element>
+
+<xs:element name="updateAssociateAssignment" type="tns:updateAssociateAssignment"></xs:element>
+
+<xs:element name="updateAssociateAssignmentResponse" type="tns:updateAssociateAssignmentResponse"></xs:element>
+
+<xs:complexType name="addOrUpdatePreferenceCenter">
+<xs:sequence>
+<xs:element name="customerPreferenceCenter" type="tns:PreferenceCenterRequestType"  minOccurs="0"></xs:element>
+<xs:element name="securityUserId" type="xs:string"  minOccurs="0"></xs:element>
+<xs:element name="updateUserId" type="xs:string"  minOccurs="0"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="PreferenceCenterRequestType">
+<xs:sequence>
+<xs:element name="CustomerID" type="xs:string" minOccurs="0"></xs:element>
+<xs:element name="AlternateKey" type="tns:AlternateKeyType"  maxOccurs="unbounded" minOccurs="0"></xs:element>
+<xs:element name="CardNumber" type="xs:string"  minOccurs="0"></xs:element>
+<xs:element name="PreferenceCenters" type="tns:PreferenceCenterContainerRequestType"  minOccurs="0"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="AlternateKeyType">
+<xs:sequence>
+<xs:element name="AlternateID" type="xs:string" minOccurs="0"></xs:element>
+</xs:sequence>
+<xs:attribute name="TypeCode" type="xs:string"></xs:attribute>
+</xs:complexType>
+
+<xs:complexType name="PreferenceCenterContainerRequestType">
+<xs:sequence>
+<xs:element name="PreferenceCenter" type="tns:PreferenceCenterReqType" maxOccurs="unbounded" minOccurs="0"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="PreferenceCenterReqType">
+<xs:sequence>
+<xs:element name="Action" type="tns:PreferenceCenterActionType" minOccurs="0"></xs:element>
+<xs:element name="preferenceTypeId" type="xs:long" minOccurs="0"></xs:element>
+<xs:element name="PreferenceCenterChannel" type="tns:PreferenceCenterChannelReqType"  maxOccurs="unbounded" minOccurs="0"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="PreferenceCenterChannelReqType">
+<xs:sequence>
+<xs:element name="channelTypeCode" type="tns:PreferenceChannelType" minOccurs="0"></xs:element>
+<xs:element name="optInFlag" type="xs:boolean" minOccurs="0"></xs:element>
+<xs:element name="frequencyCode" type="xs:string" minOccurs="0"></xs:element>
+<xs:element name="communicationLastSentDate" type="xs:date"  minOccurs="0"></xs:element>
+</xs:sequence>
+<xs:attribute name="updateDate" type="xs:date"></xs:attribute>
+<xs:attribute name="updateUser" type="xs:string"></xs:attribute>
+</xs:complexType>
+
+<xs:complexType name="addOrUpdatePreferenceCenterResponse">
+<xs:sequence>
+<xs:element name="customerId" type="xs:string"  minOccurs="0"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="RelateProcessingException">
+<xs:sequence>
+<xs:element name="faultDetail" type="xs:string"  minOccurs="0"></xs:element>
+<xs:element name="message" type="xs:string"  minOccurs="0"></xs:element>
+<xs:element name="relateExceptionCode" type="tns:relateExceptionCode"  minOccurs="0"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="addCustomerNote">
+<xs:sequence>
+<xs:element name="customerNoteData" type="tns:CustomerNotesRequestType"  minOccurs="0"></xs:element>
+<xs:element name="updateUserId" type="xs:string"  minOccurs="0"></xs:element>
+<xs:element name="securityUserId" type="xs:string"  minOccurs="0"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="CustomerNotesRequestType">
+<xs:sequence>
+<xs:element name="CustomerID" type="xs:string" minOccurs="0"></xs:element>
+<xs:element name="CustomerNotesContainer" type="tns:CustomerNotesContainerType"  minOccurs="0"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="CustomerNotesContainerType">
+<xs:sequence>
+<xs:element name="CustomerNote" type="tns:CustomerNotesType"  maxOccurs="unbounded" minOccurs="0"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="CustomerNotesType">
+<xs:simpleContent>
+<xs:extension base="xs:string">
+<xs:attribute name="createDate" type="xs:dateTime"></xs:attribute>
+<xs:attribute name="createUser" type="xs:string"></xs:attribute>
+<xs:attribute name="type" type="xs:string"></xs:attribute>
+<xs:attribute name="location" type="xs:string"></xs:attribute>
+</xs:extension>
+</xs:simpleContent>
+</xs:complexType>
+
+<xs:complexType name="addCustomerNoteResponse">
+<xs:sequence>
+<xs:element name="customerId" type="xs:string"  minOccurs="0"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="getPreferenceCenter">
+<xs:sequence>
+<xs:element name="customerId" type="xs:string"  minOccurs="0"></xs:element>
+<xs:element name="alternateKeyList" type="tns:AlternateKeyLookupType"  maxOccurs="unbounded" minOccurs="0"></xs:element>
+<xs:element name="cardNumber" type="xs:string"  minOccurs="0"></xs:element>
+<xs:element name="preferenceTypeId" type="xs:long" minOccurs="0"></xs:element>
+<xs:element name="securityUserId" type="xs:string"  minOccurs="0"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="AlternateKeyLookupType">
+<xs:sequence>
+<xs:element name="AlternateID" type="xs:string" minOccurs="0"></xs:element>
+</xs:sequence>
+<xs:attribute name="TypeCode" type="xs:string"></xs:attribute>
+</xs:complexType>
+
+<xs:complexType name="getPreferenceCenterResponse">
+<xs:sequence>
+<xs:element name="return" type="tns:PreferenceCenterReturnType"  minOccurs="0"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="PreferenceCenterReturnType">
+<xs:sequence>
+<xs:element name="CustomerID" type="xs:string" minOccurs="0"></xs:element>
+<xs:element name="PreferenceCenters" type="tns:PreferenceCenterContainerReturnType"  minOccurs="0"></xs:element>
+<xs:element name="SecurityPrivilege" type="xs:string"  minOccurs="0"></xs:element>
+<xs:element name="MaskData" type="xs:boolean" minOccurs="0"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="PreferenceCenterContainerReturnType">
+<xs:sequence>
+<xs:element name="PreferenceCenter" type="tns:PreferenceCenterType"  maxOccurs="unbounded" minOccurs="0"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="PreferenceCenterType">
+<xs:sequence>
+<xs:element name="preferenceTypeId" type="xs:string" minOccurs="0"></xs:element>
+<xs:element name="preferenceTypeName" type="xs:string" minOccurs="0"></xs:element>
+<xs:element name="PreferenceCenterChannel" type="tns:PreferenceCenterChannelType"  maxOccurs="unbounded" minOccurs="0"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="PreferenceCenterChannelType">
+<xs:sequence>
+<xs:element name="channelTypeCode" type="xs:string" minOccurs="0"></xs:element>
+<xs:element name="optInFlag" type="xs:boolean" minOccurs="0"></xs:element>
+<xs:element name="frequencyCode" type="xs:string" minOccurs="0"></xs:element>
+<xs:element name="authorizationDocument" type="xs:string"  minOccurs="0"></xs:element>
+<xs:element name="communicationLastSentDate" type="xs:dateTime"  minOccurs="0"></xs:element>
+</xs:sequence>
+<xs:attribute name="updateDate" type="xs:dateTime"></xs:attribute>
+<xs:attribute name="updateUser" type="xs:string"></xs:attribute>
+</xs:complexType>
+
+<xs:complexType name="associateCardToCustomer">
+<xs:sequence>
+<xs:element name="customerId" type="xs:string"  minOccurs="0"></xs:element>
+<xs:element name="alternateKeyList" type="tns:AlternateKeyLookupType"  maxOccurs="unbounded" minOccurs="0"></xs:element>
+<xs:element name="cardNumber" type="xs:string"  minOccurs="0"></xs:element>
+<xs:element name="TransactionInfo" type="tns:RTPTransactionType"  minOccurs="0"></xs:element>
+<xs:element name="updateUserId" type="xs:string"  minOccurs="0"></xs:element>
+<xs:element name="securityUserId" type="xs:string"  minOccurs="0"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="RTPTransactionType">
+<xs:sequence>
+<xs:element name="RTPTransactionID" type="xs:string"  minOccurs="0"></xs:element>
+<xs:element name="OperatorID" type="xs:string"  minOccurs="0"></xs:element>
+<xs:element name="LocationID" type="xs:string"  minOccurs="0"></xs:element>
+<xs:element name="TransactionDateTime" type="xs:string"  minOccurs="0"></xs:element>
+<xs:element name="DeviceID" type="xs:string"  minOccurs="0"></xs:element>
+<xs:element name="BusinessDate" type="xs:string"  minOccurs="0"></xs:element>
+<xs:element name="RTPAmount" type="tns:RTPAmountType"  minOccurs="0"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="RTPAmountType">
+<xs:sequence>
+<xs:element name="CurrencyID" type="xs:string" minOccurs="0"></xs:element>
+<xs:element name="Amount" type="xs:string" minOccurs="0"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="associateCardToCustomerResponse">
+<xs:sequence></xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="deleteWishlistItems">
+<xs:sequence>
+<xs:element name="wishlistData" type="tns:WishlistItemRequestType"  minOccurs="0"></xs:element>
+<xs:element name="securityUserId" type="xs:string"  minOccurs="0"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="WishlistItemRequestType">
+<xs:sequence>
+<xs:element name="CustomerID" type="xs:string" minOccurs="0"></xs:element>
+<xs:element name="WishlistItems" type="tns:WishlistItemsContainerType"  minOccurs="0"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="WishlistItemsContainerType">
+<xs:sequence>
+<xs:element name="WishlistItem" type="tns:WishlistItemType"  maxOccurs="unbounded" minOccurs="0"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="WishlistItemType">
+<xs:simpleContent>
+<xs:extension base="xs:string">
+<xs:attribute name="itemId" type="xs:string"></xs:attribute>
+<xs:attribute name="publishExternally" type="xs:boolean"></xs:attribute>
+<xs:attribute name="createDate" type="xs:dateTime"></xs:attribute>
+<xs:attribute name="createUser" type="xs:string"></xs:attribute>
+</xs:extension>
+</xs:simpleContent>
+</xs:complexType>
+
+<xs:complexType name="deleteWishlistItemsResponse">
+<xs:sequence>
+<xs:element name="customerId" type="xs:string"  minOccurs="0"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="getPromotionHistoryWithDateRange">
+<xs:sequence>
+<xs:element name="customerId" type="xs:string"  minOccurs="0"></xs:element>
+<xs:element name="alternateKeyList" type="tns:AlternateKeyLookupType"  maxOccurs="unbounded" minOccurs="0"></xs:element>
+<xs:element name="cardNumber" type="xs:string"  minOccurs="0"></xs:element>
+<xs:element name="startDate" type="xs:dateTime"  minOccurs="0"></xs:element>
+<xs:element name="endDate" type="xs:dateTime"  minOccurs="0"></xs:element>
+<xs:element name="securityUserId" type="xs:string"  minOccurs="0"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="getPromotionHistoryWithDateRangeResponse">
+<xs:sequence>
+<xs:element name="return" type="tns:PromotionEventReturnType"  minOccurs="0"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="PromotionEventReturnType">
+<xs:sequence>
+<xs:element name="CustomerID" type="xs:string"  minOccurs="0"></xs:element>
+<xs:element name="PromotionEvents" type="tns:PromotionEventContainerReturnType"  minOccurs="0"></xs:element>
+<xs:element name="SecurityPrivilege" type="xs:string"  minOccurs="0"></xs:element>
+<xs:element name="MaskData" type="xs:boolean" minOccurs="0"></xs:element>
+<xs:element name="SystemCurrencyCode" type="xs:string" minOccurs="0"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="PromotionEventContainerReturnType">
+<xs:sequence>
+<xs:element name="PromotionEvent" type="tns:PromotionEventType"  maxOccurs="unbounded" minOccurs="0"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="PromotionEventType">
+<xs:sequence>
+<xs:element name="promotionId" type="xs:string" minOccurs="0"></xs:element>
+<xs:element name="campaignId" type="xs:string" minOccurs="0"></xs:element>
+<xs:element name="promotionName" type="xs:string" minOccurs="0"></xs:element>
+<xs:element name="campaignName" type="xs:string" minOccurs="0"></xs:element>
+<xs:element name="responseAmount" type="xs:string" minOccurs="0"></xs:element>
+<xs:element name="startDate" type="xs:dateTime" minOccurs="0"></xs:element>
+<xs:element name="endDate" type="xs:dateTime" minOccurs="0"></xs:element>
+<xs:element name="controlGrp" type="xs:boolean" minOccurs="0"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="changeItemDisplayStatus">
+<xs:sequence>
+<xs:element name="visualizerItems" type="tns:ItemVisualizerRequestType"  minOccurs="0"></xs:element>
+<xs:element name="updateUserId" type="xs:string"  minOccurs="0"></xs:element>
+<xs:element name="securityUserId" type="xs:string"  minOccurs="0"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="ItemVisualizerRequestType">
+<xs:sequence>
+<xs:element name="CustomerID" type="xs:string" minOccurs="0"></xs:element>
+<xs:element name="VisualizerItems" type="tns:ItemVisualizerContainerType"  minOccurs="0"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="ItemVisualizerContainerType">
+<xs:sequence>
+<xs:element name="VisualizerItem" type="tns:VisualizerItemType"  maxOccurs="unbounded" minOccurs="0"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="VisualizerItemType">
+<xs:sequence></xs:sequence>
+<xs:attribute name="itemId" type="xs:string"></xs:attribute>
+<xs:attribute name="publishExternally" type="xs:boolean"></xs:attribute>
+</xs:complexType>
+
+<xs:complexType name="changeItemDisplayStatusResponse">
+<xs:sequence>
+<xs:element name="return" type="xs:string"  minOccurs="0"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="getCustomerImage">
+<xs:sequence>
+<xs:element name="securityUserId" type="xs:string"  minOccurs="0"></xs:element>
+<xs:element name="customerId" type="xs:string"  minOccurs="0"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="getCustomerImageResponse">
+<xs:sequence>
+<xs:element name="return" type="tns:CustomerImageType"  minOccurs="0"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="CustomerImageType">
+<xs:simpleContent>
+<xs:extension base="xs:string">
+<xs:attribute name="createDate" type="xs:date"></xs:attribute>
+<xs:attribute name="createUser" type="xs:string"></xs:attribute>
+<xs:attribute name="updateDate" type="xs:date"></xs:attribute>
+<xs:attribute name="updateUser" type="xs:string"></xs:attribute>
+</xs:extension>
+</xs:simpleContent>
+</xs:complexType>
+
+<xs:complexType name="getAssociateAssignment">
+<xs:sequence>
+<xs:element name="customerId" type="xs:string"  minOccurs="0"></xs:element>
+<xs:element name="alternateKeyList" type="tns:AlternateKeyLookupType"  maxOccurs="unbounded" minOccurs="0"></xs:element>
+<xs:element name="cardNumber" type="xs:string"  minOccurs="0"></xs:element>
+<xs:element name="securityUserId" type="xs:string"  minOccurs="0"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="getAssociateAssignmentResponse">
+<xs:sequence>
+<xs:element name="return" type="tns:AssociateAssignmentResponseType"  minOccurs="0"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="AssociateAssignmentResponseType">
+<xs:sequence>
+<xs:element name="CustomerID" type="xs:string" minOccurs="0"></xs:element>
+<xs:element name="MaskData" type="xs:boolean" minOccurs="0"></xs:element>
+<xs:element name="AssociateAssignments" type="tns:AssociateAssignmentContainerReturnType"  minOccurs="0"></xs:element>
+<xs:element name="SecurityPrivilege" type="xs:string"  minOccurs="0"></xs:element>
+</xs:sequence>
+<xs:attribute name="ResponseCode" type="xs:string"></xs:attribute>
+</xs:complexType>
+
+<xs:complexType name="AssociateAssignmentContainerReturnType">
+<xs:sequence>
+<xs:element name="AssociateAssignment" type="tns:AssociateAssignmentReturnType"  maxOccurs="unbounded" minOccurs="0"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="AssociateAssignmentReturnType">
+<xs:simpleContent>
+<xs:extension base="xs:string">
+<xs:attribute name="updateDate" type="xs:string"></xs:attribute>
+<xs:attribute name="updateUser" type="xs:string"></xs:attribute>
+<xs:attribute name="lockedFlag" type="xs:string"></xs:attribute>
+<xs:attribute name="associateName" type="xs:string"></xs:attribute>
+<xs:attribute name="associateId" type="xs:string"></xs:attribute>
+<xs:attribute name="primaryFlag" type="xs:string"></xs:attribute>
+<xs:attribute name="roleName" type="xs:string"></xs:attribute>
+<xs:attribute name="roleId" type="xs:string"></xs:attribute>
+</xs:extension>
+</xs:simpleContent>
+</xs:complexType>
+
+<xs:complexType name="updateAssociateAssignment">
+<xs:sequence>
+<xs:element name="associateAssignmentData" type="tns:AssociateAssignmentRequestType"  minOccurs="0"></xs:element>
+<xs:element name="securityUserId" type="xs:string"  minOccurs="0"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="AssociateAssignmentRequestType">
+<xs:sequence>
+<xs:element name="CustomerID" type="xs:string"  minOccurs="0"></xs:element>
+<xs:element name="AlternateKey" type="tns:AlternateKeyType"  maxOccurs="unbounded" minOccurs="0"></xs:element>
+<xs:element name="CardNumber" type="xs:string"  minOccurs="0"></xs:element>
+<xs:element name="CardSerialNumber" type="xs:string"  minOccurs="0"></xs:element>
+<xs:element name="AssociateAssignments" type="tns:AssociateAssignmentsContainerType"  minOccurs="0"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="AssociateAssignmentsContainerType">
+<xs:sequence>
+<xs:element name="AssociateAssignment" type="tns:AssociateAssignmentType"  maxOccurs="unbounded" minOccurs="0"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="AssociateAssignmentType">
+<xs:simpleContent>
+<xs:extension base="xs:string">
+<xs:attribute name="roleId" type="xs:string"></xs:attribute>
+<xs:attribute name="roleName" type="xs:string"></xs:attribute>
+<xs:attribute name="primaryFlag" type="xs:string"></xs:attribute>
+<xs:attribute name="associateId" type="xs:string"></xs:attribute>
+<xs:attribute name="associateName" type="xs:string"></xs:attribute>
+<xs:attribute name="lockedFlag" type="xs:string"></xs:attribute>
+<xs:attribute name="updateDate" type="xs:dateTime"></xs:attribute>
+<xs:attribute name="updateUser" type="xs:string"></xs:attribute>
+</xs:extension>
+</xs:simpleContent>
+</xs:complexType>
+
+<xs:complexType name="updateAssociateAssignmentResponse">
+<xs:sequence>
+<xs:element name="customerId" type="xs:string"  minOccurs="0"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="getPromotionHistoryWithDateRangeMaxResult">
+<xs:sequence>
+<xs:element name="customerId" type="xs:string"  minOccurs="0"></xs:element>
+<xs:element name="alternateKeyList" type="tns:AlternateKeyLookupType"  maxOccurs="unbounded" minOccurs="0"></xs:element>
+<xs:element name="cardNumber" type="xs:string"  minOccurs="0"></xs:element>
+<xs:element name="startDate" type="xs:dateTime"  minOccurs="0"></xs:element>
+<xs:element name="endDate" type="xs:dateTime"  minOccurs="0"></xs:element>
+<xs:element name="maxRecords" type="xs:int" minOccurs="0"></xs:element>
+<xs:element name="securityUserId" type="xs:string"  minOccurs="0"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="getPromotionHistoryWithDateRangeMaxResultResponse">
+<xs:sequence>
+<xs:element name="return" type="tns:PromotionEventReturnType"  minOccurs="0"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="searchCustomers">
+<xs:sequence>
+<xs:element name="customerData" type="tns:CustomerLookupType"  minOccurs="0"></xs:element>
+<xs:element name="securityUserId" type="xs:string"  minOccurs="0"></xs:element>
+<xs:element name="AssociateId" type="xs:string"  minOccurs="0"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="CustomerLookupType">
+<xs:sequence>
+<xs:element name="Instrument" type="tns:InstrumentLookupType" minOccurs="0"></xs:element>
+<xs:element name="CustomerID" type="xs:string" minOccurs="0"></xs:element>
+<xs:element name="BusinessName" type="xs:string" minOccurs="0"></xs:element>
+<xs:element name="EntityInformation" type="tns:EntityInformationLookupType" minOccurs="0"></xs:element>
+<xs:element name="AlternateKey" type="tns:AlterKeyLookupType"  maxOccurs="unbounded" minOccurs="0"></xs:element>
+<xs:element name="SegmentID" type="xs:string" minOccurs="0"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="InstrumentLookupType">
+<xs:sequence>
+<xs:element name="CardNumber" type="xs:string" minOccurs="0"></xs:element>
+<xs:element name="CardSerialNumber" type="xs:string" minOccurs="0"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="EntityInformationLookupType">
+<xs:sequence>
+<xs:element name="Individual" type="tns:IndividualLookupType" minOccurs="0"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="IndividualLookupType">
+<xs:sequence>
+<xs:element name="Name" type="tns:CustomerNameLookupType" minOccurs="0"></xs:element>
+<xs:element name="ContactInformation" type="tns:ContactInformationLookupType" minOccurs="0"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="CustomerNameLookupType">
+<xs:sequence>
+<xs:element name="Name" type="tns:CustomerNameLookupTypeEntry"  maxOccurs="unbounded" minOccurs="0"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="CustomerNameLookupTypeEntry">
+<xs:simpleContent>
+<xs:extension base="xs:string">
+<xs:attribute name="Location" type="tns:NameLocationLookupType"></xs:attribute>
+<xs:attribute name="SearchType" type="tns:SearchType"></xs:attribute>
+</xs:extension>
+</xs:simpleContent>
+</xs:complexType>
+
+<xs:complexType name="ContactInformationLookupType">
+<xs:sequence>
+<xs:element name="Address" type="tns:AddressLookupType"  maxOccurs="unbounded" minOccurs="0"></xs:element>
+<xs:element name="EMail" type="tns:EMailLookupType"  maxOccurs="unbounded" minOccurs="0"></xs:element>
+<xs:element name="Telephone" type="tns:TelephoneLookupType"  maxOccurs="unbounded" minOccurs="0"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="AddressLookupType">
+<xs:sequence>
+<xs:element name="Country" type="xs:string" minOccurs="0"></xs:element>
+<xs:element name="County" type="xs:string"  minOccurs="0"></xs:element>
+<xs:element name="ApartmentNumber" type="xs:string" minOccurs="0"></xs:element>
+<xs:element name="AddressLine1" type="tns:AddressLineLookupType" minOccurs="0"></xs:element>
+<xs:element name="AddressLine2" type="tns:AddressLineLookupType" minOccurs="0"></xs:element>
+<xs:element name="AddressLine3" type="tns:AddressLineLookupType" minOccurs="0"></xs:element>
+<xs:element name="AddressLine4" type="tns:AddressLineLookupType" minOccurs="0"></xs:element>
+<xs:element name="City" type="tns:AddressLineLookupType" minOccurs="0"></xs:element>
+<xs:element name="Territory" type="tns:TerritoryLookupType" minOccurs="0"></xs:element>
+<xs:element name="PostalCode" type="tns:PostalCodeLookupType" minOccurs="0"></xs:element>
+</xs:sequence>
+<xs:attribute name="TypeCode" type="xs:string"></xs:attribute>
+<xs:attribute name="SequenceNumber" type="xs:string"></xs:attribute>
+</xs:complexType>
+
+<xs:complexType name="AddressLineLookupType">
+<xs:simpleContent>
+<xs:extension base="xs:string">
+<xs:attribute name="SearchType" type="xs:string"></xs:attribute>
+</xs:extension>
+</xs:simpleContent>
+</xs:complexType>
+
+<xs:complexType name="TerritoryLookupType">
+<xs:simpleContent>
+<xs:extension base="xs:string">
+<xs:attribute name="SearchType" type="xs:string"></xs:attribute>
+</xs:extension>
+</xs:simpleContent>
+</xs:complexType>
+
+<xs:complexType name="PostalCodeLookupType">
+<xs:simpleContent>
+<xs:extension base="xs:string">
+<xs:attribute name="SearchType" type="xs:string"></xs:attribute>
+</xs:extension>
+</xs:simpleContent>
+</xs:complexType>
+
+<xs:complexType name="EMailLookupType">
+<xs:sequence>
+<xs:element name="EMailAddress" type="xs:string" minOccurs="0"></xs:element>
+</xs:sequence>
+<xs:attribute name="TypeCode" type="xs:string"></xs:attribute>
+<xs:attribute name="SearchType" type="xs:string"></xs:attribute>
+</xs:complexType>
+
+<xs:complexType name="TelephoneLookupType">
+<xs:sequence>
+<xs:element name="PhoneNumber" type="xs:string" minOccurs="0"></xs:element>
+<xs:element name="Extension" type="xs:string" minOccurs="0"></xs:element>
+</xs:sequence>
+<xs:attribute name="TypeCode" type="xs:string"></xs:attribute>
+<xs:attribute name="SearchType" type="xs:string"></xs:attribute>
+<xs:attribute name="SequenceNumber" type="xs:string"></xs:attribute>
+</xs:complexType>
+
+<xs:complexType name="AlterKeyLookupType">
+<xs:sequence>
+<xs:element name="AlternateID" type="xs:string" minOccurs="0"></xs:element>
+</xs:sequence>
+<xs:attribute name="TypeCode" type="xs:string"></xs:attribute>
+</xs:complexType>
+
+<xs:complexType name="searchCustomersResponse">
+<xs:sequence>
+<xs:element name="return" type="tns:CustomersResponseType"  minOccurs="0"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="CustomersResponseType">
+<xs:sequence>
+<xs:element name="DateTime" type="xs:dateTime" minOccurs="0"></xs:element>
+<xs:element name="Customer" type="tns:CustomerResponseType"  maxOccurs="unbounded" minOccurs="0"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="CustomerResponseType">
+<xs:sequence>
+<xs:element name="CustomerID" type="xs:string" minOccurs="0"></xs:element>
+<xs:element name="SignupDate" type="xs:date" minOccurs="0"></xs:element>
+<xs:element name="ResponseDescription" type="xs:string"  minOccurs="0"></xs:element>
+<xs:element name="FaultDetail" type="xs:string"  minOccurs="0"></xs:element>
+<xs:element name="ErrorCode" type="xs:string"  minOccurs="0"></xs:element>
+<xs:element name="RetailStoreID" type="xs:string"  minOccurs="0"></xs:element>
+<xs:element name="FirstPurchaseDate" type="xs:date"  minOccurs="0"></xs:element>
+<xs:element name="LastPurchaseDate" type="xs:date"  minOccurs="0"></xs:element>
+<xs:element name="Validation" type="tns:ValidationType"  minOccurs="0"></xs:element>
+<xs:element name="OrgName" type="xs:string"  minOccurs="0"></xs:element>
+<xs:element name="CustOrgTypcode" type="xs:string"  minOccurs="0"></xs:element>
+<xs:element name="EmployeeID" type="xs:string"  minOccurs="0"></xs:element>
+<xs:element name="BusinessName" type="xs:string"  minOccurs="0"></xs:element>
+<xs:element name="CustomerClass" type="xs:string"  minOccurs="0"></xs:element>
+<xs:element name="Source" type="xs:string"  minOccurs="0"></xs:element>
+<xs:element name="Prospect" type="xs:boolean"  minOccurs="0"></xs:element>
+<xs:element name="CustomerOwnerID" type="xs:string"  minOccurs="0"></xs:element>
+<xs:element name="HouseholdKey" type="xs:string"  minOccurs="0"></xs:element>
+<xs:element name="CustomerNumber" type="xs:string"  minOccurs="0"></xs:element>
+<xs:element name="CustomerReference" type="xs:string"  minOccurs="0"></xs:element>
+<xs:element name="LastUpdateInfo" type="tns:LastUpdateInfoReturnType"  minOccurs="0"></xs:element>
+<xs:element name="Affiliation" type="tns:AffiliationReturnType"  maxOccurs="unbounded" minOccurs="0"></xs:element>
+<xs:element name="EntityInformation" type="tns:EntityInformationReturnType"  minOccurs="0"></xs:element>
+<xs:element name="PersonalPreferences" type="tns:PersonalPreferencesReturnType"  minOccurs="0"></xs:element>
+<xs:element name="AlternateKey" type="tns:AlternateKeyReturnType"  maxOccurs="unbounded" minOccurs="0"></xs:element>
+<xs:element name="CustomAttribute" type="tns:CustomAttributeReturnType"  maxOccurs="unbounded" minOccurs="0"></xs:element>
+<xs:element name="CustomerNotes" type="tns:CustomerNotesContainerReturnType"  minOccurs="0"></xs:element>
+<xs:element name="EligiblePromotionDeals" type="tns:EligiblePromotionDealsType"  minOccurs="0"></xs:element>
+<xs:element name="CustomerSegments" type="tns:CustomerSegmentsType"  minOccurs="0"></xs:element>
+<xs:element name="CustomerCards" type="tns:CustomerCardsType"  minOccurs="0"></xs:element>
+<xs:element name="MaskData" type="xs:boolean" minOccurs="0"></xs:element>
+<xs:element name="AssociateAssignments" type="tns:AssociateAssignmentContainerReturnType"  minOccurs="0"></xs:element>
+<xs:element name="SecurityPrivilege" type="xs:string"  minOccurs="0"></xs:element>
+<xs:element name="SystemCurrencyCode" type="xs:string"  minOccurs="0"></xs:element>
+<xs:element name="PreferenceCenters" type="tns:PreferenceCenterContainerReturnType"  minOccurs="0"></xs:element>
+<xs:element name="Franchisees" type="tns:CustomerFranchiseeContainerReturnType"  minOccurs="0"></xs:element>
+</xs:sequence>
+<xs:attribute name="ResponseCode" type="xs:string"></xs:attribute>
+</xs:complexType>
+
+<xs:complexType name="ValidationType">
+<xs:simpleContent>
+<xs:extension base="xs:string">
+<xs:attribute name="ValidFlag" type="xs:boolean"></xs:attribute>
+</xs:extension>
+</xs:simpleContent>
+</xs:complexType>
+
+<xs:complexType name="LastUpdateInfoReturnType">
+<xs:sequence>
+<xs:element name="UpdateUserID" type="xs:string"  minOccurs="0"></xs:element>
+<xs:element name="UpdateDate" type="xs:dateTime"  minOccurs="0"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="AffiliationReturnType">
+<xs:sequence>
+<xs:element name="RetailStoreID" type="xs:string"  minOccurs="0"></xs:element>
+</xs:sequence>
+<xs:attribute name="Action" type="xs:string"></xs:attribute>
+</xs:complexType>
+
+<xs:complexType name="EntityInformationReturnType">
+<xs:sequence>
+<xs:element name="Individual" type="tns:IndividualReturnType" minOccurs="0"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="IndividualReturnType">
+<xs:sequence>
+<xs:element name="Suffix" type="xs:string"  minOccurs="0"></xs:element>
+<xs:element name="SortingName" type="xs:string"  minOccurs="0"></xs:element>
+<xs:element name="NickName" type="xs:string"  minOccurs="0"></xs:element>
+<xs:element name="Salutation" type="xs:string"  minOccurs="0"></xs:element>
+<xs:element name="Name" type="tns:NameType"  minOccurs="0"></xs:element>
+<xs:element name="ContactInformation" type="tns:ContactInformationReturnType"  minOccurs="0"></xs:element>
+<xs:element name="PersonalSummary" type="tns:PersonalSummaryReturnType"  minOccurs="0"></xs:element>
+<xs:element name="SocioEconomicProfile" type="tns:SocioEconomicProfileReturnType"  minOccurs="0"></xs:element>
+<xs:element name="LifetimeActivitySummary" type="tns:LifetimeActivitySummaryType"  minOccurs="0"></xs:element>
+<xs:element name="YearToDateActivitySummary" type="tns:YearToDateActivitySummaryType"  minOccurs="0"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="NameType">
+<xs:sequence>
+<xs:element name="Name" type="tns:CustomerNameTypeReturnEntry"  maxOccurs="unbounded" minOccurs="0"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="CustomerNameTypeReturnEntry">
+<xs:simpleContent>
+<xs:extension base="xs:string">
+<xs:attribute name="Location" type="tns:NameLocationReturnType"></xs:attribute>
+</xs:extension>
+</xs:simpleContent>
+</xs:complexType>
+
+<xs:complexType name="ContactInformationReturnType">
+<xs:sequence>
+<xs:element name="Address" type="tns:AddressReturnType"  maxOccurs="unbounded" minOccurs="0"></xs:element>
+<xs:element name="EMail" type="tns:EMailReturnType"  maxOccurs="unbounded" minOccurs="0"></xs:element>
+<xs:element name="Telephone" type="tns:TelephoneReturnType"  maxOccurs="unbounded" minOccurs="0"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="AddressReturnType">
+<xs:sequence>
+<xs:element name="AddressLine1" type="xs:string"  minOccurs="0"></xs:element>
+<xs:element name="AddressLine2" type="xs:string"  minOccurs="0"></xs:element>
+<xs:element name="AddressLine3" type="xs:string"  minOccurs="0"></xs:element>
+<xs:element name="AddressLine4" type="xs:string"  minOccurs="0"></xs:element>
+<xs:element name="ApartmentNumber" type="xs:string"  minOccurs="0"></xs:element>
+<xs:element name="City" type="xs:string"  minOccurs="0"></xs:element>
+<xs:element name="Country" type="xs:string"  minOccurs="0"></xs:element>
+<xs:element name="County" type="xs:string"  minOccurs="0"></xs:element>
+<xs:element name="Territory" type="xs:string"  minOccurs="0"></xs:element>
+<xs:element name="PostalCode" type="xs:string"  minOccurs="0"></xs:element>
+</xs:sequence>
+<xs:attribute name="Label" type="xs:string"></xs:attribute>
+<xs:attribute name="ContactPreferenceCode" type="xs:string"></xs:attribute>
+<xs:attribute name="PrimaryFlag" type="xs:boolean"></xs:attribute>
+<xs:attribute name="TypeCode" type="xs:string"></xs:attribute>
+<xs:attribute name="UpdateType" type="xs:string"></xs:attribute>
+<xs:attribute name="ValidFlag" type="xs:boolean"></xs:attribute>
+<xs:attribute name="SequenceNumber" type="xs:string"></xs:attribute>
+</xs:complexType>
+
+<xs:complexType name="EMailReturnType">
+<xs:sequence>
+<xs:element name="EMailAddress" type="xs:string" minOccurs="0"></xs:element>
+</xs:sequence>
+<xs:attribute name="PrimaryFlag" type="xs:boolean"></xs:attribute>
+<xs:attribute name="TypeCode" type="xs:string"></xs:attribute>
+<xs:attribute name="Label" type="xs:string"></xs:attribute>
+<xs:attribute name="ContactPreferenceCode" type="xs:string"></xs:attribute>
+<xs:attribute name="FormatPreferenceCode" type="xs:string"></xs:attribute>
+<xs:attribute name="UpdateType" type="xs:string"></xs:attribute>
+<xs:attribute name="SearchType" type="xs:string"></xs:attribute>
+<xs:attribute name="SequenceNumber" type="xs:string"></xs:attribute>
+<xs:attribute name="ValidFlag" type="xs:boolean"></xs:attribute>
+</xs:complexType>
+
+<xs:complexType name="TelephoneReturnType">
+<xs:sequence>
+<xs:element name="PhoneNumber" type="xs:string"  minOccurs="0"></xs:element>
+<xs:element name="Extension" type="xs:string"  minOccurs="0"></xs:element>
+</xs:sequence>
+<xs:attribute name="PrimaryFlag" type="xs:boolean"></xs:attribute>
+<xs:attribute name="TypeCode" type="xs:string"></xs:attribute>
+<xs:attribute name="Label" type="xs:string"></xs:attribute>
+<xs:attribute name="ContactPreferenceCode" type="xs:string"></xs:attribute>
+<xs:attribute name="UpdateType" type="xs:string"></xs:attribute>
+<xs:attribute name="SearchType" type="xs:string"></xs:attribute>
+<xs:attribute name="SequenceNumber" type="xs:string"></xs:attribute>
+<xs:attribute name="ValidFlag" type="xs:boolean"></xs:attribute>
+</xs:complexType>
+
+<xs:complexType name="PersonalSummaryReturnType">
+<xs:sequence>
+<xs:element name="GenderType" type="xs:string"  minOccurs="0"></xs:element>
+<xs:element name="BirthDate" type="xs:date"  minOccurs="0"></xs:element>
+<xs:element name="Anniversary" type="xs:date"  minOccurs="0"></xs:element>
+<xs:element name="MaritalStatusCode" type="xs:string"  minOccurs="0"></xs:element>
+<xs:element name="Ethnicity" type="xs:string"  minOccurs="0"></xs:element>
+<xs:element name="Rent" type="xs:boolean"  minOccurs="0"></xs:element>
+<xs:element name="LanguageCode" type="xs:string"  minOccurs="0"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="SocioEconomicProfileReturnType">
+<xs:sequence>
+<xs:element name="AnnualIncomeAmount" type="xs:string"  minOccurs="0"></xs:element>
+<xs:element name="NetWorth" type="xs:string"  minOccurs="0"></xs:element>
+<xs:element name="HighestEducationalLevelName" type="xs:string"  minOccurs="0"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="LifetimeActivitySummaryType">
+<xs:sequence>
+<xs:element name="TotalReturnsAmount" type="xs:string"  minOccurs="0"></xs:element>
+<xs:element name="TotalSalesAmount" type="xs:string"  minOccurs="0"></xs:element>
+<xs:element name="TotalTransactionCount" type="xs:string"  minOccurs="0"></xs:element>
+<xs:element name="TotalItemsSoldCount" type="xs:string"  minOccurs="0"></xs:element>
+<xs:element name="TotalItemsReturnedCount" type="xs:string"  minOccurs="0"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="YearToDateActivitySummaryType">
+<xs:sequence>
+<xs:element name="YearToDateReturnsAmount" type="xs:string"  minOccurs="0"></xs:element>
+<xs:element name="YearToDateSalesAmount" type="xs:string"  minOccurs="0"></xs:element>
+<xs:element name="YearToDateTransactionCount" type="xs:string"  minOccurs="0"></xs:element>
+<xs:element name="YearToDateItemsSoldCount" type="xs:string"  minOccurs="0"></xs:element>
+<xs:element name="YearToDateItemsReturnedCount" type="xs:string"  minOccurs="0"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="PersonalPreferencesReturnType">
+<xs:sequence>
+<xs:element name="ContactPreference" type="tns:ContactPreferenceReturnType"  maxOccurs="unbounded" minOccurs="0"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="ContactPreferenceReturnType">
+<xs:simpleContent>
+<xs:extension base="xs:string">
+<xs:attribute name="ContactType" type="tns:ContactPreferenceContactReturnType"></xs:attribute>
+<xs:attribute name="Permission" type="xs:boolean"></xs:attribute>
+</xs:extension>
+</xs:simpleContent>
+</xs:complexType>
+
+<xs:complexType name="AlternateKeyReturnType">
+<xs:sequence>
+<xs:element name="AlternateID" type="xs:string" minOccurs="0"></xs:element>
+</xs:sequence>
+<xs:attribute name="TypeCode" type="xs:string"></xs:attribute>
+<xs:attribute name="UpdateType" type="xs:string"></xs:attribute>
+</xs:complexType>
+
+<xs:complexType name="CustomAttributeReturnType">
+<xs:sequence>
+<xs:element name="AttributeValue" type="xs:string" minOccurs="0"></xs:element>
+</xs:sequence>
+<xs:attribute name="editable" type="xs:boolean"></xs:attribute>
+<xs:attribute name="name" type="xs:string"></xs:attribute>
+</xs:complexType>
+
+<xs:complexType name="CustomerNotesContainerReturnType">
+<xs:sequence>
+<xs:element name="CustomerNote" type="tns:CustomerNotesReturnType"  maxOccurs="unbounded" minOccurs="0"></xs:element>
+<xs:element name="SecurityPrivilege" type="xs:string"  minOccurs="0"></xs:element>
+<xs:element name="MaskData" type="xs:boolean" minOccurs="0"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="CustomerNotesReturnType">
+<xs:simpleContent>
+<xs:extension base="xs:string">
+<xs:attribute name="type" type="xs:string"></xs:attribute>
+<xs:attribute name="createDate" type="xs:dateTime"></xs:attribute>
+<xs:attribute name="createUser" type="xs:string"></xs:attribute>
+<xs:attribute name="location" type="xs:string"></xs:attribute>
+</xs:extension>
+</xs:simpleContent>
+</xs:complexType>
+
+<xs:complexType name="EligiblePromotionDealsType">
+<xs:sequence>
+<xs:element name="PromotionDealId" type="tns:PromotionDealIdType"  maxOccurs="unbounded" minOccurs="0"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="PromotionDealIdType">
+<xs:simpleContent>
+<xs:extension base="xs:string">
+<xs:attribute name="Name" type="xs:string"></xs:attribute>
+<xs:attribute name="Exclusive" type="xs:string"></xs:attribute>
+</xs:extension>
+</xs:simpleContent>
+</xs:complexType>
+
+<xs:complexType name="CustomerSegmentsType">
+<xs:sequence>
+<xs:element name="Segment" type="tns:SegmentType"  maxOccurs="unbounded" minOccurs="0"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="SegmentType">
+<xs:sequence>
+<xs:element name="SegmentId" type="xs:string" minOccurs="0"></xs:element>
+<xs:element name="Name" type="xs:string" minOccurs="0"></xs:element>
+<xs:element name="Description" type="xs:string" minOccurs="0"></xs:element>
+<xs:element name="Type" type="xs:string" minOccurs="0"></xs:element>
+<xs:element name="OpenAccess" type="xs:boolean"  minOccurs="0"></xs:element>
+<xs:element name="PublishToPromote" type="xs:boolean"  minOccurs="0"></xs:element>
+<xs:element name="SegmentMessage" type="tns:SegmentMessageType"  maxOccurs="unbounded" minOccurs="0"></xs:element>
+<xs:element name="Strata" type="tns:SegmentStrataType"  maxOccurs="unbounded" minOccurs="0"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="SegmentMessageType">
+<xs:sequence>
+<xs:element name="LanguageCode" type="xs:string" minOccurs="0"></xs:element>
+<xs:element name="Message" type="xs:string"  minOccurs="0"></xs:element>
+<xs:element name="CustomerMessage" type="xs:string"  minOccurs="0"></xs:element>
+<xs:element name="ReceiptMessage" type="xs:string"  minOccurs="0"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="SegmentStrataType">
+<xs:sequence>
+<xs:element name="StrataType" type="xs:string"  minOccurs="0"></xs:element>
+<xs:element name="StrataFormat" type="xs:string"  minOccurs="0"></xs:element>
+<xs:element name="BasedOnValue" type="xs:string"  minOccurs="0"></xs:element>
+<xs:element name="StrataField" type="xs:string"  minOccurs="0"></xs:element>
+<xs:element name="AverageStrataValue" type="xs:long"  minOccurs="0"></xs:element>
+<xs:element name="NumberOfStrata" type="xs:long"  minOccurs="0"></xs:element>
+<xs:element name="CustomerStrata" type="xs:long"  minOccurs="0"></xs:element>
+<xs:element name="CustomerValue" type="xs:long"  minOccurs="0"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="CustomerCardsType">
+<xs:sequence>
+<xs:element name="Instrument" type="tns:InstrumentReturnType"  maxOccurs="unbounded" minOccurs="0"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="InstrumentReturnType">
+<xs:sequence>
+<xs:element name="CardNumber" type="xs:string" minOccurs="0"></xs:element>
+<xs:element name="CardSerialNumber" type="xs:string" minOccurs="0"></xs:element>
+<xs:element name="PrimaryAccountHolderFlag" type="xs:boolean" minOccurs="0"></xs:element>
+<xs:element name="AccountId" type="tns:AccountIdType"  maxOccurs="unbounded" minOccurs="0"></xs:element>
+</xs:sequence>
+<xs:attribute name="Description" type="xs:string"></xs:attribute>
+</xs:complexType>
+
+<xs:complexType name="AccountIdType">
+<xs:simpleContent>
+<xs:extension base="xs:string">
+<xs:attribute name="Type" type="xs:string"></xs:attribute>
+</xs:extension>
+</xs:simpleContent>
+</xs:complexType>
+
+<xs:complexType name="CustomerFranchiseeContainerReturnType">
+<xs:sequence>
+<xs:element name="Franchisee" type="tns:CustomerFranchiseeReturnType"  maxOccurs="unbounded" minOccurs="0"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="CustomerFranchiseeReturnType">
+<xs:simpleContent>
+<xs:extension base="xs:string">
+<xs:attribute name="franchiseeId" type="xs:long"></xs:attribute>
+<xs:attribute name="franchiseeName" type="xs:string"></xs:attribute>
+</xs:extension>
+</xs:simpleContent>
+</xs:complexType>
+
+<xs:complexType name="deleteCustomer">
+<xs:sequence>
+<xs:element name="customerId" type="xs:string"  minOccurs="0"></xs:element>
+<xs:element name="alternateKeyList" type="tns:AlternateKeyLookupType"  maxOccurs="unbounded" minOccurs="0"></xs:element>
+<xs:element name="cardNumber" type="xs:string"  minOccurs="0"></xs:element>
+<xs:element name="updateUserId" type="xs:string"  minOccurs="0"></xs:element>
+<xs:element name="securityUserId" type="xs:string"  minOccurs="0"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="deleteCustomerResponse">
+<xs:sequence></xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="getItemHistory">
+<xs:sequence>
+<xs:element name="customerId" type="xs:string"  minOccurs="0"></xs:element>
+<xs:element name="alternateKeyList" type="tns:AlternateKeyLookupType"  maxOccurs="unbounded" minOccurs="0"></xs:element>
+<xs:element name="cardNumber" type="xs:string"  minOccurs="0"></xs:element>
+<xs:element name="businessDate" type="xs:dateTime"  minOccurs="0"></xs:element>
+<xs:element name="retailTransactionId" type="xs:string"  minOccurs="0"></xs:element>
+<xs:element name="locationId" type="xs:string"  minOccurs="0"></xs:element>
+<xs:element name="securityUserId" type="xs:string"  minOccurs="0"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="getItemHistoryResponse">
+<xs:sequence>
+<xs:element name="return" type="tns:ItemHistoryResponseType"  minOccurs="0"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="ItemHistoryResponseType">
+<xs:sequence>
+<xs:element name="CustomerID" type="xs:string" minOccurs="0"></xs:element>
+<xs:element name="TransactionsContainer" type="tns:TransactionsContainerReturnType"  minOccurs="0"></xs:element>
+</xs:sequence>
+<xs:attribute name="ResponseMessage" type="xs:string"></xs:attribute>
+<xs:attribute name="ResponseCode" type="xs:string"></xs:attribute>
+</xs:complexType>
+
+<xs:complexType name="TransactionsContainerReturnType">
+<xs:sequence>
+<xs:element name="Transaction" type="tns:TransactionItemsReturnType"  maxOccurs="unbounded" minOccurs="0"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="TransactionItemsReturnType">
+<xs:sequence>
+<xs:element name="Item" type="tns:TransactionItemReturnType"  maxOccurs="unbounded" minOccurs="0"></xs:element>
+</xs:sequence>
+<xs:attribute name="retailLocationId" type="xs:string"></xs:attribute>
+<xs:attribute name="businessDate" type="xs:string"></xs:attribute>
+<xs:attribute name="transactionId" type="xs:string"></xs:attribute>
+</xs:complexType>
+
+<xs:complexType name="TransactionItemReturnType">
+<xs:sequence>
+<xs:element name="MerchandiseHierarchyLevel" type="tns:ItemMerchHierarchyLevel"  maxOccurs="unbounded" minOccurs="0"></xs:element>
+</xs:sequence>
+<xs:attribute name="season" type="xs:string"></xs:attribute>
+<xs:attribute name="brand" type="xs:string"></xs:attribute>
+<xs:attribute name="color" type="xs:string"></xs:attribute>
+<xs:attribute name="description" type="xs:string"></xs:attribute>
+<xs:attribute name="itemId" type="xs:string"></xs:attribute>
+</xs:complexType>
+
+<xs:complexType name="ItemMerchHierarchyLevel">
+<xs:simpleContent>
+<xs:extension base="xs:string">
+<xs:attribute name="levelId" type="xs:string"></xs:attribute>
+<xs:attribute name="name" type="xs:string"></xs:attribute>
+</xs:extension>
+</xs:simpleContent>
+</xs:complexType>
+
+<xs:complexType name="addOrDeleteCustomerFranchisees">
+<xs:sequence>
+<xs:element name="customerFranchisees" type="tns:CustomerFranchiseeRequestType" minOccurs="0"></xs:element>
+<xs:element name="updateUserId" type="xs:string" minOccurs="0"></xs:element>
+<xs:element name="securityUserId" type="xs:string" minOccurs="0"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="CustomerFranchiseeRequestType">
+<xs:sequence>
+<xs:element name="CustomerID" type="xs:string" minOccurs="0"></xs:element>
+<xs:element name="AlternateKey" type="tns:AlternateKeyType"  maxOccurs="unbounded" minOccurs="0"></xs:element>
+<xs:element name="CardNumber" type="xs:string"  minOccurs="0"></xs:element>
+<xs:element name="CustomerFranchisees" type="tns:CustomerFranchiseeContainerType"  minOccurs="0"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="CustomerFranchiseeContainerType">
+<xs:sequence>
+<xs:element name="CustomerFranchisee" type="tns:CustomerFranchiseeType"  maxOccurs="unbounded" minOccurs="0"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="CustomerFranchiseeType">
+<xs:simpleContent>
+<xs:extension base="xs:string">
+<xs:attribute name="action" type="tns:FranchiseeActionType"></xs:attribute>
+<xs:attribute name="franchiseeId" type="xs:string"></xs:attribute>
+<xs:attribute name="franchiseeName" type="xs:string"></xs:attribute>
+</xs:extension>
+</xs:simpleContent>
+</xs:complexType>
+
+<xs:complexType name="addOrDeleteCustomerFranchiseesResponse">
+<xs:sequence>
+<xs:element name="customerId" type="xs:string"  minOccurs="0"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="getPreferenceTypes">
+<xs:sequence>
+<xs:element name="preferenceTypeId" type="xs:long" minOccurs="0"></xs:element>
+<xs:element name="securityUserId" type="xs:string"  minOccurs="0"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="getPreferenceTypesResponse">
+<xs:sequence>
+<xs:element name="return" type="tns:PreferenceTypeReturnType"  minOccurs="0"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="PreferenceTypeReturnType">
+<xs:sequence>
+<xs:element name="PreferenceType" type="tns:PreferenceType"  maxOccurs="unbounded" minOccurs="0"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="PreferenceType">
+<xs:sequence>
+<xs:element name="preferenceTypeId" type="xs:string" minOccurs="0"></xs:element>
+<xs:element name="preferenceTypeName" type="xs:string" minOccurs="0"></xs:element>
+<xs:element name="defaultFrequencyTypeCode" type="xs:string"  minOccurs="0"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="getCustomerNotes">
+<xs:sequence>
+<xs:element name="customerId" type="xs:string"  minOccurs="0"></xs:element>
+<xs:element name="alternateKeyList" type="tns:AlternateKeyLookupType"  maxOccurs="unbounded" minOccurs="0"></xs:element>
+<xs:element name="cardNumber" type="xs:string"  minOccurs="0"></xs:element>
+<xs:element name="typeFilter" type="xs:string"  minOccurs="0"></xs:element>
+<xs:element name="startDate" type="xs:dateTime"  minOccurs="0"></xs:element>
+<xs:element name="endDate" type="xs:dateTime"  minOccurs="0"></xs:element>
+<xs:element name="securityUserId" type="xs:string"  minOccurs="0"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="getCustomerNotesResponse">
+<xs:sequence>
+<xs:element name="return" type="tns:CustomerNotesContainerReturnType"  minOccurs="0"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="getTransactionHistory">
+<xs:sequence>
+<xs:element name="customerId" type="xs:string"  minOccurs="0"></xs:element>
+<xs:element name="alternateKeyList" type="tns:AlternateKeyLookupType"  maxOccurs="unbounded" minOccurs="0"></xs:element>
+<xs:element name="cardNumber" type="xs:string"  minOccurs="0"></xs:element>
+<xs:element name="startDate" type="xs:dateTime"  minOccurs="0"></xs:element>
+<xs:element name="endDate" type="xs:dateTime"  minOccurs="0"></xs:element>
+<xs:element name="securityUserId" type="xs:string"  minOccurs="0"></xs:element>
+<xs:element name="LineItemTypeCode" type="xs:string"  minOccurs="0"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="getTransactionHistoryResponse">
+<xs:sequence>
+<xs:element name="return" type="tns:TransactionReturnType"  minOccurs="0"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="TransactionReturnType">
+<xs:sequence>
+<xs:element name="CustomerID" type="xs:string" minOccurs="0"></xs:element>
+<xs:element name="Transactions" type="tns:TransactionContainerReturnType"  minOccurs="0"></xs:element>
+<xs:element name="SecurityPrivilege" type="xs:string"  minOccurs="0"></xs:element>
+<xs:element name="MaskData" type="xs:boolean" minOccurs="0"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="TransactionContainerReturnType">
+<xs:sequence>
+<xs:element name="Transaction" type="tns:TransactionType"  maxOccurs="unbounded" minOccurs="0"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="TransactionType">
+<xs:sequence>
+<xs:element name="RetailStoreID" type="xs:string" minOccurs="0"></xs:element>
+<xs:element name="WorkstationID" type="xs:string" minOccurs="0"></xs:element>
+<xs:element name="SequenceNumber" type="xs:string" minOccurs="0"></xs:element>
+<xs:element name="BusinessDayDate" type="xs:date" minOccurs="0"></xs:element>
+<xs:element name="VoidFlag" type="xs:boolean" minOccurs="0"></xs:element>
+<xs:element name="BeginDateTime" type="xs:dateTime" minOccurs="0"></xs:element>
+<xs:element name="EndDateTime" type="xs:dateTime" minOccurs="0"></xs:element>
+<xs:element name="OperatorID" type="xs:string" minOccurs="0"></xs:element>
+<xs:element name="CurrencyCode" type="xs:string" minOccurs="0"></xs:element>
+<xs:element name="OrgCurrencyCode" type="xs:string"  minOccurs="0"></xs:element>
+<xs:element name="ExchangeRate" type="xs:decimal"  minOccurs="0"></xs:element>
+<xs:element name="RetailTransaction" type="tns:RetailTransactionType" minOccurs="0"></xs:element>
+<xs:element name="PosTransactionProperties" type="tns:PosTransactionPropertiesType"  maxOccurs="unbounded" minOccurs="0"></xs:element>
+</xs:sequence>
+<xs:attribute name="CancelFlag" type="xs:boolean"></xs:attribute>
+<xs:attribute name="Action" type="xs:string"></xs:attribute>
+<xs:attribute name="TransactionType" type="xs:string"></xs:attribute>
+</xs:complexType>
+
+<xs:complexType name="RetailTransactionType">
+<xs:sequence>
+<xs:element name="LineItem" type="tns:LineItemType"  maxOccurs="unbounded" minOccurs="0"></xs:element>
+<xs:element name="Total" type="tns:TotalType"  maxOccurs="unbounded" minOccurs="0"></xs:element>
+<xs:element name="CustomerAccount" type="tns:CustomerAccountType"  minOccurs="0"></xs:element>
+<xs:element name="Customer" type="tns:PoslogCustomerType"  minOccurs="0"></xs:element>
+<xs:element name="TransactionLink" type="tns:TransactionLinkType"  minOccurs="0"></xs:element>
+<xs:element name="PostVoidReasonCode" type="xs:string"  minOccurs="0"></xs:element>
+<xs:element name="PostVoidComment" type="xs:string"  minOccurs="0"></xs:element>
+</xs:sequence>
+<xs:attribute name="Version" type="xs:string"></xs:attribute>
+<xs:attribute name="TypeCode" type="xs:string"></xs:attribute>
+<xs:attribute name="TransactionStatus" type="xs:string"></xs:attribute>
+</xs:complexType>
+
+<xs:complexType name="LineItemType">
+<xs:sequence>
+<xs:element name="SequenceNumber" type="xs:string" minOccurs="0"></xs:element>
+<xs:element name="BeginDateTime" type="xs:dateTime"  minOccurs="0"></xs:element>
+<xs:element name="EndDateTime" type="xs:dateTime"  minOccurs="0"></xs:element>
+<xs:element name="SaleForDelivery" type="tns:SaleForDeliveryType"  minOccurs="0"></xs:element>
+<xs:element name="PreviousLayaway" type="tns:PreviousLayawayType"  minOccurs="0"></xs:element>
+<xs:element name="PreviousCustomerOrder" type="tns:PreviousCustomerOrderType"  minOccurs="0"></xs:element>
+<xs:element name="CustomerOrderForDelivery" type="tns:CustomerOrderForDeliveryType"  minOccurs="0"></xs:element>
+<xs:element name="CustomerOrderForPickup" type="tns:CustomerOrderForPickupType"  minOccurs="0"></xs:element>
+<xs:element name="Return" type="tns:ReturnType"  minOccurs="0"></xs:element>
+<xs:element name="Sale" type="tns:SaleType"  minOccurs="0"></xs:element>
+<xs:element name="Tender" type="tns:TenderType"  minOccurs="0"></xs:element>
+<xs:element name="Tax" type="tns:TaxType"  minOccurs="0"></xs:element>
+<xs:element name="DocumentType" type="xs:string"  minOccurs="0"></xs:element>
+<xs:element name="ActivityCode" type="xs:string"  minOccurs="0"></xs:element>
+<xs:element name="RetailPriceModifier" type="tns:RetailPriceModifierType"  maxOccurs="unbounded" minOccurs="0"></xs:element>
+</xs:sequence>
+<xs:attribute name="VoidFlag" type="xs:boolean"></xs:attribute>
+</xs:complexType>
+
+<xs:complexType name="SaleForDeliveryType">
+<xs:sequence>
+<xs:element name="ItemID" type="xs:string"  minOccurs="0"></xs:element>
+<xs:element name="UnitCostPrice" type="xs:decimal"  minOccurs="0"></xs:element>
+<xs:element name="RegularSalesUnitPrice" type="xs:decimal"  minOccurs="0"></xs:element>
+<xs:element name="ActualSalesUnitPrice" type="xs:decimal"  minOccurs="0"></xs:element>
+<xs:element name="ExtendedAmount" type="xs:decimal"  minOccurs="0"></xs:element>
+<xs:element name="Quantity" type="xs:decimal"  minOccurs="0"></xs:element>
+<xs:element name="SerialNumber" type="xs:string"  minOccurs="0"></xs:element>
+<xs:element name="Associate" type="tns:AssociateType"  minOccurs="0"></xs:element>
+<xs:element name="PercentageOfItem" type="tns:PercentageOfItemType"  minOccurs="0"></xs:element>
+<xs:element name="RetailPriceModifier" type="tns:RetailPriceModifierType"  maxOccurs="unbounded" minOccurs="0"></xs:element>
+<xs:element name="Delivery" type="tns:DeliveryType"  minOccurs="0"></xs:element>
+</xs:sequence>
+<xs:attribute name="ItemType" type="xs:string"></xs:attribute>
+<xs:attribute name="Action" type="xs:string"></xs:attribute>
+</xs:complexType>
+
+<xs:complexType name="AssociateType">
+<xs:sequence>
+<xs:element name="AssociateID" type="xs:string" minOccurs="0"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="PercentageOfItemType">
+<xs:sequence>
+<xs:element name="AssociateID" type="xs:string" minOccurs="0"></xs:element>
+<xs:element name="Percentage" type="xs:decimal" minOccurs="0"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="RetailPriceModifierType">
+<xs:sequence>
+<xs:element name="SequenceNumber" type="xs:string" minOccurs="0"></xs:element>
+<xs:element name="Amount" type="tns:AmountType" minOccurs="0"></xs:element>
+<xs:element name="PromotionID" type="xs:string"  minOccurs="0"></xs:element>
+<xs:element name="ReasonCode" type="xs:string"  minOccurs="0"></xs:element>
+<xs:element name="Coupon" type="tns:CouponType"  minOccurs="0"></xs:element>
+</xs:sequence>
+<xs:attribute name="VoidFlag" type="xs:boolean"></xs:attribute>
+</xs:complexType>
+
+<xs:complexType name="AmountType">
+<xs:simpleContent>
+<xs:extension base="xs:decimal">
+<xs:attribute name="Action" type="xs:string"></xs:attribute>
+</xs:extension>
+</xs:simpleContent>
+</xs:complexType>
+
+<xs:complexType name="CouponType">
+<xs:sequence>
+<xs:element name="ScanCode" type="xs:string" minOccurs="0"></xs:element>
+<xs:element name="ExpirationDate" type="xs:dateTime"  minOccurs="0"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="DeliveryType">
+<xs:sequence>
+<xs:element name="Name" type="xs:string" minOccurs="0"></xs:element>
+<xs:element name="Address" type="tns:PoslogAddressType" minOccurs="0"></xs:element>
+<xs:element name="TelephoneNumber" type="xs:string" minOccurs="0"></xs:element>
+<xs:element name="TrackingNumber" type="xs:string" minOccurs="0"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="PoslogAddressType">
+<xs:sequence>
+<xs:element name="AddressLine" type="xs:string" minOccurs="0"></xs:element>
+<xs:element name="City" type="xs:string" minOccurs="0"></xs:element>
+<xs:element name="State" type="xs:string" minOccurs="0"></xs:element>
+<xs:element name="PostalCode" type="xs:string" minOccurs="0"></xs:element>
+<xs:element name="CountryCode" type="xs:string" minOccurs="0"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="PreviousLayawayType">
+<xs:sequence>
+<xs:element name="POSIdentity" type="tns:POSIdentityType"  minOccurs="0"></xs:element>
+<xs:element name="ItemID" type="xs:string" minOccurs="0"></xs:element>
+<xs:element name="UnitCostPrice" type="xs:decimal" minOccurs="0"></xs:element>
+<xs:element name="RegularSalesUnitPrice" type="xs:decimal" minOccurs="0"></xs:element>
+<xs:element name="ActualSalesUnitPrice" type="xs:decimal" minOccurs="0"></xs:element>
+<xs:element name="ExtendedAmount" type="xs:decimal" minOccurs="0"></xs:element>
+<xs:element name="Quantity" type="xs:decimal" minOccurs="0"></xs:element>
+<xs:element name="SerialNumber" type="xs:string"  minOccurs="0"></xs:element>
+<xs:element name="Associate" type="tns:AssociateType"  minOccurs="0"></xs:element>
+<xs:element name="PercentageOfItem" type="tns:PercentageOfItemType"  minOccurs="0"></xs:element>
+<xs:element name="RetailPriceModifier" type="tns:RetailPriceModifierType"  maxOccurs="unbounded" minOccurs="0"></xs:element>
+</xs:sequence>
+<xs:attribute name="Action" type="xs:string"></xs:attribute>
+<xs:attribute name="ItemType" type="xs:string"></xs:attribute>
+</xs:complexType>
+
+<xs:complexType name="POSIdentityType">
+<xs:sequence>
+<xs:element name="POSItemID" type="xs:string"  minOccurs="0"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="PreviousCustomerOrderType">
+<xs:sequence>
+<xs:element name="ItemID" type="xs:string" minOccurs="0"></xs:element>
+<xs:element name="UnitCostPrice" type="xs:decimal" minOccurs="0"></xs:element>
+<xs:element name="RegularSalesUnitPrice" type="xs:decimal" minOccurs="0"></xs:element>
+<xs:element name="ActualSalesUnitPrice" type="xs:decimal" minOccurs="0"></xs:element>
+<xs:element name="ExtendedAmount" type="xs:decimal" minOccurs="0"></xs:element>
+<xs:element name="Quantity" type="xs:decimal" minOccurs="0"></xs:element>
+<xs:element name="SerialNumber" type="xs:string"  minOccurs="0"></xs:element>
+<xs:element name="RetailPriceModifier" type="tns:RetailPriceModifierType"  maxOccurs="unbounded" minOccurs="0"></xs:element>
+<xs:element name="Associate" type="tns:AssociateType"  minOccurs="0"></xs:element>
+<xs:element name="PercentageOfItem" type="tns:PercentageOfItemType"  minOccurs="0"></xs:element>
+<xs:element name="InventoryReservationID" type="xs:string"  minOccurs="0"></xs:element>
+</xs:sequence>
+<xs:attribute name="ItemType" type="xs:string"></xs:attribute>
+<xs:attribute name="Action" type="xs:string"></xs:attribute>
+</xs:complexType>
+
+<xs:complexType name="CustomerOrderForDeliveryType">
+<xs:sequence>
+<xs:element name="ItemID" type="xs:string" minOccurs="0"></xs:element>
+<xs:element name="UnitCostPrice" type="xs:decimal" minOccurs="0"></xs:element>
+<xs:element name="RegularSalesUnitPrice" type="xs:decimal" minOccurs="0"></xs:element>
+<xs:element name="ActualSalesUnitPrice" type="xs:decimal" minOccurs="0"></xs:element>
+<xs:element name="ExtendedAmount" type="xs:decimal" minOccurs="0"></xs:element>
+<xs:element name="Quantity" type="xs:decimal" minOccurs="0"></xs:element>
+<xs:element name="SerialNumber" type="xs:string"  minOccurs="0"></xs:element>
+<xs:element name="Associate" type="tns:AssociateType"  minOccurs="0"></xs:element>
+<xs:element name="RetailPriceModifier" type="tns:RetailPriceModifierType"  maxOccurs="unbounded" minOccurs="0"></xs:element>
+<xs:element name="PercentageOfItem" type="tns:PercentageOfItemType"  minOccurs="0"></xs:element>
+<xs:element name="Delivery" type="tns:DeliveryType"  minOccurs="0"></xs:element>
+<xs:element name="InventoryReservationID" type="xs:string"  minOccurs="0"></xs:element>
+<xs:element name="From" type="xs:string"  minOccurs="0"></xs:element>
+</xs:sequence>
+<xs:attribute name="Action" type="xs:string"></xs:attribute>
+<xs:attribute name="ItemType" type="xs:string"></xs:attribute>
+<xs:attribute name="Setup" type="xs:string"></xs:attribute>
+</xs:complexType>
+
+<xs:complexType name="CustomerOrderForPickupType">
+<xs:sequence>
+<xs:element name="ItemID" type="xs:string" minOccurs="0"></xs:element>
+<xs:element name="UnitCostPrice" type="xs:decimal" minOccurs="0"></xs:element>
+<xs:element name="RegularSalesUnitPrice" type="xs:decimal" minOccurs="0"></xs:element>
+<xs:element name="ActualSalesUnitPrice" type="xs:decimal" minOccurs="0"></xs:element>
+<xs:element name="ExtendedAmount" type="xs:decimal" minOccurs="0"></xs:element>
+<xs:element name="Quantity" type="xs:decimal" minOccurs="0"></xs:element>
+<xs:element name="SerialNumber" type="xs:string"  minOccurs="0"></xs:element>
+<xs:element name="Associate" type="tns:AssociateType"  minOccurs="0"></xs:element>
+<xs:element name="RetailPriceModifier" type="tns:RetailPriceModifierType"  maxOccurs="unbounded" minOccurs="0"></xs:element>
+<xs:element name="PercentageOfItem" type="tns:PercentageOfItemType"  minOccurs="0"></xs:element>
+<xs:element name="Delivery" type="tns:DeliveryType"  minOccurs="0"></xs:element>
+<xs:element name="InventoryReservationID" type="xs:string"  minOccurs="0"></xs:element>
+<xs:element name="From" type="xs:string"  minOccurs="0"></xs:element>
+</xs:sequence>
+<xs:attribute name="ItemType" type="xs:string"></xs:attribute>
+<xs:attribute name="OrderStatus" type="xs:string"></xs:attribute>
+<xs:attribute name="Action" type="xs:string"></xs:attribute>
+</xs:complexType>
+
+<xs:complexType name="ReturnType">
+<xs:sequence>
+<xs:element name="ItemID" type="xs:string" minOccurs="0"></xs:element>
+<xs:element name="UnitCostPrice" type="xs:decimal" minOccurs="0"></xs:element>
+<xs:element name="RegularSalesUnitPrice" type="xs:decimal" minOccurs="0"></xs:element>
+<xs:element name="ActualSalesUnitPrice" type="xs:decimal" minOccurs="0"></xs:element>
+<xs:element name="ExtendedAmount" type="xs:decimal" minOccurs="0"></xs:element>
+<xs:element name="Quantity" type="xs:decimal" minOccurs="0"></xs:element>
+<xs:element name="SerialNumber" type="xs:string"  minOccurs="0"></xs:element>
+<xs:element name="Associate" type="tns:AssociateType"  minOccurs="0"></xs:element>
+<xs:element name="PercentageOfItem" type="tns:PercentageOfItemType"  minOccurs="0"></xs:element>
+<xs:element name="TransactionLink" type="tns:TransactionLinkType"  minOccurs="0"></xs:element>
+<xs:element name="Disposal" type="xs:string"  minOccurs="0"></xs:element>
+<xs:element name="Reason" type="xs:string"  minOccurs="0"></xs:element>
+<xs:element name="ReturnType" type="xs:string"  minOccurs="0"></xs:element>
+<xs:element name="ReasonComment" type="xs:string"  minOccurs="0"></xs:element>
+<xs:element name="RetailPriceModifier" type="tns:RetailPriceModifierType"  maxOccurs="unbounded" minOccurs="0"></xs:element>
+</xs:sequence>
+<xs:attribute name="ItemType" type="xs:string"></xs:attribute>
+<xs:attribute name="Action" type="xs:string"></xs:attribute>
+</xs:complexType>
+
+<xs:complexType name="TransactionLinkType">
+<xs:sequence>
+<xs:element name="RetailStoreID" type="xs:string" minOccurs="0"></xs:element>
+<xs:element name="WorkstationID" type="xs:string" minOccurs="0"></xs:element>
+<xs:element name="SequenceNumber" type="xs:string" minOccurs="0"></xs:element>
+<xs:element name="BusinessDayDate" type="xs:date" minOccurs="0"></xs:element>
+</xs:sequence>
+<xs:attribute name="ReasonCode" type="xs:string"></xs:attribute>
+<xs:attribute name="EntryMethod" type="xs:string"></xs:attribute>
+</xs:complexType>
+
+<xs:complexType name="SaleType">
+<xs:sequence>
+<xs:element name="ItemID" type="xs:string" minOccurs="0"></xs:element>
+<xs:element name="UnitCostPrice" type="xs:decimal" minOccurs="0"></xs:element>
+<xs:element name="RegularSalesUnitPrice" type="xs:decimal" minOccurs="0"></xs:element>
+<xs:element name="ActualSalesUnitPrice" type="xs:decimal" minOccurs="0"></xs:element>
+<xs:element name="ExtendedAmount" type="xs:decimal" minOccurs="0"></xs:element>
+<xs:element name="Quantity" type="xs:decimal" minOccurs="0"></xs:element>
+<xs:element name="SerialNumber" type="xs:string"  minOccurs="0"></xs:element>
+<xs:element name="Associate" type="tns:AssociateType"  minOccurs="0"></xs:element>
+<xs:element name="PercentageOfItem" type="tns:PercentageOfItemType"  minOccurs="0"></xs:element>
+<xs:element name="RetailPriceModifier" type="tns:RetailPriceModifierType"  maxOccurs="unbounded" minOccurs="0"></xs:element>
+</xs:sequence>
+<xs:attribute name="ItemType" type="xs:string"></xs:attribute>
+<xs:attribute name="Action" type="xs:string"></xs:attribute>
+</xs:complexType>
+
+<xs:complexType name="TenderType">
+<xs:sequence>
+<xs:element name="TenderID" type="xs:string"  minOccurs="0"></xs:element>
+<xs:element name="Amount" type="xs:decimal"  minOccurs="0"></xs:element>
+<xs:element name="Authorization" type="tns:AuthorizationType"  minOccurs="0"></xs:element>
+<xs:element name="CreditDebit" type="tns:CreditDebitType"  minOccurs="0"></xs:element>
+<xs:element name="GiftCard" type="tns:GiftCardType"  minOccurs="0"></xs:element>
+<xs:element name="Voucher" type="tns:VoucherType"  minOccurs="0"></xs:element>
+<xs:element name="CustomerVerification" type="tns:CustomerVerificationType"  minOccurs="0"></xs:element>
+<xs:element name="Check" type="tns:CheckType"  minOccurs="0"></xs:element>
+<xs:element name="Coupon" type="tns:CouponType"  minOccurs="0"></xs:element>
+</xs:sequence>
+<xs:attribute name="TenderType" type="xs:string"></xs:attribute>
+</xs:complexType>
+
+<xs:complexType name="AuthorizationType">
+<xs:sequence>
+<xs:element name="AuthorizationCode" type="xs:string"  minOccurs="0"></xs:element>
+<xs:element name="AdjudicationCode" type="xs:string"  minOccurs="0"></xs:element>
+<xs:element name="AuthorizationDateTime" type="xs:dateTime"  minOccurs="0"></xs:element>
+<xs:element name="ReferenceNumber" type="xs:string"  minOccurs="0"></xs:element>
+<xs:element name="RequestedAmount" type="xs:decimal"  minOccurs="0"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="CreditDebitType">
+<xs:sequence>
+<xs:element name="PrimaryAccountNumber" type="xs:string" minOccurs="0"></xs:element>
+<xs:element name="ReconciliationCode" type="xs:string" minOccurs="0"></xs:element>
+<xs:element name="ExpirationDate" type="xs:dateTime" minOccurs="0"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="GiftCardType">
+<xs:sequence>
+<xs:element name="CardNumber" type="xs:string" minOccurs="0"></xs:element>
+<xs:element name="DateSold" type="xs:string" minOccurs="0"></xs:element>
+<xs:element name="InitialBalance" type="xs:string" minOccurs="0"></xs:element>
+<xs:element name="CurrentBalance" type="xs:string" minOccurs="0"></xs:element>
+<xs:element name="Authorization" type="tns:AuthorizationType"  minOccurs="0"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="VoucherType">
+<xs:sequence>
+<xs:element name="Description" type="xs:string" minOccurs="0"></xs:element>
+<xs:element name="FaceValueAmount" type="xs:decimal" minOccurs="0"></xs:element>
+<xs:element name="SerialNumber" type="xs:string"  minOccurs="0"></xs:element>
+<xs:element name="MallCertificate" type="xs:string" minOccurs="0"></xs:element>
+<xs:element name="ExpirationDate" type="xs:dateTime" minOccurs="0"></xs:element>
+<xs:element name="UnspentAmount" type="xs:decimal" minOccurs="0"></xs:element>
+</xs:sequence>
+<xs:attribute name="TypeCode" type="xs:string"></xs:attribute>
+</xs:complexType>
+
+<xs:complexType name="CustomerVerificationType">
+<xs:sequence>
+<xs:element name="PersonalID" type="tns:PersonalIDType" minOccurs="0"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="PersonalIDType">
+<xs:sequence>
+<xs:element name="IDNumber" type="xs:string" minOccurs="0"></xs:element>
+<xs:element name="Issuer" type="xs:string" minOccurs="0"></xs:element>
+<xs:element name="Province" type="xs:string" minOccurs="0"></xs:element>
+</xs:sequence>
+<xs:attribute name="IDType" type="xs:string"></xs:attribute>
+</xs:complexType>
+
+<xs:complexType name="CheckType">
+<xs:sequence>
+<xs:element name="AccountNumber" type="xs:string" minOccurs="0"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="TaxType">
+<xs:sequence>
+<xs:element name="TaxAuthority" type="xs:string"  minOccurs="0"></xs:element>
+<xs:element name="TaxableAmount" type="xs:decimal"  minOccurs="0"></xs:element>
+<xs:element name="Amount" type="xs:decimal"  minOccurs="0"></xs:element>
+<xs:element name="Percent" type="xs:decimal"  minOccurs="0"></xs:element>
+<xs:element name="TaxLocationID" type="xs:string"  minOccurs="0"></xs:element>
+<xs:element name="TaxExemption" type="tns:TaxExemptionType"  minOccurs="0"></xs:element>
+<xs:element name="TaxOverride" type="tns:TaxOverrideType"  minOccurs="0"></xs:element>
+</xs:sequence>
+<xs:attribute name="TaxType" type="xs:string"></xs:attribute>
+</xs:complexType>
+
+<xs:complexType name="TaxExemptionType">
+<xs:sequence>
+<xs:element name="CustomerExemptionID" type="xs:string"  minOccurs="0"></xs:element>
+<xs:element name="ExemptTaxAmount" type="xs:string" minOccurs="0"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="TaxOverrideType">
+<xs:sequence>
+<xs:element name="OriginalPercent" type="xs:decimal"  minOccurs="0"></xs:element>
+<xs:element name="OriginalTaxAmount" type="xs:decimal"  minOccurs="0"></xs:element>
+<xs:element name="NewTaxPercent" type="xs:decimal"  minOccurs="0"></xs:element>
+<xs:element name="NewTaxAmount" type="xs:decimal"  minOccurs="0"></xs:element>
+<xs:element name="ReasonCode" type="xs:string"  minOccurs="0"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="TotalType">
+<xs:simpleContent>
+<xs:extension base="xs:string">
+<xs:attribute name="TotalType" type="xs:string"></xs:attribute>
+</xs:extension>
+</xs:simpleContent>
+</xs:complexType>
+
+<xs:complexType name="CustomerAccountType">
+<xs:sequence>
+<xs:element name="LoyaltyAccount" type="tns:LoyaltyAccountType" minOccurs="0"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="LoyaltyAccountType">
+<xs:sequence>
+<xs:element name="LoyaltyAccountID" type="xs:string" minOccurs="0"></xs:element>
+</xs:sequence>
+<xs:attribute name="TypeCode" type="xs:string"></xs:attribute>
+</xs:complexType>
+
+<xs:complexType name="PoslogCustomerType">
+<xs:sequence>
+<xs:element name="Name" type="xs:string" minOccurs="0"></xs:element>
+<xs:element name="Address" type="tns:PoslogAddressType" minOccurs="0"></xs:element>
+<xs:element name="TelephoneNumber" type="xs:string" minOccurs="0"></xs:element>
+<xs:element name="eMail" type="xs:string" minOccurs="0"></xs:element>
+<xs:element name="AccountNumber" type="xs:string" minOccurs="0"></xs:element>
+<xs:element name="AlternateKey" type="tns:PoslogAlternateKeyType"  maxOccurs="unbounded" minOccurs="0"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="PoslogAlternateKeyType">
+<xs:sequence>
+<xs:element name="AlternateID" type="xs:string" minOccurs="0"></xs:element>
+</xs:sequence>
+<xs:attribute name="TypeCode" type="xs:string"></xs:attribute>
+</xs:complexType>
+
+<xs:complexType name="PosTransactionPropertiesType">
+<xs:sequence>
+<xs:element name="PosTransactionPropertyCode" type="xs:string" minOccurs="0"></xs:element>
+<xs:element name="PosTransactionPropertyValue" type="xs:string" minOccurs="0"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="getVisualizerItems">
+<xs:sequence>
+<xs:element name="customerId" type="xs:string"  minOccurs="0"></xs:element>
+<xs:element name="alternateKeyList" type="tns:AlternateKeyLookupType"  maxOccurs="unbounded" minOccurs="0"></xs:element>
+<xs:element name="cardNumber" type="xs:string"  minOccurs="0"></xs:element>
+<xs:element name="startDate" type="xs:dateTime"  minOccurs="0"></xs:element>
+<xs:element name="endDate" type="xs:dateTime"  minOccurs="0"></xs:element>
+<xs:element name="typeFilter" type="xs:string"  minOccurs="0"></xs:element>
+<xs:element name="securityUserId" type="xs:string"  minOccurs="0"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="getVisualizerItemsResponse">
+<xs:sequence>
+<xs:element name="return" type="tns:VisualizerItemResponseType"  minOccurs="0"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="VisualizerItemResponseType">
+<xs:sequence>
+<xs:element name="CustomerID" type="xs:string" minOccurs="0"></xs:element>
+<xs:element name="VisualizerItemContainer" type="tns:VisualizerItemsContainerReturnType"  minOccurs="0"></xs:element>
+</xs:sequence>
+<xs:attribute name="ResponseMessage" type="xs:string"></xs:attribute>
+<xs:attribute name="ResponseCode" type="xs:string"></xs:attribute>
+</xs:complexType>
+
+<xs:complexType name="VisualizerItemsContainerReturnType">
+<xs:sequence>
+<xs:element name="VisualizerItems" type="tns:VisualizerItemReturnType"  maxOccurs="unbounded" minOccurs="0"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="VisualizerItemReturnType">
+<xs:simpleContent>
+<xs:extension base="xs:string">
+<xs:attribute name="createDate" type="xs:string"></xs:attribute>
+<xs:attribute name="createUser" type="xs:string"></xs:attribute>
+<xs:attribute name="itemImageUrl" type="xs:string"></xs:attribute>
+<xs:attribute name="isWishlistFlag" type="xs:string"></xs:attribute>
+<xs:attribute name="color" type="xs:string"></xs:attribute>
+<xs:attribute name="description" type="xs:string"></xs:attribute>
+<xs:attribute name="itemId" type="xs:string"></xs:attribute>
+<xs:attribute name="publishExternally" type="xs:boolean"></xs:attribute>
+</xs:extension>
+</xs:simpleContent>
+</xs:complexType>
+
+<xs:complexType name="addWishlistItems">
+<xs:sequence>
+<xs:element name="wishlistData" type="tns:WishlistItemRequestType"  minOccurs="0"></xs:element>
+<xs:element name="securityUserId" type="xs:string"  minOccurs="0"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="addWishlistItemsResponse">
+<xs:sequence>
+<xs:element name="customerId" type="xs:string"  minOccurs="0"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="retrieveCustomer">
+<xs:sequence>
+<xs:element name="customerId" type="xs:string"  minOccurs="0"></xs:element>
+<xs:element name="alternateKeyList" type="tns:AlternateKeyLookupType"  maxOccurs="unbounded" minOccurs="0"></xs:element>
+<xs:element name="cardNumber" type="xs:string"  minOccurs="0"></xs:element>
+<xs:element name="securityUserId" type="xs:string"  minOccurs="0"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="retrieveCustomerResponse">
+<xs:sequence>
+<xs:element name="return" type="tns:CustomerResponseType"  minOccurs="0"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="mergeCustomers">
+<xs:sequence>
+<xs:element name="mergeSource" type="tns:custIdentifier"  minOccurs="0"></xs:element>
+<xs:element name="mergeTargetSet" type="tns:custIdentifier"  maxOccurs="unbounded" minOccurs="0"></xs:element>
+<xs:element name="updateUserId" type="xs:string"  minOccurs="0"></xs:element>
+<xs:element name="securityUserId" type="xs:string"  minOccurs="0"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="custIdentifier">
+<xs:sequence>
+<xs:element name="alternateKey" type="xs:string"  minOccurs="0"></xs:element>
+<xs:element name="alternateKeyTypeCode" type="xs:string"  minOccurs="0"></xs:element>
+<xs:element name="customerId" type="xs:string"  minOccurs="0"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="mergeCustomersResponse">
+<xs:sequence>
+<xs:element name="customerId" type="xs:string"  minOccurs="0"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="addOrUpdateCustomer">
+<xs:sequence>
+<xs:element name="customerData" type="tns:CustomerType"  minOccurs="0"></xs:element>
+<xs:element name="securityUserId" type="xs:string"  minOccurs="0"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="CustomerType">
+<xs:sequence>
+<xs:element name="RetailStoreID" type="xs:string" minOccurs="0"></xs:element>
+<xs:element name="Instrument" type="tns:InstrumentType" minOccurs="0"></xs:element>
+<xs:element name="CustomerID" type="xs:string" minOccurs="0"></xs:element>
+<xs:element name="OrgName" type="xs:string" minOccurs="0"></xs:element>
+<xs:element name="CustOrgTypcode" type="xs:string" minOccurs="0"></xs:element>
+<xs:element name="EmployeeID" type="xs:string" minOccurs="0"></xs:element>
+<xs:element name="BusinessName" type="xs:string" minOccurs="0"></xs:element>
+<xs:element name="CustomerClass" type="xs:string" minOccurs="0"></xs:element>
+<xs:element name="Source" type="xs:string" minOccurs="0"></xs:element>
+<xs:element name="Prospect" type="xs:boolean"  minOccurs="0"></xs:element>
+<xs:element name="CustomerOwnerID" type="xs:string" minOccurs="0"></xs:element>
+<xs:element name="CustomerNumber" type="xs:string" minOccurs="0"></xs:element>
+<xs:element name="CustomerReference" type="xs:string" minOccurs="0"></xs:element>
+<xs:element name="LastUpdateInfo" type="tns:LastUpdateInfoType" minOccurs="0"></xs:element>
+<xs:element name="Affiliation" type="tns:AffiliationType"  maxOccurs="unbounded" minOccurs="0"></xs:element>
+<xs:element name="EntityInformation" type="tns:EntityInformationType" minOccurs="0"></xs:element>
+<xs:element name="PersonalPreferences" type="tns:PersonalPreferencesType" minOccurs="0"></xs:element>
+<xs:element name="AlternateKey" type="tns:AlternateKeyType"  maxOccurs="unbounded" minOccurs="0"></xs:element>
+<xs:element name="CustomAttribute" type="tns:CustomAttributeType"  maxOccurs="unbounded" minOccurs="0"></xs:element>
+<xs:element name="CustomerNotes" type="tns:CustomerNotesContainerType"  minOccurs="0"></xs:element>
+<xs:element name="SignupDate" type="xs:date"  minOccurs="0"></xs:element>
+<xs:element name="AssociateAssignments" type="tns:AssociateAssignmentsContainerType"  minOccurs="0"></xs:element>
+<xs:element name="PreferenceCenters" type="tns:PreferenceCenterContainerRequestType"  minOccurs="0"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="InstrumentType">
+<xs:sequence>
+<xs:element name="CardNumber" type="xs:string" minOccurs="0"></xs:element>
+<xs:element name="CardSerialNumber" type="xs:string" minOccurs="0"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="LastUpdateInfoType">
+<xs:sequence>
+<xs:element name="UpdateUserID" type="xs:string" minOccurs="0"></xs:element>
+<xs:element name="UpdateDate" type="xs:dateTime" minOccurs="0"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="AffiliationType">
+<xs:sequence>
+<xs:element name="RetailStoreID" type="xs:string"  minOccurs="0"></xs:element>
+</xs:sequence>
+<xs:attribute name="Action" type="xs:string"></xs:attribute>
+</xs:complexType>
+
+<xs:complexType name="EntityInformationType">
+<xs:sequence>
+<xs:element name="Individual" type="tns:IndividualType" minOccurs="0"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="IndividualType">
+<xs:sequence>
+<xs:element name="Name" type="tns:CustomerNameType" minOccurs="0"></xs:element>
+<xs:element name="Suffix" type="xs:string" minOccurs="0"></xs:element>
+<xs:element name="SortingName" type="xs:string"  minOccurs="0"></xs:element>
+<xs:element name="NickName" type="xs:string" minOccurs="0"></xs:element>
+<xs:element name="Salutation" type="xs:string" minOccurs="0"></xs:element>
+<xs:element name="ContactInformation" type="tns:ContactInformationType" minOccurs="0"></xs:element>
+<xs:element name="PersonalSummary" type="tns:PersonalSummaryType" minOccurs="0"></xs:element>
+<xs:element name="SocioEconomicProfile" type="tns:SocioEconomicProfileType" minOccurs="0"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="CustomerNameType">
+<xs:sequence>
+<xs:element name="Name" type="tns:CustomerNameTypeEntry"  maxOccurs="unbounded" minOccurs="0"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="CustomerNameTypeEntry">
+<xs:simpleContent>
+<xs:extension base="xs:string">
+<xs:attribute name="Location" type="tns:NameLocationType"></xs:attribute>
+</xs:extension>
+</xs:simpleContent>
+</xs:complexType>
+
+<xs:complexType name="ContactInformationType">
+<xs:sequence>
+<xs:element name="Address" type="tns:AddressType"  maxOccurs="unbounded" minOccurs="0"></xs:element>
+<xs:element name="EMail" type="tns:EMailType"  maxOccurs="unbounded" minOccurs="0"></xs:element>
+<xs:element name="Telephone" type="tns:TelephoneType"  maxOccurs="unbounded" minOccurs="0"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="AddressType">
+<xs:sequence>
+<xs:element name="AddressLine1" type="tns:AddressLineType" minOccurs="0"></xs:element>
+<xs:element name="AddressLine2" type="tns:AddressLineType" minOccurs="0"></xs:element>
+<xs:element name="AddressLine3" type="tns:AddressLineType" minOccurs="0"></xs:element>
+<xs:element name="AddressLine4" type="tns:AddressLineType" minOccurs="0"></xs:element>
+<xs:element name="ApartmentNumber" type="xs:string" minOccurs="0"></xs:element>
+<xs:element name="City" type="tns:AddressLineType" minOccurs="0"></xs:element>
+<xs:element name="Country" type="xs:string" minOccurs="0"></xs:element>
+<xs:element name="County" type="xs:string"  minOccurs="0"></xs:element>
+<xs:element name="Territory" type="tns:TerritoryType" minOccurs="0"></xs:element>
+<xs:element name="PostalCode" type="tns:PostalCodeType" minOccurs="0"></xs:element>
+</xs:sequence>
+<xs:attribute name="Label" type="xs:string"></xs:attribute>
+<xs:attribute name="ContactPreferenceCode" type="xs:string"></xs:attribute>
+<xs:attribute name="PrimaryFlag" type="xs:boolean"></xs:attribute>
+<xs:attribute name="TypeCode" type="xs:string"></xs:attribute>
+<xs:attribute name="DeleteAllByType" type="xs:string"></xs:attribute>
+<xs:attribute name="ValidFlag" type="xs:boolean"></xs:attribute>
+<xs:attribute name="SequenceNumber" type="xs:string"></xs:attribute>
+</xs:complexType>
+
+<xs:simpleType name="AddressLineType">
+<xs:restriction base="xs:string"></xs:restriction>
+</xs:simpleType>
+
+<xs:simpleType name="TerritoryType">
+<xs:restriction base="xs:string"></xs:restriction>
+</xs:simpleType>
+
+<xs:simpleType name="PostalCodeType">
+<xs:restriction base="xs:string"></xs:restriction>
+</xs:simpleType>
+
+<xs:complexType name="EMailType">
+<xs:sequence>
+<xs:element name="EMailAddress" type="xs:string" minOccurs="0"></xs:element>
+</xs:sequence>
+<xs:attribute name="PrimaryFlag" type="xs:boolean"></xs:attribute>
+<xs:attribute name="TypeCode" type="xs:string"></xs:attribute>
+<xs:attribute name="DeleteAllByType" type="xs:string"></xs:attribute>
+<xs:attribute name="Label" type="xs:string"></xs:attribute>
+<xs:attribute name="ContactPreferenceCode" type="xs:string"></xs:attribute>
+<xs:attribute name="FormatPreferenceCode" type="xs:string"></xs:attribute>
+<xs:attribute name="SequenceNumber" type="xs:string"></xs:attribute>
+</xs:complexType>
+
+<xs:complexType name="TelephoneType">
+<xs:sequence>
+<xs:element name="PhoneNumber" type="xs:string" minOccurs="0"></xs:element>
+<xs:element name="Extension" type="xs:string" minOccurs="0"></xs:element>
+</xs:sequence>
+<xs:attribute name="PrimaryFlag" type="xs:boolean"></xs:attribute>
+<xs:attribute name="TypeCode" type="xs:string"></xs:attribute>
+<xs:attribute name="DeleteAllByType" type="xs:string"></xs:attribute>
+<xs:attribute name="Label" type="xs:string"></xs:attribute>
+<xs:attribute name="ContactPreferenceCode" type="xs:string"></xs:attribute>
+<xs:attribute name="SequenceNumber" type="xs:string"></xs:attribute>
+</xs:complexType>
+
+<xs:complexType name="PersonalSummaryType">
+<xs:sequence>
+<xs:element name="GenderType" type="xs:string" minOccurs="0"></xs:element>
+<xs:element name="BirthDate" type="xs:date" minOccurs="0"></xs:element>
+<xs:element name="Anniversary" type="xs:date" minOccurs="0"></xs:element>
+<xs:element name="MaritalStatusCode" type="xs:string" minOccurs="0"></xs:element>
+<xs:element name="Ethnicity" type="xs:string" minOccurs="0"></xs:element>
+<xs:element name="Rent" type="xs:boolean" minOccurs="0"></xs:element>
+<xs:element name="LanguageCode" type="xs:string" minOccurs="0"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="SocioEconomicProfileType">
+<xs:sequence>
+<xs:element name="AnnualIncomeAmount" type="xs:string" minOccurs="0"></xs:element>
+<xs:element name="NetWorth" type="xs:string" minOccurs="0"></xs:element>
+<xs:element name="HighestEducationalLevelName" type="xs:string" minOccurs="0"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="PersonalPreferencesType">
+<xs:sequence>
+<xs:element name="ContactPreference" type="tns:ContactPreferenceType"  maxOccurs="unbounded" minOccurs="0"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="ContactPreferenceType">
+<xs:sequence></xs:sequence>
+<xs:attribute name="ContactType" type="tns:ContactPreferenceContactType"></xs:attribute>
+<xs:attribute name="Permission" type="xs:boolean"></xs:attribute>
+</xs:complexType>
+
+<xs:complexType name="CustomAttributeType">
+<xs:sequence>
+<xs:element name="AttributeValue" type="xs:string" minOccurs="0"></xs:element>
+</xs:sequence>
+<xs:attribute name="name" type="xs:string"></xs:attribute>
+</xs:complexType>
+
+<xs:complexType name="addOrUpdateCustomerResponse">
+<xs:sequence>
+<xs:element name="customerId" type="xs:string"  minOccurs="0"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:simpleType name="PreferenceCenterActionType">
+<xs:restriction base="xs:string">
+<xs:enumeration value="ADD"></xs:enumeration>
+<xs:enumeration value="UPDATE"></xs:enumeration>
+<xs:enumeration value="DELETE"></xs:enumeration>
+</xs:restriction>
+</xs:simpleType>
+
+<xs:simpleType name="PreferenceChannelType">
+<xs:restriction base="xs:string">
+<xs:enumeration value="MAIL"></xs:enumeration>
+<xs:enumeration value="EMAIL"></xs:enumeration>
+<xs:enumeration value="PHONE"></xs:enumeration>
+</xs:restriction>
+</xs:simpleType>
+
+<xs:simpleType name="relateExceptionCode">
+<xs:restriction base="xs:string">
+<xs:enumeration value="SESSION_EXPIRED"></xs:enumeration>
+<xs:enumeration value="LDAP_BIND_INVALID_CREDENITAL"></xs:enumeration>
+<xs:enumeration value="OPERATION_UNSUPPORTED_FOR_LDAP"></xs:enumeration>
+<xs:enumeration value="UNABLE_TO_LOAD_REQUEST_ATTRIBUTE"></xs:enumeration>
+<xs:enumeration value="ATTRIBUTE_IN_USE"></xs:enumeration>
+<xs:enumeration value="ATTRIBUTE_NOT_FOUND"></xs:enumeration>
+<xs:enumeration value="ATTRIBUTE_DATA_TYPE_IS_NOT_LIST"></xs:enumeration>
+<xs:enumeration value="NO_RETAILLOC_SEARCH_RESULTS"></xs:enumeration>
+<xs:enumeration value="RETAILLOC_MAX_RECORDS_EXCEEDED"></xs:enumeration>
+<xs:enumeration value="PROMOTION_HISTORY_NOT_FOUND"></xs:enumeration>
+<xs:enumeration value="PROMOTION_HISTORY_MAX_RECORDS_EXCEEDED"></xs:enumeration>
+<xs:enumeration value="UNREASONABLE_REQUEST_MAX_RECORD"></xs:enumeration>
+<xs:enumeration value="CUSTOMER_ALREADY_EXISTS"></xs:enumeration>
+<xs:enumeration value="CUSTOMER_ID_UNSPECIFIED"></xs:enumeration>
+<xs:enumeration value="INVALID_LANGUAGE_CODE"></xs:enumeration>
+<xs:enumeration value="NAME_POSITION_INVALID"></xs:enumeration>
+<xs:enumeration value="ALTERNATE_KEY_VALUE_UNSPECIFIED"></xs:enumeration>
+<xs:enumeration value="ALTERNATE_KEY_TYPECODE_UNSPECIFIED"></xs:enumeration>
+<xs:enumeration value="ATTRIBUTE_NAME_UNSPECIFIED"></xs:enumeration>
+<xs:enumeration value="ATTRIBUTE_NAME_UNDEFINED"></xs:enumeration>
+<xs:enumeration value="ATTRIBUTE_NAME_DUPLICATES"></xs:enumeration>
+<xs:enumeration value="ATTRIBUTE_TYPE_DUPLICATE"></xs:enumeration>
+<xs:enumeration value="INVALID_CUSTOMER_ACTION_SPECIFIED"></xs:enumeration>
+<xs:enumeration value="ATTRIBUTE_CAN_NOT_BE_EDITED_BY_THIS_USER"></xs:enumeration>
+<xs:enumeration value="INSUFFICIENT_DATA_SUPPLIED"></xs:enumeration>
+<xs:enumeration value="MULTIPLE_VALUES_ON_UNIQUE_ATTRIBUTE_TYPE"></xs:enumeration>
+<xs:enumeration value="UNKNOWN_ATTRIBUTE_TYPE"></xs:enumeration>
+<xs:enumeration value="CANNOT_ADD_ZERO_VALUES"></xs:enumeration>
+<xs:enumeration value="INVALID_ATTRIBUTE_VALUE"></xs:enumeration>
+<xs:enumeration value="ATTRIBUTE_VALUE_TOO_LARGE"></xs:enumeration>
+<xs:enumeration value="INVALID_DATE_FORMAT"></xs:enumeration>
+<xs:enumeration value="VALUE_NOT_IN_ENUMERATED_ATTRIBUTE_TYPE_VALUES"></xs:enumeration>
+<xs:enumeration value="MERGE_TARGET_SET_UNSPECIFIED"></xs:enumeration>
+<xs:enumeration value="MERGE_CUSTOMER_CREATION_EXCEPTION"></xs:enumeration>
+<xs:enumeration value="DIFF_UTILITY_MISCONFIGURED"></xs:enumeration>
+<xs:enumeration value="CUSTOMER_SET_OPERATION_ERROR"></xs:enumeration>
+<xs:enumeration value="MAXIMUM_LOOKUP_RESULTS_ERROR"></xs:enumeration>
+<xs:enumeration value="CUSTOMER_NOTE_EMPTY"></xs:enumeration>
+<xs:enumeration value="CUSTOMER_LOOKUP_TIMEOUT_ERROR"></xs:enumeration>
+<xs:enumeration value="INVALID_EMAIL_ADDRESS"></xs:enumeration>
+<xs:enumeration value="MULTIPLE_CUSTS_ASSOCIATED_TO_CARD"></xs:enumeration>
+<xs:enumeration value="NO_CUSTOMER_NOTES"></xs:enumeration>
+<xs:enumeration value="COUPON_SERIAL_NUMBER_INVALID"></xs:enumeration>
+<xs:enumeration value="COUPON_ALREADY_REDEEMED"></xs:enumeration>
+<xs:enumeration value="COUPON_NOT_FOUND"></xs:enumeration>
+<xs:enumeration value="LOYALTY_EXPIRE_POINTS_ERROR"></xs:enumeration>
+<xs:enumeration value="EARN_ESCROW_POINTS_ERROR"></xs:enumeration>
+<xs:enumeration value="DISTRIBUTE_LOYALTY_AWARDS_ERROR"></xs:enumeration>
+<xs:enumeration value="CREATE_PENDING_AWARDS_ERROR"></xs:enumeration>
+<xs:enumeration value="LOYALTY_ACTIVITY_NOT_FOUND"></xs:enumeration>
+<xs:enumeration value="RETAIL_LOCATION_ID_UNSPECIFIED"></xs:enumeration>
+<xs:enumeration value="RETAIL_LOCATION_ID_INVALID"></xs:enumeration>
+<xs:enumeration value="RETAIL_LOCATION_NOT_FOUND"></xs:enumeration>
+<xs:enumeration value="RETAIL_LOCATION_NOT_ACTIVE"></xs:enumeration>
+<xs:enumeration value="RETAIL_LOCATION_ATTRIBUTE_NAME_UNSPECIFIED"></xs:enumeration>
+<xs:enumeration value="INVALID_RETAIL_LOCATION_ACTION_SPECIFIED"></xs:enumeration>
+<xs:enumeration value="MERCHANDISE_HIERARCHY_LEVEL_ID_UNSPECIFIED"></xs:enumeration>
+<xs:enumeration value="MERCHANDISE_HIERARCHY_LEVEL_UNSPECIFIED"></xs:enumeration>
+<xs:enumeration value="ITEM_ID_DUPLICATE_SPECIFIED"></xs:enumeration>
+<xs:enumeration value="ITEM_ID_UNSPECIFIED"></xs:enumeration>
+<xs:enumeration value="ITEM_ID_TYPE_UNSPECIFIED"></xs:enumeration>
+<xs:enumeration value="NEGATIVE_ITEM_PRICE_SPECIFIED"></xs:enumeration>
+<xs:enumeration value="ITEM_PRICE_DECIMAL_SPECIFIED"></xs:enumeration>
+<xs:enumeration value="ITEM_PRICE_INVALID"></xs:enumeration>
+<xs:enumeration value="ITEM_MSRP_INVALID"></xs:enumeration>
+<xs:enumeration value="ITEM_UNIT_COST_INVALID"></xs:enumeration>
+<xs:enumeration value="ITEM_TAX_INFORMATION_INVALID"></xs:enumeration>
+<xs:enumeration value="ITEM_UPC_SPECIFIED_DATA_EMPTY"></xs:enumeration>
+<xs:enumeration value="ITEM_UPC_UNSPECIFIED"></xs:enumeration>
+<xs:enumeration value="ITEM_FRANCHISEE_UNSPECIFIED"></xs:enumeration>
+<xs:enumeration value="ITEM_ACCESS_DENIED"></xs:enumeration>
+<xs:enumeration value="ITEM_NOT_FOUND"></xs:enumeration>
+<xs:enumeration value="ITEM_XREF_NOT_FOUND"></xs:enumeration>
+<xs:enumeration value="INVALID_ITEM_ACTION_SPECIFIED"></xs:enumeration>
+<xs:enumeration value="INVALID_INTENDED_INDUSTRY"></xs:enumeration>
+<xs:enumeration value="GENERATE_CARD_ERROR_DUPLICATES_FOUND"></xs:enumeration>
+<xs:enumeration value="ALL_CARDS_GENERATED"></xs:enumeration>
+<xs:enumeration value="CARD_SERIES_UNSPECIFIED"></xs:enumeration>
+<xs:enumeration value="CARD_BATCHES_UNSPECIFIED"></xs:enumeration>
+<xs:enumeration value="CARD_BATCH_NOT_FOUND"></xs:enumeration>
+<xs:enumeration value="CARD_PREFIX_UNSPECIFIED"></xs:enumeration>
+<xs:enumeration value="CARD_PREFIX_NOT_FOUND"></xs:enumeration>
+<xs:enumeration value="CARD_BATCH_CONTAINS_INACTIVE_CARD"></xs:enumeration>
+<xs:enumeration value="CARD_SERIES_PREFIX_UNSPECIFIED"></xs:enumeration>
+<xs:enumeration value="CARD_SERIES_SEQUENCE_UNSPECIFIED"></xs:enumeration>
+<xs:enumeration value="CARD_SERIES_SEQUENCE_INVALID"></xs:enumeration>
+<xs:enumeration value="CARD_SERIES_ALREADY_GENERATED"></xs:enumeration>
+<xs:enumeration value="CARD_SERIES_NOT_FOUND"></xs:enumeration>
+<xs:enumeration value="CARDS_NOT_GENERATED"></xs:enumeration>
+<xs:enumeration value="CARD_GROUP_NOT_SPECIFIED"></xs:enumeration>
+<xs:enumeration value="CARD_GROUP_NOT_IN_SAME_BATCH"></xs:enumeration>
+<xs:enumeration value="CARD_GROUP_FROM_BEFORE_END"></xs:enumeration>
+<xs:enumeration value="CARD_GROUP_RANGE_NOT_EXIST"></xs:enumeration>
+<xs:enumeration value="CARD_EXPIRATION_DATE_MUST_BE_GREATER_THAN_ACTIVATION_DATE"></xs:enumeration>
+<xs:enumeration value="CARD_EXPIRATION_TYPE_IS_FIXED"></xs:enumeration>
+<xs:enumeration value="ACTIVATION_DATE_DOES_NOT_MEET_CARD_EXPIRATION_DATE_RANGE"></xs:enumeration>
+<xs:enumeration value="CARD_CUST_ASSOCIATION_MULTIPLE_ACTIONS"></xs:enumeration>
+<xs:enumeration value="CARD_CUST_ASSOCIATION_INVALID_ACTION"></xs:enumeration>
+<xs:enumeration value="SEGMENT_ID_UNSPECIFIED"></xs:enumeration>
+<xs:enumeration value="SEGMENT_ID_NOT_FOUND"></xs:enumeration>
+<xs:enumeration value="SEGMENT_RUNID_UNSPECIFIED"></xs:enumeration>
+<xs:enumeration value="USER_ID_REQUIRED"></xs:enumeration>
+<xs:enumeration value="SEGMENT_NAME_REQUIRED"></xs:enumeration>
+<xs:enumeration value="SEGMENT_DESCRIPTION_REQUIRED"></xs:enumeration>
+<xs:enumeration value="CLIENTELING_FLAG_REQUIRED"></xs:enumeration>
+<xs:enumeration value="PRIVATE_FLAG_REQUIRED"></xs:enumeration>
+<xs:enumeration value="PRIVATE_FLAG_SHOULD_BE_FALSE"></xs:enumeration>
+<xs:enumeration value="NO_SEGMENTS_FOUND"></xs:enumeration>
+<xs:enumeration value="UNKNOWN_SEGMENT_ID"></xs:enumeration>
+<xs:enumeration value="JOB_ALREADY_IN_PROCESS"></xs:enumeration>
+<xs:enumeration value="JOB_CREATION_FAILURE"></xs:enumeration>
+<xs:enumeration value="JOBMANAGER_FAILURE"></xs:enumeration>
+<xs:enumeration value="TRANSACTION_ALREADY_EXISTS"></xs:enumeration>
+<xs:enumeration value="TRANSACTION_DATA_UNSPECIFIED"></xs:enumeration>
+<xs:enumeration value="TRANSACTION_DATA_INVALID"></xs:enumeration>
+<xs:enumeration value="NON_UNIQUE_TRANSACTION_PROPERTY_CODES"></xs:enumeration>
+<xs:enumeration value="RETAIL_TRANSACTION_ID_INVALID"></xs:enumeration>
+<xs:enumeration value="RETAIL_TRANSACTION_ID_ILLEGAL"></xs:enumeration>
+<xs:enumeration value="INVALID_BUSINESS_DATE"></xs:enumeration>
+<xs:enumeration value="AWARD_PROGRAM_MISSING"></xs:enumeration>
+<xs:enumeration value="CARD_SETUP_ERROR"></xs:enumeration>
+<xs:enumeration value="ACCOUNT_SETUP_ERROR"></xs:enumeration>
+<xs:enumeration value="POST_VOID_TRANSACTION_NOT_FOUND"></xs:enumeration>
+<xs:enumeration value="INVALID_CURRENCY_CODE"></xs:enumeration>
+<xs:enumeration value="INVALID_CURRENCY_DATE"></xs:enumeration>
+<xs:enumeration value="TRANSACTION_CUSTID_ON_TRANS_NOT_FOUND"></xs:enumeration>
+<xs:enumeration value="TRANSACTION_ALTKEY_ON_TRANS_NOT_FOUND"></xs:enumeration>
+<xs:enumeration value="ACCOUNT_PROCESSING_EXCEPTION"></xs:enumeration>
+<xs:enumeration value="INVALID_START_INDEX"></xs:enumeration>
+<xs:enumeration value="INVALID_PAGE_SIZE"></xs:enumeration>
+<xs:enumeration value="USER_NOT_FOUND"></xs:enumeration>
+<xs:enumeration value="CONFIGURATION_ERROR"></xs:enumeration>
+<xs:enumeration value="PROGRAM_ALREADY_ASSOCIATED"></xs:enumeration>
+<xs:enumeration value="UNEXPECTED_ERROR"></xs:enumeration>
+<xs:enumeration value="DATABASE_COMMIT_EXCEPTION"></xs:enumeration>
+<xs:enumeration value="XML_MESSAGE_REQUST_TYPE_INVALID"></xs:enumeration>
+<xs:enumeration value="DEAL_ENGINE_SETUP_ERROR"></xs:enumeration>
+<xs:enumeration value="DEAL_ENGINE_UNSUPPORTED_TYPE"></xs:enumeration>
+<xs:enumeration value="DEAL_SETUP_ERROR"></xs:enumeration>
+<xs:enumeration value="PROMOTION_SETUP_ERROR"></xs:enumeration>
+<xs:enumeration value="PROMOTION_NOT_FOUND"></xs:enumeration>
+<xs:enumeration value="PROMOTION_NOT_ACTIVE"></xs:enumeration>
+<xs:enumeration value="PROMOTION_TERMINATED"></xs:enumeration>
+<xs:enumeration value="PROMOTION_NOT_GENERATED"></xs:enumeration>
+<xs:enumeration value="PROMOTION_NON_TARGETED"></xs:enumeration>
+<xs:enumeration value="AWARD_TYPE_PROMOTION_NOT_ALLOWED"></xs:enumeration>
+<xs:enumeration value="ENTITLEMENT_TYPE_PROMOTION_NOT_ALLOWED"></xs:enumeration>
+<xs:enumeration value="PROMOTION_INVALID_DATE_CONFIGURATION"></xs:enumeration>
+<xs:enumeration value="PROMOTION_HAS_NO_ENABLED_DEALS"></xs:enumeration>
+<xs:enumeration value="MESSAGE_UNSUPPORTED_FOR_WEB"></xs:enumeration>
+<xs:enumeration value="MESSAGE_UNSUPPORTED_FOR_BATCH"></xs:enumeration>
+<xs:enumeration value="SEQUENCE_NUMBER_GENERATION_ERROR"></xs:enumeration>
+<xs:enumeration value="DUPLICATE_CUSTOMER_ALT_KEY_EXISTS"></xs:enumeration>
+<xs:enumeration value="REQUEST_DATA_EMPTY"></xs:enumeration>
+<xs:enumeration value="DATA_EXPORT_ERROR"></xs:enumeration>
+<xs:enumeration value="RELATE_SERVICES_GENERAL_CONFIGURATION_ERROR"></xs:enumeration>
+<xs:enumeration value="LOYALTY_SETUP_ERROR"></xs:enumeration>
+<xs:enumeration value="LOYALTY_ROUNDING_SETUP_ERROR"></xs:enumeration>
+<xs:enumeration value="HOUSEHOLD_IDENTIFY_UNSUPPORTED_TYPE"></xs:enumeration>
+<xs:enumeration value="NO_CUSTOMERS_FOUND"></xs:enumeration>
+<xs:enumeration value="CUSTOMER_NOT_FOUND"></xs:enumeration>
+<xs:enumeration value="ACCOUNT_NOT_FOUND"></xs:enumeration>
+<xs:enumeration value="NO_ACTIVE_ACCOUNTS_FOUND"></xs:enumeration>
+<xs:enumeration value="CARD_NOT_FOUND"></xs:enumeration>
+<xs:enumeration value="LINE_ITEM_NOT_FOUND_FROM_SEQ"></xs:enumeration>
+<xs:enumeration value="PROGRAM_NOT_FOUND"></xs:enumeration>
+<xs:enumeration value="PROGRAM_CURRENCY_UNKNOWN"></xs:enumeration>
+<xs:enumeration value="CURRENCY_RATE_NOT_FOUND"></xs:enumeration>
+<xs:enumeration value="ACCOUNT_INACTIVE"></xs:enumeration>
+<xs:enumeration value="ACCOUNT_EXPIRED"></xs:enumeration>
+<xs:enumeration value="ACCOUNT_ALREADY_ACTIVE"></xs:enumeration>
+<xs:enumeration value="ACCOUNT_ALREADY_INACTIVE"></xs:enumeration>
+<xs:enumeration value="ACCOUNT_BLOCKED"></xs:enumeration>
+<xs:enumeration value="ACCOUNT_NOT_BLOCKED"></xs:enumeration>
+<xs:enumeration value="ACCOUNT_NOT_EFFECTIVE"></xs:enumeration>
+<xs:enumeration value="CARD_INACTIVE"></xs:enumeration>
+<xs:enumeration value="CARD_EXPIRED"></xs:enumeration>
+<xs:enumeration value="CARD_TYPE_ACCESS_RESTRICTED"></xs:enumeration>
+<xs:enumeration value="CARD_ALREADY_ACTIVE"></xs:enumeration>
+<xs:enumeration value="PROGRAM_EXPIRED"></xs:enumeration>
+<xs:enumeration value="ALL_PROGRAMS_EXPIRED"></xs:enumeration>
+<xs:enumeration value="PROGRAM_NOT_EFFECTIVE"></xs:enumeration>
+<xs:enumeration value="PROGRAM_INACTIVE"></xs:enumeration>
+<xs:enumeration value="CAN_NOT_ACTIVATE_ACCOUNT"></xs:enumeration>
+<xs:enumeration value="INSUFFICIENT_FUNDS"></xs:enumeration>
+<xs:enumeration value="ORIG_SVA_TRAN_NOT_FOUND"></xs:enumeration>
+<xs:enumeration value="ORIG_AWARD_TRAN_NOT_FOUND"></xs:enumeration>
+<xs:enumeration value="VALID_ORIGINAL_TRAN_REQUIRED"></xs:enumeration>
+<xs:enumeration value="INVALID_PIN"></xs:enumeration>
+<xs:enumeration value="NO_PHYSICAL_CARD"></xs:enumeration>
+<xs:enumeration value="MAX_BALANCE_EXCEEDED"></xs:enumeration>
+<xs:enumeration value="MIN_BALANCE_NOT_MET"></xs:enumeration>
+<xs:enumeration value="MIN_ACTIVATION_AMT_NOT_MET"></xs:enumeration>
+<xs:enumeration value="EXCEEDED_LIFETIME_USES"></xs:enumeration>
+<xs:enumeration value="EXCEEDED_DAILY_USES"></xs:enumeration>
+<xs:enumeration value="EXCEEDED_DAILY_REDEMPTION_AMT"></xs:enumeration>
+<xs:enumeration value="CASHOUT_NOT_PERMITTED"></xs:enumeration>
+<xs:enumeration value="CASHOUT_LIMIT_EXCEEDED"></xs:enumeration>
+<xs:enumeration value="ORIGINAL_TRANSACTION_VOIDED"></xs:enumeration>
+<xs:enumeration value="ORIGINAL_TRAN_ERROR"></xs:enumeration>
+<xs:enumeration value="ORIGINAL_TRAN_WRONG_CARD"></xs:enumeration>
+<xs:enumeration value="ORIGINAL_TRAN_WRONG_ACCOUNT"></xs:enumeration>
+<xs:enumeration value="ORIGINAL_TRAN_WRONG_PROGRAM"></xs:enumeration>
+<xs:enumeration value="REQUESTED_AMT_INCORRECT"></xs:enumeration>
+<xs:enumeration value="DEBIT_REVERSALS_NOT_PERMITTED"></xs:enumeration>
+<xs:enumeration value="CREDIT_REVERSALS_NOT_PERMITTED"></xs:enumeration>
+<xs:enumeration value="CAN_NOT_REVERSE_TRAN_TYPE"></xs:enumeration>
+<xs:enumeration value="TRANSACTION_ALREADY_REVERSED"></xs:enumeration>
+<xs:enumeration value="TRANSACTION_NOT_FOUND"></xs:enumeration>
+<xs:enumeration value="TRANSACTION_TYPE_INVALID"></xs:enumeration>
+<xs:enumeration value="DEBIT_VOIDS_NOT_PERMITTED"></xs:enumeration>
+<xs:enumeration value="CREDIT_VOIDS_NOT_PERMITTED"></xs:enumeration>
+<xs:enumeration value="CAN_NOT_VOID_TRAN_TYPE"></xs:enumeration>
+<xs:enumeration value="CAN_NOT_RELEASE_TRAN_TYPE"></xs:enumeration>
+<xs:enumeration value="CAN_NOT_POSTAUTH_TRAN_TYPE"></xs:enumeration>
+<xs:enumeration value="TRANSACTION_ALREADY_VOIDED"></xs:enumeration>
+<xs:enumeration value="PREAUTH_TRANSACTION_ALREADY_VOIDED_OR_CLOSED"></xs:enumeration>
+<xs:enumeration value="TRANSACTION_VOIDED"></xs:enumeration>
+<xs:enumeration value="BALANCE_IS_NOW_ZERO"></xs:enumeration>
+<xs:enumeration value="BALANCE_IS_LESS_THAN_ZERO"></xs:enumeration>
+<xs:enumeration value="PREAUTH_ALREADY_POSTAUTHED_OR_RELEASE"></xs:enumeration>
+<xs:enumeration value="CONTAINS_OUTSTANDING_PREAUTHS"></xs:enumeration>
+<xs:enumeration value="TENDER_ACCOUNT_ALREADY_MERGED"></xs:enumeration>
+<xs:enumeration value="LOYALTY_ACCOUNT_ALREADY_MERGED"></xs:enumeration>
+<xs:enumeration value="AWARD_ACCOUNT_ALREADY_MERGED"></xs:enumeration>
+<xs:enumeration value="ENTITLEMENT_ACCOUNT_ALREADY_MERGED"></xs:enumeration>
+<xs:enumeration value="ACCOUNT_ALREADY_MERGED_CAN_NOT_PERFORM"></xs:enumeration>
+<xs:enumeration value="CANNOT_MERGE_FROM_INACTIVE_TENDER_ACCOUNT"></xs:enumeration>
+<xs:enumeration value="CANNOT_MERGE_FROM_INACTIVE_LOYALTY_ACCOUNT"></xs:enumeration>
+<xs:enumeration value="CANNOT_MERGE_FROM_INACTIVE_AWARD_ACCOUNT"></xs:enumeration>
+<xs:enumeration value="CANNOT_MERGE_FROM_INACTIVE_ACCOUNT"></xs:enumeration>
+<xs:enumeration value="CANNOT_MERGE_CARDS_OF_DIFFERENT_CARD_TYPES"></xs:enumeration>
+<xs:enumeration value="CANNOT_MERGE_CARDS_WITH_DIFFERENT_OWNERS"></xs:enumeration>
+<xs:enumeration value="CANNOT_MERGE_CARDS_PROGRAM_BLOCKED_MERGE"></xs:enumeration>
+<xs:enumeration value="MISSING_PIN_ERROR"></xs:enumeration>
+<xs:enumeration value="MISSING_NEW_PIN_ERROR"></xs:enumeration>
+<xs:enumeration value="ORIGINAL_TRANSACTION_NOT_LAST"></xs:enumeration>
+<xs:enumeration value="ACTIVATION_NOT_VOIDABLE_WHEN_ACCT_HAS_ACTIVITY"></xs:enumeration>
+<xs:enumeration value="PREAUTH_NOT_VOIDABLE"></xs:enumeration>
+<xs:enumeration value="RELOADS_NOT_PERMITTED"></xs:enumeration>
+<xs:enumeration value="INVALID_ORIG_AUTH_CODE"></xs:enumeration>
+<xs:enumeration value="CARD_NUMBER_REQUIRED"></xs:enumeration>
+<xs:enumeration value="NEGATIVE_AMOUNT_ERROR"></xs:enumeration>
+<xs:enumeration value="INVALID_AMOUNT_ERROR"></xs:enumeration>
+<xs:enumeration value="INVALID_REDEEM_AMOUNT_ERROR"></xs:enumeration>
+<xs:enumeration value="INVALID_ACTIVATE_AMOUNT_ERROR"></xs:enumeration>
+<xs:enumeration value="INVALID_PREAUTH_AMOUNT_ERROR"></xs:enumeration>
+<xs:enumeration value="INVALID_POSTAUTH_AMOUNT_ERROR"></xs:enumeration>
+<xs:enumeration value="INVALID_RELEASEAUTH_AMOUNT_ERROR"></xs:enumeration>
+<xs:enumeration value="INVALID_RECHARGE_AMOUNT_ERROR"></xs:enumeration>
+<xs:enumeration value="INVALID_RETURN_AMOUNT_ERROR"></xs:enumeration>
+<xs:enumeration value="INVALID_SERVICE_CHARGE_AMOUNT_ERROR"></xs:enumeration>
+<xs:enumeration value="INVALID_VOID_AMOUNT_ERROR"></xs:enumeration>
+<xs:enumeration value="TENDER_PROGRAM_DISALLOWS_PREAUTH"></xs:enumeration>
+<xs:enumeration value="INVALID_DATA_FOR_REQUEST"></xs:enumeration>
+<xs:enumeration value="ILLEGAL_PROGRAM_ACCOUNT_SETUP"></xs:enumeration>
+<xs:enumeration value="INVALID_TRANSACTION_DATA"></xs:enumeration>
+<xs:enumeration value="COUPON_IDENTIFIER_INVALID_OR_EXPIRED"></xs:enumeration>
+<xs:enumeration value="COUPON_REQUEST_AMOUNT_INVALID"></xs:enumeration>
+<xs:enumeration value="COUPON_REQUEST_DATE_INVALID"></xs:enumeration>
+<xs:enumeration value="COUPON_REQUEST_NEGATIVE_AMOUNT_INVALID"></xs:enumeration>
+<xs:enumeration value="COUPON_REQUEST_EXCEEDS_BALANCE"></xs:enumeration>
+<xs:enumeration value="ILLEGAL_RETAIL_TRANSACTION_ID"></xs:enumeration>
+<xs:enumeration value="AWARD_ACCOUNT_EXPIRED"></xs:enumeration>
+<xs:enumeration value="AWARD_PROGRAM_EXPIRED"></xs:enumeration>
+<xs:enumeration value="AWARD_PROGRAM_NOT_EFFECTIVE"></xs:enumeration>
+<xs:enumeration value="LOYALTY_PROGRAM_EXPIRED"></xs:enumeration>
+<xs:enumeration value="LOYALTY_PROGRAM_NOT_EFFECTIVE"></xs:enumeration>
+<xs:enumeration value="LOYALTY_ACCOUNT_EXPIRED"></xs:enumeration>
+<xs:enumeration value="LOYALTY_POINTS_ALREADY_AWARDED"></xs:enumeration>
+<xs:enumeration value="LOYALTY_POINTS_NOT_AWARDED"></xs:enumeration>
+<xs:enumeration value="LOYALTY_ACTIVITY_DOES_NOT_MATCH_CARD"></xs:enumeration>
+<xs:enumeration value="LOYALTY_RULE_NOT_FOUND"></xs:enumeration>
+<xs:enumeration value="LOYALTY_NEGATIVE_BALANCE_NOT_ALLOWED"></xs:enumeration>
+<xs:enumeration value="LOYALTY_AWARD_COST_EXCEEDS_THRESHOLD"></xs:enumeration>
+<xs:enumeration value="LOYALTY_INSUFFICIENT_POINTS_FOR_REDEEM"></xs:enumeration>
+<xs:enumeration value="LOYALTY_INVALID_ESCROW_PERIOD"></xs:enumeration>
+<xs:enumeration value="LOYALTY_INVALID_BONUS_FLAG"></xs:enumeration>
+<xs:enumeration value="LOYALTY_INVALID_FORCE_EARNED_PTS_FLAG"></xs:enumeration>
+<xs:enumeration value="LOYALTY_INVALID_POINTS_AMOUNT"></xs:enumeration>
+<xs:enumeration value="LOYALTY_AWARD_ACCOUNT_ERROR"></xs:enumeration>
+<xs:enumeration value="LOYALTY_ACCOUNT_AWARD_RULE_MISMATCH"></xs:enumeration>
+<xs:enumeration value="ENTITLEMENT_PROGRAM_EXPIRED"></xs:enumeration>
+<xs:enumeration value="ENTITLEMENT_PROGRAM_NOT_EFFECTIVE"></xs:enumeration>
+<xs:enumeration value="CURRENCY_EXCHANGE_RATE_NOT_FOUND"></xs:enumeration>
+<xs:enumeration value="CURRENCY_ID_MISSING_IN_REQUEST"></xs:enumeration>
+<xs:enumeration value="CURRENCY_CODE_INVALID"></xs:enumeration>
+<xs:enumeration value="FOREIGN_CURRENCY_NOT_ALLOWED"></xs:enumeration>
+<xs:enumeration value="CONCURRENT_DATA_ACCESS"></xs:enumeration>
+<xs:enumeration value="CARD_NOT_ASSOCIATED_TO_CUSTOMER"></xs:enumeration>
+<xs:enumeration value="ANNIV_ECOUPON_REQUEST_EXCEEDS_LIMIT"></xs:enumeration>
+<xs:enumeration value="SIGNUP_ECOUPON_REQUEST_CURRENT_YEAR"></xs:enumeration>
+<xs:enumeration value="LOYALTY_PRGLVL_NOT_EXISTS"></xs:enumeration>
+<xs:enumeration value="LOYALTY_PRGLVL_MOVE_REQUEST_EXCEEDS_BALANCE"></xs:enumeration>
+<xs:enumeration value="LOYALTY_PRGLVL_MOVE_REQUEST_NEGATIVE_AMOUNT_INVALID"></xs:enumeration>
+<xs:enumeration value="INSUFFICIENT_POINTS_FOR_AWARD"></xs:enumeration>
+<xs:enumeration value="NEGATIVE_POINTS_NOT_ALLOWED"></xs:enumeration>
+<xs:enumeration value="LOYALTY_ACCOUNT_ALREADY_ACTIVE"></xs:enumeration>
+<xs:enumeration value="LOYALTY_ACCOUNT_ALREADY_INACTIVE"></xs:enumeration>
+<xs:enumeration value="LOYALTY_TRANSACTION_ALREADY_VOIDED"></xs:enumeration>
+<xs:enumeration value="LOYALTY_TRANSACTION_ALREADY_EARNED"></xs:enumeration>
+<xs:enumeration value="POINTS_NOT_IN_ESCROW"></xs:enumeration>
+<xs:enumeration value="LOYALTY_ACCOUNT_INACTIVE"></xs:enumeration>
+<xs:enumeration value="NO_WRITE_PRIVILEGE_ON_CUSTOMER"></xs:enumeration>
+<xs:enumeration value="NO_ACCESS_ON_CUSTOMER"></xs:enumeration>
+<xs:enumeration value="INVALID_ASSOCIATE_ID"></xs:enumeration>
+<xs:enumeration value="INVALID_ASSOCIATE_ROLE_ID"></xs:enumeration>
+<xs:enumeration value="ASSOCIATE_ASSIGNMENT_EMPTY"></xs:enumeration>
+<xs:enumeration value="WISHLIST_EMPTY"></xs:enumeration>
+<xs:enumeration value="INVALID_USER"></xs:enumeration>
+<xs:enumeration value="INVALID_VISUALIZER_FILTER"></xs:enumeration>
+<xs:enumeration value="REQUIRED_PARAMETERS_MISSING"></xs:enumeration>
+<xs:enumeration value="CUSTOMER_NOT_FOUND_IN_PROMOTION_TARGET"></xs:enumeration>
+<xs:enumeration value="CUSTOMER_EXISTS_IN_PROMOTION_TARGET"></xs:enumeration>
+<xs:enumeration value="NO_CUSTOMER_IMAGE_FOUND"></xs:enumeration>
+<xs:enumeration value="INVALID_LINE_ITEM_TYPE_CODE"></xs:enumeration>
+<xs:enumeration value="TASK_WITHOUT_START_END_DATE"></xs:enumeration>
+<xs:enumeration value="INVALID_DATE_RANGE"></xs:enumeration>
+<xs:enumeration value="MISSING_SUBJECT_LINE"></xs:enumeration>
+<xs:enumeration value="INVALID_LOCATION_ID"></xs:enumeration>
+<xs:enumeration value="TASKID_NOT_FOUND"></xs:enumeration>
+<xs:enumeration value="TASK_NOTE_ALREADY_EXIST"></xs:enumeration>
+<xs:enumeration value="REASON_CODE_REQUIRED"></xs:enumeration>
+<xs:enumeration value="INVALID_DEFAULT_REASON_CODE"></xs:enumeration>
+<xs:enumeration value="INVALID_STATUS_VALUE"></xs:enumeration>
+<xs:enumeration value="INVALID_TASK_PRIORITY_VALUE"></xs:enumeration>
+<xs:enumeration value="INVALID_TASK_TYPE_VALUE"></xs:enumeration>
+<xs:enumeration value="EVENT_TASK_PROMOTION_REQUIRED"></xs:enumeration>
+<xs:enumeration value="EVENT_TASK_CUSTOMER_REQUIRED"></xs:enumeration>
+<xs:enumeration value="INVALID_REGISTRY_ITEM_ID_SPECIFIED"></xs:enumeration>
+<xs:enumeration value="INVALID_REGISTRY_ADDRESS_TYPE_SPECIFIED"></xs:enumeration>
+<xs:enumeration value="INVALID_REGISTRY_ADDRESS_SPECIFIED"></xs:enumeration>
+<xs:enumeration value="INVALID_REGISTRY_ADDRESS_ACTION"></xs:enumeration>
+<xs:enumeration value="INVALID_REGISTRY_OWNER_SPECIFIED"></xs:enumeration>
+<xs:enumeration value="INVALID_REGISTRY_OWNER_ACTION"></xs:enumeration>
+<xs:enumeration value="REGISTRY_OWNER_REQUIRED"></xs:enumeration>
+<xs:enumeration value="REGISTRY_ID_REQUIRED"></xs:enumeration>
+<xs:enumeration value="REGISTRY_NOT_FOUND"></xs:enumeration>
+<xs:enumeration value="REGISTRY_IS_EXPIRED"></xs:enumeration>
+<xs:enumeration value="INVALID_REGISTRY_ITEM_SPECIFIED"></xs:enumeration>
+<xs:enumeration value="REGISTRY_ITEM_QUANTITY_REQUIRED"></xs:enumeration>
+<xs:enumeration value="INVALID_REGISTRY_ITEM_QUANTITY"></xs:enumeration>
+<xs:enumeration value="INVALID_REGISTRY_ITEM_QUANTITY_VALUE"></xs:enumeration>
+<xs:enumeration value="INVALID_REGISTRY_ITEM_ACTION"></xs:enumeration>
+<xs:enumeration value="INVALID_REGISTRY_ATTR_ACTION"></xs:enumeration>
+<xs:enumeration value="ERROR_UPDATING_OWNER_CONTACT_INFO"></xs:enumeration>
+<xs:enumeration value="ITEM_AND_ITEM_REF_ID_UNSPECIFIED"></xs:enumeration>
+<xs:enumeration value="ACTION_CODE_IS_REQUIRED"></xs:enumeration>
+<xs:enumeration value="QUANTITY_IS_NOT_VALID"></xs:enumeration>
+<xs:enumeration value="CANNOT_PUBLISH_WITH_ZERO_ITEMS"></xs:enumeration>
+<xs:enumeration value="REGISTRY_FIELD_REQUIRED"></xs:enumeration>
+<xs:enumeration value="REGISTRY_OWNER_FIELD_REQUIRED"></xs:enumeration>
+<xs:enumeration value="EVENT_DATE_BEFORE_EXPIRATION_DATE"></xs:enumeration>
+<xs:enumeration value="INVALID_REGISTRY_EVENT_TYPECODE"></xs:enumeration>
+<xs:enumeration value="ATTRIBUTE_GROUP_NOT_FOUND"></xs:enumeration>
+<xs:enumeration value="ATTRIBUTE_GROUP_IS_NOT_VALID"></xs:enumeration>
+<xs:enumeration value="REQUIRED_ATTRIBUTE_IS_UNSPECIFIED"></xs:enumeration>
+<xs:enumeration value="ATTRIBUTE_IS_REQUIRED"></xs:enumeration>
+<xs:enumeration value="REGISTRY_ATTRIBUTE_GROUPS_DO_NOT_MATCH"></xs:enumeration>
+<xs:enumeration value="ESP_SUBSCRIBER_CSV_NOT_EXIST"></xs:enumeration>
+<xs:enumeration value="ESP_FTP_CONFIGURATION_ERROR"></xs:enumeration>
+<xs:enumeration value="ESP_FTP_GENERAL_ERROR"></xs:enumeration>
+<xs:enumeration value="ESP_FTP_LOGIN_ERROR"></xs:enumeration>
+<xs:enumeration value="ESP_FTP_INVALID_DIRECTORY"></xs:enumeration>
+<xs:enumeration value="ESP_FTP_TRANSFER_ERROR"></xs:enumeration>
+<xs:enumeration value="ESP_FTP_CONNECTION_TIMED_OUT"></xs:enumeration>
+<xs:enumeration value="ESP_FTP_FILE_NOT_EXIST"></xs:enumeration>
+<xs:enumeration value="ESP_DATAEXT_CREATE_ERROR"></xs:enumeration>
+<xs:enumeration value="ESP_DATAEXT_NOT_EXIST"></xs:enumeration>
+<xs:enumeration value="ESP_DATAEXT_DEFINITION_ERROR"></xs:enumeration>
+<xs:enumeration value="ESP_IMPORT_CSV_ERROR"></xs:enumeration>
+<xs:enumeration value="ESP_SENDCLASSIFICATION_RETRIEVE_ERROR"></xs:enumeration>
+<xs:enumeration value="ESP_CSVIMPORTSTATUS_RETRIEVE_ERROR"></xs:enumeration>
+<xs:enumeration value="ESP_EMAILDEF_CREATE_ERROR"></xs:enumeration>
+<xs:enumeration value="ESP_EMAIL_SEND_START_ERROR"></xs:enumeration>
+<xs:enumeration value="ESP_TRIGGERED_DEF_CREATE_ERROR"></xs:enumeration>
+<xs:enumeration value="ESP_TRIGGERED_DEF_UPDATE_ERROR"></xs:enumeration>
+<xs:enumeration value="ESP_SUBSCRIBER_LIST_RETRIEVE_ERROR"></xs:enumeration>
+<xs:enumeration value="ESP_TRIGGERED_DEF_PAUSE_ERRROR"></xs:enumeration>
+<xs:enumeration value="ESP_TRIGGERED_DEF_PUBLISH_CHANGES_ERRROR"></xs:enumeration>
+<xs:enumeration value="ESP_EMAILDEF_DELETE_ERROR"></xs:enumeration>
+<xs:enumeration value="ESP_DATA_EXTRACT_BULK_INSERT_ERROR"></xs:enumeration>
+<xs:enumeration value="ESP_DATA_EXTRACT_CLEANUP_ERROR"></xs:enumeration>
+<xs:enumeration value="ESP_DATA_EXTRACT_UPDATE_ERROR"></xs:enumeration>
+<xs:enumeration value="ESP_DATA_EXTRACT_UPDATE_CUSTOMER_ERROR"></xs:enumeration>
+<xs:enumeration value="ESP_DATA_EXTRACT_PROCESSING_ERROR"></xs:enumeration>
+<xs:enumeration value="ESP_NO_EMAIL_SERVER_ACCESS"></xs:enumeration>
+<xs:enumeration value="UNABLE_TO_LOGIN_TO_BI_SERVER_ERROR"></xs:enumeration>
+<xs:enumeration value="UNABLE_TO_PARSE_DATE_TO_XML_CALENDAR_ERROR"></xs:enumeration>
+<xs:enumeration value="PREFERENCE_TYPE_NOT_FOUND"></xs:enumeration>
+<xs:enumeration value="PREFERENCE_CENTER_NOT_FOUND"></xs:enumeration>
+<xs:enumeration value="PREFERENCE_CENTER_REQUIRED"></xs:enumeration>
+<xs:enumeration value="FREQUENCY_CODE_INVALID"></xs:enumeration>
+<xs:enumeration value="INVALID_PREFERENCE_CENTER_ACTION_SPECIFIED"></xs:enumeration>
+<xs:enumeration value="INVALID_PREFERENCE_CHANNEL_SPECIFIED"></xs:enumeration>
+<xs:enumeration value="INVALID_REQUEST_TYPE"></xs:enumeration>
+<xs:enumeration value="PREFERENCE_CENTER_MODULE_DISABLED"></xs:enumeration>
+<xs:enumeration value="INVALID_PREFERENCE_FREQUENCY_CODE"></xs:enumeration>
+<xs:enumeration value="EMAIL_FORMAT_PREFERENCE_TYPECODE_INVALID"></xs:enumeration>
+<xs:enumeration value="CURRENCY_CONVERSION_ROUNDING_SETUP_ERROR"></xs:enumeration>
+<xs:enumeration value="PREFERENCE_TYPE_ASSIGNED_TO_CUSTOMER_PREFERENCE"></xs:enumeration>
+<xs:enumeration value="ADMIN_TYPE_TASK_UNSUPPORTED"></xs:enumeration>
+<xs:enumeration value="INVALID_RELATE_ROLE"></xs:enumeration>
+<xs:enumeration value="INVALID_USER_ORGANIZATION"></xs:enumeration>
+<xs:enumeration value="USER_ID_UNSPECIFIED"></xs:enumeration>
+<xs:enumeration value="INVALID_USER_ACTION_SPECIFIED"></xs:enumeration>
+<xs:enumeration value="USER_NAME_REQUIRED"></xs:enumeration>
+<xs:enumeration value="USER_EMAIL_REQUIRED"></xs:enumeration>
+<xs:enumeration value="USER_LANGUAGE_REQUIRED"></xs:enumeration>
+<xs:enumeration value="USER_COUNTRY_REQUIRED"></xs:enumeration>
+<xs:enumeration value="INVALID_COUNTRY_CODE"></xs:enumeration>
+<xs:enumeration value="ATTRIBUTE_GROUP_NOT_SEGMENT_TYPE"></xs:enumeration>
+<xs:enumeration value="SEGMENT_ATTRIBUTE_GROUPS_DO_NOT_MATCH"></xs:enumeration>
+<xs:enumeration value="CONNECT_TO_PROMOTE_ERROR"></xs:enumeration>
+<xs:enumeration value="EXPORT_TO_PROMOTE_ERROR"></xs:enumeration>
+<xs:enumeration value="INVALID_SOCIAL_MEDIA"></xs:enumeration>
+<xs:enumeration value="APPLICATION_KEY_UNSPECIFIED"></xs:enumeration>
+<xs:enumeration value="APPLICATION_SECRET_UNSPECIFIED"></xs:enumeration>
+<xs:enumeration value="SOCIAL_MEDIA_TYPE_DISABLED"></xs:enumeration>
+<xs:enumeration value="ACCESS_TOKEN_UNSPECIFIED"></xs:enumeration>
+<xs:enumeration value="NO_SOCIAL_MEDIA_REGISTRATION"></xs:enumeration>
+<xs:enumeration value="INVALID_ACTION_SPECIFIED"></xs:enumeration>
+<xs:enumeration value="INVALID_SEGMENT_ACTION_SPECIFIED"></xs:enumeration>
+<xs:enumeration value="SOCIAL_MEDIA_TYPE_NOT_EXIST"></xs:enumeration>
+<xs:enumeration value="SOCIAL_MEDIA_ACCOUNT_NOT_EXIST"></xs:enumeration>
+<xs:enumeration value="INVALID_SOCIAL_ACCOUNT"></xs:enumeration>
+<xs:enumeration value="CUSTOMER_SOCIAL_ACCOUNT_NOT_EXIST"></xs:enumeration>
+<xs:enumeration value="SOCIAL_SEARCH_NOT_EXIST"></xs:enumeration>
+<xs:enumeration value="SOCIAL_REQUEST_UNSPECIFIED"></xs:enumeration>
+<xs:enumeration value="SOCIAL_ACTIVITY_NOT_FOUND"></xs:enumeration>
+<xs:enumeration value="SOCIAL_NETWORK_LISTENING_ERROR"></xs:enumeration>
+<xs:enumeration value="SOCIAL_MEDIA_ACCESS_DISABLED"></xs:enumeration>
+<xs:enumeration value="CUSTOMER_SEARCH_REQUIRED_PARAMETERS"></xs:enumeration>
+<xs:enumeration value="ACCESS_TOKEN_SECRET_UNSPECIFIED"></xs:enumeration>
+<xs:enumeration value="SOCIAL_PROFILE_AUTHENTICATION_ERROR"></xs:enumeration>
+<xs:enumeration value="USER_HAS_NO_RELATE_ROLE"></xs:enumeration>
+<xs:enumeration value="INVALID_FRANCHISEE_ORGANIZATION"></xs:enumeration>
+<xs:enumeration value="FRANCHISEE_NAME_ALREADY_EXISTS"></xs:enumeration>
+<xs:enumeration value="FRANCHISEE_NAME_NOT_FOUND"></xs:enumeration>
+<xs:enumeration value="FRANCHISEE_ASSIGNED_TO_CARD_TYPE"></xs:enumeration>
+<xs:enumeration value="ACCESS_DENIED"></xs:enumeration>
+<xs:enumeration value="FRANCHISEE_ASSIGNED_TO_USER"></xs:enumeration>
+<xs:enumeration value="FRANCHISEE_ASSIGNED_TO_LOCATION"></xs:enumeration>
+<xs:enumeration value="FRANCHISEE_ASSIGNED_TO_CUSTOMER"></xs:enumeration>
+<xs:enumeration value="FRANCHISE_SUPPORT_DISABLED"></xs:enumeration>
+<xs:enumeration value="FRANCHISEE_SEARCH_REQUIRED_PARAMETERS"></xs:enumeration>
+<xs:enumeration value="FRANCHISEE_NOT_FOUND"></xs:enumeration>
+<xs:enumeration value="FRANCHISEE_NAME_UNSPECIFIED"></xs:enumeration>
+<xs:enumeration value="INVALID_FRANCHISEE_USER"></xs:enumeration>
+<xs:enumeration value="RELATE_USER_NOT_FOUND"></xs:enumeration>
+<xs:enumeration value="RELATE_USER_REQUIRED_PARAMETERS"></xs:enumeration>
+<xs:enumeration value="LOCATION_REQUIRED_PARAMETERS"></xs:enumeration>
+<xs:enumeration value="NO_WRITE_PRIVILEGE_ON_FRANCHISEE"></xs:enumeration>
+<xs:enumeration value="LOCATION_NOT_ASSIGNED_TO_FRANCHISEE"></xs:enumeration>
+<xs:enumeration value="PAST_X_PASSWORDS_NOT_ALLOWED"></xs:enumeration>
+<xs:enumeration value="PASSWORD_TOO_COMMON"></xs:enumeration>
+<xs:enumeration value="PASSWORD_NOT_COMPLEX"></xs:enumeration>
+<xs:enumeration value="USER_NOT_EXIST"></xs:enumeration>
+<xs:enumeration value="INVALID_PASSWORD"></xs:enumeration>
+<xs:enumeration value="INVALID_USER_OR_PASSWORD"></xs:enumeration>
+<xs:enumeration value="PASSWORD_EXPIRED"></xs:enumeration>
+<xs:enumeration value="ACCOUNT_DISABLED"></xs:enumeration>
+<xs:enumeration value="ACCOUNT_LOCKED_DUE_TO_INACTIVITY"></xs:enumeration>
+<xs:enumeration value="ACCOUNT_LOCKED_MANY_PASSWORD_ERRORS"></xs:enumeration>
+<xs:enumeration value="USER_LOGIN_FAILED"></xs:enumeration>
+<xs:enumeration value="FILE_NOT_FOUND"></xs:enumeration>
+<xs:enumeration value="ENTITLEMENT_ACCOUNT_NOT_FOUND"></xs:enumeration>
+<xs:enumeration value="INVALID_LICENSE_KEY"></xs:enumeration>
+<xs:enumeration value="CARD_CUSTOMER_AMOUNTS_DO_NOT_MATCH"></xs:enumeration>
+<xs:enumeration value="INVALID_BUSINESS_DATE_FORMAT"></xs:enumeration>
+</xs:restriction>
+</xs:simpleType>
+
+<xs:simpleType name="NameLocationLookupType">
+<xs:restriction base="xs:string">
+<xs:enumeration value="First"></xs:enumeration>
+<xs:enumeration value="First2"></xs:enumeration>
+<xs:enumeration value="Middle"></xs:enumeration>
+<xs:enumeration value="Last"></xs:enumeration>
+<xs:enumeration value="Last2"></xs:enumeration>
+</xs:restriction>
+</xs:simpleType>
+
+<xs:simpleType name="SearchType">
+<xs:restriction base="xs:string">
+<xs:enumeration value="StartsWith"></xs:enumeration>
+<xs:enumeration value="EndsWith"></xs:enumeration>
+<xs:enumeration value="Exact"></xs:enumeration>
+<xs:enumeration value="Contains"></xs:enumeration>
+<xs:enumeration value="SoundsLike"></xs:enumeration>
+</xs:restriction>
+</xs:simpleType>
+
+<xs:simpleType name="NameLocationReturnType">
+<xs:restriction base="xs:string">
+<xs:enumeration value="First"></xs:enumeration>
+<xs:enumeration value="First2"></xs:enumeration>
+<xs:enumeration value="Middle"></xs:enumeration>
+<xs:enumeration value="Last"></xs:enumeration>
+<xs:enumeration value="Last2"></xs:enumeration>
+</xs:restriction>
+</xs:simpleType>
+
+<xs:simpleType name="ContactPreferenceContactReturnType">
+<xs:restriction base="xs:string">
+<xs:enumeration value="Mail"></xs:enumeration>
+<xs:enumeration value="Email"></xs:enumeration>
+<xs:enumeration value="Phone"></xs:enumeration>
+<xs:enumeration value="Fax"></xs:enumeration>
+</xs:restriction>
+</xs:simpleType>
+
+<xs:simpleType name="FranchiseeActionType">
+<xs:restriction base="xs:string">
+<xs:enumeration value="ADD"></xs:enumeration>
+<xs:enumeration value="UPDATE"></xs:enumeration>
+<xs:enumeration value="DELETE"></xs:enumeration>
+</xs:restriction>
+</xs:simpleType>
+
+<xs:simpleType name="NameLocationType">
+<xs:restriction base="xs:string">
+<xs:enumeration value="First"></xs:enumeration>
+<xs:enumeration value="First2"></xs:enumeration>
+<xs:enumeration value="Middle"></xs:enumeration>
+<xs:enumeration value="Last"></xs:enumeration>
+<xs:enumeration value="Last2"></xs:enumeration>
+</xs:restriction>
+</xs:simpleType>
+
+<xs:simpleType name="ContactPreferenceContactType">
+<xs:restriction base="xs:string">
+<xs:enumeration value="Mail"></xs:enumeration>
+<xs:enumeration value="Email"></xs:enumeration>
+<xs:enumeration value="Phone"></xs:enumeration>
+<xs:enumeration value="Fax"></xs:enumeration>
+</xs:restriction>
+</xs:simpleType>
+</xs:schema>

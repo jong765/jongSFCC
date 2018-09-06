@@ -1,0 +1,67 @@
+/**
+* Demandware Script File
+* To define input and output parameters, create entries of the form:
+*
+* @<paramUsageType> <paramName> : <paramDataType> [<paramComment>]
+*
+* where
+*   <paramUsageType> can be either 'input' or 'output'
+*   <paramName> can be any valid parameter name
+*   <paramDataType> identifies the type of the parameter
+*   <paramComment> is an optional comment
+*
+* For example:
+*
+*-   @input ExampleIn : String This is a sample comment.
+*-   @output ExampleOut : Number
+*
+*/
+importPackage( dw.system );
+importPackage( dw.catalog );
+importPackage( dw.util );
+importPackage( dw.campaign );
+importPackage( dw.value );
+
+function execute( args : PipelineDictionary ) : Number
+{
+	var product:Product = ProductMgr.getProduct("0760479830004");
+	var masterProd:Product = product.getVariationModel().getMaster();
+	
+	//var testInd:Boolean = product.primaryCategory.isSubCategoryOf(dw.catalog.CatalogMgr.getCategory('sale')) || product.primaryCategory.isSubCategoryOf(dw.catalog.CatalogMgr.getCategory('clearance'));
+	
+	var onlineCategories:Collection = product.onlineCategories;
+	var saleOrClearance:Boolean = false;
+	for(var a in product.onlineCategories) {
+		var cat:Category = onlineCategories[a];
+		if (cat.isSubCategoryOf(dw.catalog.CatalogMgr.getCategory('sale')) || cat.isSubCategoryOf(dw.catalog.CatalogMgr.getCategory('clearance')))
+			saleOrClearance = true;
+	}
+	
+	var promoMsgAttr:String = "";
+	if (saleOrClearance) {
+		promoMsgAttr = !empty(product.custom.PromotionalMessage) ? product.custom.PromotionalMessage: (!empty(masterProd.custom.PromotionalMessage) ? masterProd.custom.PromotionalMessage: "");
+		if(!empty(promoMsgAttr)) {
+			var tempvar = promoMsgAttr;
+		}
+	}
+	
+	
+   var promos:Collection = dw.campaign.PromotionMgr.getActivePromotions().getProductPromotions(product);
+  // var customerPromotionPlan = dw.campaign.PromotionMgr.getActivePromotions();
+   // var PromotionalPrice:Money = dw.value.Money.NOT_AVAILABLE;
+   // var promos:Collection = customerPromotionPlan.getProductPromotions(product);
+    var calloutMessage:String ="";
+    var messageType;
+    
+    for(var a in promos){
+		var promo:Promotion = promos[a];
+		//if(promo.getPromotionClass() != null && promo.getPromotionClass().equals(dw.campaign.Promotion.PROMOTION_CLASS_PRODUCT) && !promo.basedOnCoupons && !promo.basedOnSourceCodes){
+		if(promo.getPromotionClass() != null && !promo.basedOnCoupons && !promo.basedOnSourceCodes){
+			if (promo.calloutMsg != null)
+				calloutMessage += promo.calloutMsg + " ; ";
+			messageType = promo.getPromotionClass();
+		}
+    }
+
+   return PIPELET_NEXT;
+}

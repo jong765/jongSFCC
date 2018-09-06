@@ -1,0 +1,53 @@
+/**
+* Demandware Script File
+* To define input and output parameters, create entries of the form:
+*
+* @<paramUsageType> <paramName> : <paramDataType> [<paramComment>]
+*
+* where
+*   <paramUsageType> can be either 'input' or 'output'
+*   <paramName> can be any valid parameter name
+*   <paramDataType> identifies the type of the parameter
+*   <paramComment> is an optional comment
+*
+* For example:
+*
+*-   @input ExampleIn : String This is a sample comment.
+*-   @output ExampleOut : Number
+*
+*/
+importPackage( dw.system );
+importPackage(dw.util);
+importPackage(dw.web);
+importPackage(dw.net);
+
+function execute( args : PipelineDictionary ) : Number
+{
+
+    // read pipeline dictionary input parameter
+    // ... = args.ExampleIn;
+
+	var hostName : String = "https://pismo.pacsun.com";
+	var apiRelPath : String = "/pacsun_ws/services/SalesAssociate";
+	var apiUrl : String = hostName + apiRelPath;
+	var userName : String = "DWUser";
+	var password : String = "DinhA2012";
+	var testManagerJSON = '{"ws_user":"DWUser","ws_password":"DinhA2012","sales_assoc_store":"0003","sales_assoc_id":"438625","sales_assoc_pass":"4386253426"}';
+	var parameters : String = 'sales_assoc=' + testManagerJSON;
+	
+    var httpClient : HTTPClient = new HTTPClient();
+    
+    try {
+    	httpClient.open('POST', apiUrl, userName, password);
+    	httpClient.setRequestHeader('Content-Type','application/x-www-form-urlencoded');
+    	httpClient.send(parameters);
+    	var message : String = httpClient.getText();
+    } catch (e) {
+    }
+
+    // write pipeline dictionary output parameter
+
+    // args.ExampleOut = ...
+
+   return PIPELET_NEXT;
+}

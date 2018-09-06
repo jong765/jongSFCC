@@ -1,0 +1,54 @@
+<!--- TEMPLATENAME: FTPTemplate.isml --->
+
+<style>
+table {
+  border-collapse: collapse;
+}
+th,
+td {
+  border: 1px solid #c6c7cc;
+  padding: 10px 15px;
+}
+th {
+  font-weight: bold;
+}
+span {
+  font-size: small;
+}
+</style>
+
+<table>
+
+<tr>
+<th scope="col">URL</th>
+<th scope="col">Status</th>
+<th scope="col">Result Object</th>
+</tr>
+
+<tr>
+<td>${pdict.SVCConfig.URL}</td>
+<isif condition="${empty(pdict.FTPResult.errorMessage)}">
+<td>${pdict.FTPResult.msg}</td>
+<td>${pdict.FTPResult.object}</td>
+<iselse>
+<td>${pdict.FTPResult.status}</td>
+<td>${pdict.FTPResult.errorMessage}</td>
+</iselse>
+</isif>
+</tr>
+
+</table>
+<br>
+
+<span>Test using ftp server on <a href="ftp://54.149.170.12">Platform QA ec2 instance</a></span>
+
+<h3>Service Information</h3>
+<br>
+<h5>Configuration</h5>
+<span>${pdict.SVCConfig.configuration}</span>
+<p>
+<h5>Profile</h5>
+<span>${pdict.SVCConfig.configuration.profile}</span>
+<p>
+<h5>Credential</h5>
+<span>${pdict.SVCConfig.configuration.credential}</span>

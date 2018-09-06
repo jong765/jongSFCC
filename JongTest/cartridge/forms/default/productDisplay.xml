@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<form xmlns="http://www.demandware.com/xml/form/2008-04-19">
+    <field formid="pId" label="forms.product.id.label" type="string" mandatory="true" binding="testobject.productId" max-length="50"/>
+    <field formid="pName" label="forms.product.name.label" type="string" mandatory="true" binding="testobject.productName" max-length="50"/>
+	
+	<action formid="search" valid-form="true"/>
+</form>

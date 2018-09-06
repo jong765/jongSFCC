@@ -1,0 +1,127 @@
+/**
+*	THis Script builds the xml for the product image data
+*   @input  testVariable:String
+*	@output clearImageXMLPath:String Full relative path for the clearImageXML
+*	@output imageXMLPath:String Full relative path for the imageXMLPath
+*/
+importPackage( dw.system );
+importPackage( dw.catalog );
+importPackage( dw.util );
+importPackage( dw.io );
+
+
+function execute( args : PipelineDictionary ) : Number
+{
+	var newClassificationCat:Category;
+	var xmlProductItemArray : Array = new Array();
+	var fileName : String = "ip_product.xml";
+	var firstPass : Boolean = true;
+	var currentRestrictions : String;
+	var cuurentWhitelistValues : String;
+	
+	var log : Log = Logger.getLogger("JK_TestScript");
+	var productIT:SeekableIterator = ProductMgr.queryAllSiteProducts();
+	var productITCount = productIT.count;
+
+	//while (prods.hasNext()) {
+    //var prd: ProductSearchHit = prds.next();
+	
+	
+	for each(var product:Product in productIT) {
+		
+		//------------------------------------------------------
+		// 1.  Build Brand Array
+	    //------------------------------------------------------
+		if(!product.variant) {
+		
+		
+		
+		
+		
+		
+		}
+		
+		//------------------------------------------------------
+		
+		//------------------------------------------------------
+		// 2.  Build Category Assignments
+	    //------------------------------------------------------
+		newClassificationCat = null;
+		if(!product.variant) {
+			
+			if(product.categories.length > 1) {
+				
+				
+				
+			} else {
+				
+		
+		
+			}
+		
+		}
+		
+		//------------------------------------------------------
+		// 3.  Build Sale Category Assignments
+	    //------------------------------------------------------
+		if (product.master && product.isOnline()) {
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		}
+		//------------------------------------------------------
+
+		//------------------------------------------------------
+		// 4.  Build Product Exclusives and product restrictions
+	    //------------------------------------------------------
+	    if (!product.variant) {
+	    	
+	    	
+	    	
+	    	
+	    }
+	    
+	    if (product.master) {
+			if(product.custom.exclusive) {
+				xmlProductItemArray.push("<custom-attribute attribute-id='exclusiveType'><value>online</value></custom-attribute>");
+			} else if(!empty(product.custom.pacSunExclusive)) {
+				xmlProductItemArray.push("<custom-attribute attribute-id='exclusiveType'><value>pacsun</value></custom-attribute>");
+			}
+		}
+		
+		if (!product.variant) {
+			xmlProductItemArray.push("</custom-attributes></product>");
+		}
+		
+		if (product.master && hasInventoryForVariants(product)) {
+			for each(var variantProduct : Product in product.variants) {
+				//use the values for the parent item
+				xmlProductItemArray.push("<product product-id='"+variantProduct.ID+"'><custom-attributes>");
+				xmlProductItemArray.push("<custom-attribute attribute-id='fiftyone_restrictions'>" + currentRestrictions + "</custom-attribute>");
+				xmlProductItemArray.push("<custom-attribute attribute-id='fiftyone_whitelist'>" + cuurentWhitelistValues + "</custom-attribute>");
+				xmlProductItemArray.push("</custom-attributes></product>");
+			}
+		}
+		
+	}
+
+	return PIPELET_NEXT;
+}
+
+// Returns true if all of variants have no inventories for the master product.
+function hasInventoryForVariants(masterProduct : Product) : boolean {
+	for(var i=0;i<masterProduct.variants.length;i++) {
+		var currentVariant : Product = masterProduct.variants[i];
+		if (currentVariant.getAvailabilityModel().getInventoryRecord().allocation > 0)
+			return true;
+	}
+	
+	return false;
+}

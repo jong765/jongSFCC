@@ -1,0 +1,50 @@
+/**
+ * Initialize SOAP services for a cartridge
+ */    
+importPackage( dw.svc );
+importPackage( dw.net );
+importPackage( dw.io );  
+
+    /**
+	 *
+	 * SOAP Services
+	 *
+	 */	 
+    ServiceRegistry.configure("relate.searchCustomer",{
+    	initServiceClient: function() {
+			// authentication is provided by 'key' param and stored in credential object
+			// load the WebReference
+		    this.webref = webreferences.CustomerServices;
+		    // Get the default service.
+		    return this.webref.getDefaultService();
+		},
+		createRequest : function(svc: SOAPService, params : Object) : Object {	
+			// Create parameter
+			var parameter = new this.webref.SearchCustomers();
+			var customerData : CustomerLookupType = new this.webref.CustomerLookupType();
+			var entityInformation : EntityInformationLookupType = new this.webref.EntityInformationLookupType();
+			var individual : IndividualLookupType = new this.webref.IndividualLookupType();
+			var contactInformation : ContactInformationLookupType = new this.webref.ContactInformationLookupType();
+			var EMail : EMailLookupType = new this.webref.EMailLookupType();
+			
+			EMail.setEMailAddress("ktzsmommy@gmail.com");		
+		
+			contactInformation.setEMail([EMail]);
+			individual.setContactInformation(contactInformation);
+			entityInformation.setIndividual(individual);
+			customerData.setEntityInformation(entityInformation);
+			var securityUserID = dw.system.Site.getCurrent().getCustomPreferenceValue('RelateSecurityUserIDWeb');
+			parameter.setSecurityUserId(securityUserID);	
+			parameter.setCustomerData(customerData);
+			return parameter;
+		},
+		execute: function(svc:SOAPService, parameter:Object) {
+			return svc.serviceClient.searchCustomers(parameter);
+		},
+		parseResponse : function(service: SOAPService, response : Object) : Object {
+			return response;
+		},
+		mockCall : function(service : SOAPService, request : Object) : Object {
+			return { status: "MOCKED" };
+		}
+	});

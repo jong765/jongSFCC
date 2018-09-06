@@ -1,0 +1,30 @@
+/**
+ * Initialize HTTPForm services for a cartridge
+ */
+importPackage( dw.svc );
+importPackage( dw.net );
+   
+   /**
+    *
+    * HTTPForm Service
+    *
+    */
+	ServiceRegistry.configure("test.httpform.post", {
+		createRequest: function(svc:HTTPFormService, args){
+			if(args) {
+				return JSON.stringify(args);
+			} else {
+				return null;
+			}
+		},
+		parseResponse: function(svc:HTTPFormService, client:HTTPClient) {
+			return client.text;
+		},
+		mockCall: function(svc:HTTPFormService, client:HTTPClient) {
+			return {
+				statusCode: 200,
+				statusMessage: "Form post successful",
+				text: "MOCK RESPONSE (" + svc.URL + ")"
+			};
+		}
+	});

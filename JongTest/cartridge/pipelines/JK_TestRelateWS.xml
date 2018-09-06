@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<?demandware-pipeline version="2.0"?>
+
+<pipeline type="view">
+  <branch basename="LookupCustomer">
+    <segment>
+      <node>
+        <start-node name="LookupCustomer" secure="false"/>
+        <node-display x="1" y="1"/>
+      </node>
+      <simple-transition>
+        <transition-display>
+          <bend-point relative-to="source" x="0" y="1"/>
+        </transition-display>
+      </simple-transition>
+      <node>
+        <pipelet-node pipelet-name="Script" pipelet-set-identifier="bc_api">
+          <config-property key="Transactional" value="false"/>
+          <config-property key="OnError" value="PIPELET_ERROR"/>
+          <config-property key="ScriptFile" value="ServiceFramework/testSOAPService.ds"/>
+          <key-binding alias="null" key="ScriptLog"/>
+          <key-binding alias="&quot;jksb62@pacsun.com&quot;" key="emailAddress"/>
+          <key-binding alias="false" key="isMobileApp"/>
+          <key-binding alias="customerFound" key="customerFound"/>
+          <key-binding alias="lastCheckin" key="lastCheckin"/>
+          <key-binding alias="profileSkipped" key="profileSkipped"/>
+          <key-binding alias="relateCustomerID" key="relateCustomerID"/>
+        </pipelet-node>
+        <node-display x="0" y="1"/>
+      </node>
+      <simple-transition>
+        <transition-display>
+          <bend-point relative-to="source" x="0" y="1"/>
+        </transition-display>
+      </simple-transition>
+      <node>
+        <interaction-node transaction-required="false">
+          <template buffered="true" dynamic="false" name="JK_TestRelateWS"/>
+        </interaction-node>
+        <node-display x="0" y="1"/>
+      </node>
+    </segment>
+  </branch>
+</pipeline>

@@ -1,0 +1,118 @@
+/**
+*  
+* 	Utility methods for generating HTTP API Requests
+*
+*/
+
+importPackage( dw.system );
+importPackage( dw.net );
+importPackage( dw.util );
+
+importScript( "common/fiftyone_preferences.ds" );
+
+function sendRequest(content : String, apiAddress : String, contentType : String, timeoutPeriod : Number)
+{
+	var retryCount = 1;
+	var response = null;
+	
+	for(var i=0;i<=retryCount;i++)
+	{
+		response = send(content,apiAddress,retryCount==i, contentType, timeoutPeriod);
+		if(response!=null)
+			return response;
+	}
+	
+	function send(content, apiAddress, throwOnError, contentType, timeoutPeriod)
+	{
+		var client : HTTPClient = new HTTPClient();
+		var auth : String = getSimpleAuthCredentials();
+		var response : String = null;
+		
+		if(!contentType) 
+			contentType = "text/xml;charset=UTF-8";
+
+		if(!timeoutPeriod)
+			timeoutPeriod = 0; // If null, use Demandware default timeout period
+			
+		client.setRequestHeader("Content-Type", contentType);
+		client.setRequestHeader("Authorization", "Basic " + auth );		
+		client.setRequestHeader("Content-Length", content.length);
+		client.setTimeout(timeoutPeriod);
+		
+		client.open("POST", apiAddress);
+		client.send(content, "UTF-8");
+		if (client.statusCode == 200)
+			response = client.text;
+		else if(throwOnError==true)
+			throw new Error("An error occured while sending FiftyOne API request. Status code: "+client.statusCode);
+			
+		return response;
+	}
+}
+
+function sendPostRequest(apiAddress : String)
+{
+	var retryCount = 0;
+	var response = null;
+	
+	for(var i=0;i<=retryCount;i++)
+	{
+		response = sendPost(apiAddress,retryCount==i);
+		if(response!=null)
+			return response;
+	}
+	
+	function sendPost(apiAddress, throwOnError)
+	{
+		var client : HTTPClient = new HTTPClient();
+		client.setTimeout(10000);
+		var response : String = null;
+		
+		try {
+			client.open("POST", apiAddress);
+			client.send();
+			if (client.statusCode == 200)
+				response = client.text;
+			else if(throwOnError==true)
+				throw new Error("An error occured while sending POST request. Status code: "+client.statusCode);
+		}
+		catch(e) {
+			var errmsg="Error in line " + e.lineNumber;
+			errmsg += ", apiAddress=" + apiAddress; 
+			if (e.message) errmsg += ", " + e.message;
+			if (e.faultDetail) errmsg += ", " + e.faultDetail;
+			errmsg += ", " + e.stack.trim();
+			Logger.error(errmsg);
+		}
+			
+		return response;
+	}
+}
+
+function sendGetRequest(apiAddress : String)
+{
+	var retryCount = 0;
+	var response = null;
+	
+	for(var i=0;i<=retryCount;i++)
+	{
+		response = sendGet(apiAddress,retryCount==i);
+		if(response!=null)
+			return response;
+	}
+	
+	function sendGet(apiAddress, throwOnError)
+	{
+		var client : HTTPClient = new HTTPClient();
+		client.setTimeout(3000);
+		var response : String = null;
+		client.open("GET", apiAddress);
+		client.send();
+		if (client.statusCode == 200)
+			response = client.text;
+		else if(throwOnError==true)
+			throw new Error("An error occured while sending GET request. Status code: "+client.statusCode);
+			
+		return response;
+	}
+}

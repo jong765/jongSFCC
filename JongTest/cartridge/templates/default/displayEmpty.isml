@@ -1,0 +1,12 @@
+<!--- TEMPLATENAME: displayEmpty.isml --->
+<isdecorate template="content/home/pt_storefront">
+Empty
+</isdecorate>
+
+<isif condition="${catProduct.primaryCategory.isSubCategoryOf(()dw.catalog.CatalogMgr.getCategory('sale')) || (catProduct.primaryCategory.isSubCategoryOf(dw.catalog.CatalogMgr.getCategory('clearance'))) && !empty(pdict.Product.custom.PromotionalMessage))}">
+    <div class="promotion">
+		<span id="pdpPromoDiv" class="promocallout">
+			<isprint value="${pdict.Product.custom.PromotionalMessage}" encoding="off"/>
+		</span>
+    </div>
+<iselseif condition="${!empty(promos)}">

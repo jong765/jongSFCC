@@ -1,0 +1,236 @@
+/**
+* MyBuys Products Export
+*
+*/
+
+importPackage( dw.system );
+importPackage( dw.catalog );
+importPackage( dw.util );
+importPackage( dw.io );
+importPackage( dw.web );
+importPackage( dw.object );
+
+function execute( args : PipelineDictionary ) : Number
+{
+
+    var siteName : String = dw.system.Site.current.name; 
+    (new dw.io.File(dw.io.File.IMPEX +'/src/mybuys/' + siteName + "/")).mkdirs();
+    var time : Date = dw.system.Site.getCalendar().time;
+    var fileName = "products-" + time.getFullYear() + "-" + (time.getMonth()+1) + "-" + time.getDate() + ".tsv";
+	var file : File = new dw.io.File(dw.io.File.IMPEX + '/src/mybuys/' + siteName + "/" + fileName);
+	var efWriter : FileWriter = new FileWriter(file);
+	
+	//var prods : SeekableIterator = ProductMgr.queryAllSiteProducts();
+	
+	var productList:ArrayList = new ArrayList();
+	productList.add(ProductMgr.getProduct("1575414"));
+	
+	var prods:Iterator = productList.iterator();
+	
+	//Get supported currencies in a comma delimited list
+	var currencies : Iterator = CustomObjectMgr.getAllCustomObjects('fiftyone_currencyList');
+	var currentItem;
+	var supportedCurrencyList : String = "";
+	
+	while(currencies.hasNext()) {
+		currentItem = currencies.next();
+		if (supportedCurrencyList.length!=0) {
+			supportedCurrencyList+= ",";
+		} 
+		supportedCurrencyList += currentItem.custom.currency_code;
+	}
+	
+	var i = 0;
+
+	var header : String = "Country\tCurrencyCode\tProduct Id\tProduct Name\tCategory Ids\tProduct Page URL\tLarge Image URL\tCurrent Price\t";
+		header += "Base Price\tBrand\tKeywords\tThumbnail Image URL\tProduct Display Name\tProduct Description\tPattern Name\tPromotional Message\tOnline Exclusive";
+	efWriter.writeLine(header);
+		
+	while(prods.hasNext())
+	{
+		var product : dw.catalog.Product = prods.next();
+		if(product.online) {
+			//if (i > 100) { break; }
+			if(!product.variant)
+			{
+				var line = "";
+				var supportedCountries : String = "";
+				
+				for each (var restriction : dw.value.EnumValue in product.custom.fiftyone_whitelist) {
+					if (supportedCountries.length!=0) {
+						supportedCountries+= ",";
+					} 
+					supportedCountries += restriction.value;
+				}
+				
+				line += supportedCountries + "\t";
+				
+				if (supportedCountries.length>0) {
+					line += supportedCurrencyList + "\t";
+				} else {
+					line += "" + "\t";
+				}
+				line += product.ID + "\t"; //Id
+				line += product.name + "\t"; //Name
+				var category : Category = product.primaryCategory;
+				if (category == null)
+					category = product.classificationCategory;
+				if(category == null && !product.onlineCategories.empty)
+					category = product.onlineCategories[0];
+					
+				var path : dw.util.ArrayList = new dw.util.ArrayList();
+				while( category != null && category.parent != null )
+				{
+					if( category.online ) path.addAt( 0, category );
+					category = category.parent;
+				}
+				var pathStr : String = '';
+				var isFirst : Boolean = true;
+				var c : Category = null;
+				for each(c in path)
+				{
+					if(!isFirst)
+						pathStr += "|";
+					pathStr += c.ID;
+					isFirst = false;
+				}
+				line += pathStr + "\t"; //Category IDs separated by | 
+				line += URLUtils.http('Product-Show', 'pid', product.ID).toString().replace("staging.web.pacsun.demandware.net", "www.pacsun.com") + "\t"; //Product Page URL
+				
+				var selectableColors : dw.util.Collection = new dw.util.ArrayList();
+				var varAttrColor : dw.catalog.ProductVariationAttribute = null;
+				var varVal: dw.catalog.ProductVariationAttributeValue = null;
+				if( product.master )
+				{
+					var varModel : dw.catalog.ProductVariationModel = product.variationModel;
+					varAttrColor = varModel.getProductVariationAttribute("color");
+					var varVals : dw.util.Collection = new dw.util.ArrayList();
+					if (varAttrColor!=null) {
+						varVals = varModel.getAllValues(varAttrColor);
+					} else {
+						Logger.debug("Error Product with no color attribute:" + product.getID());
+					}
+					var varVal: dw.catalog.ProductVariationAttributeValue = !empty(varVals) && varVals.length > 0 ? varVals[0] : null;
+					
+				}
+				var tempProduct : Product = product;
+				var foundInStock : Boolean = false;
+				if(tempProduct.master){
+					for each(product in tempProduct.getVariants()){
+						if(product.getAvailabilityModel().isInStock()){
+							foundInStock = true;
+							break;
+						}
+					}
+					if(!foundInStock){
+						product = tempProduct;
+					}
+				}
+				if(product.getImage('product-list',0)) {
+					line += product.getImage('product-list',0).absURL.toString().replace("staging.web.pacsun.demandware.net", "www.pacsun.com") + "\t"; //Image Large URL
+				} else if (varVal != null) {
+					if(!empty(varVal.getImage('product-list'))) {
+						line += varVal.getImage('product-list').absURL.toString().replace("staging.web.pacsun.demandware.net", "www.pacsun.com") + "\t";
+					} else if (!empty(varVal.getImage('product-list'))) {
+						line += varVal.getImage('product-list',0).absURL.toString().replace("staging.web.pacsun.demandware.net", "www.pacsun.com") + "\t";	
+					} else {
+						line +="\t"; // No image	
+					}
+				}
+				else {
+					line += "\t"; //No thumbnail
+				}
+				//back to original
+				product = tempProduct;
+				
+				var pb : String = ''; 
+			
+				if(('listPriceDefault' in dw.system.Site.current.preferences.custom) && !empty(dw.system.Site.current.preferences.custom.listPriceDefault))
+					pb = dw.system.Site.current.preferences.custom.listPriceDefault;
+				else	
+				    pb = 'list-prices';
+				
+				if(product.master && product.variationModel.variants.size() > 0)
+				{
+					line += product.variationModel.variants[0].priceModel.price.toNumberString() + "\t"; // Current Price
+					if(!empty(product.variationModel.variants[0].priceModel.getPriceBookPrice(pb).toNumberString()))
+						line += product.variationModel.variants[0].priceModel.getPriceBookPrice(pb).toNumberString() + "\t"; // Base Price
+					else
+						line += "\t"; // Base Price
+				}
+				else
+				{
+					line += product.priceModel.price.toNumberString() + "\t"; // Current Price
+					if(!empty(product.priceModel.getPriceBookPrice(pb).toNumberString()))
+						line +=  product.priceModel.getPriceBookPrice(pb).toNumberString() + "\t"; // Base Price
+					else
+						line += "\t"; // Base Price
+				}
+	
+	
+				line += product.brand + "\t"; //Brand
+				//Tags/Keyword separated by ,
+				if(!empty(product.pageKeywords)) 
+					line += product.pageKeywords + "\t"; 
+				else
+					line += "\t";
+				//Thumbnail Image
+				
+				tempProduct = product;
+				foundInStock = false;
+				if(tempProduct.master){
+					for each(product in tempProduct.getVariants()){
+						if(product.getAvailabilityModel().isInStock()){
+							foundInStock = true;
+							break;
+						}
+					}
+					if(!foundInStock){
+						product = tempProduct;
+					}
+				}
+				if(product.getImage('product-thumb',0))
+					line += product.getImage('product-thumb',0).absURL.toString().replace("staging.web.pacsun.demandware.net", "www.pacsun.com") + "\t";
+				else if(product.master && product.variationModel.variants.size() > 0 && product.variationModel.variants[0].getImage('medium',0))
+					line += product.variationModel.variants[0].getImage('product-thumb',0).absURL.toString().replace("staging.web.pacsun.demandware.net", "www.pacsun.com") + '\t';
+				else
+					line += "\t";
+				product = tempProduct;
+				
+				line += product.name + "\t"; //Display Name
+				if (product.longDescription != null) {
+					line += product.longDescription.getMarkup().substr(300) + "\t"; //Description
+				}
+				else {
+					line += "\t";	
+				}
+				
+				line += "\t"; //Pattern Name
+				
+				if (product.custom.PromotionalMessage != null) { //Promotional Message custom attribute
+					line += product.custom.PromotionalMessage + "\t";
+				}
+				else {
+					line += "\t";
+				}
+				
+				if (product.custom.exclusive != null && product.custom.exclusive) { //Online Exclusive custom attribute
+					line += "yes" + "\t";
+				}
+				else {
+					line += "no" + "\t";
+				}
+				
+				efWriter.writeLine(line);
+				//Logger.debug(line);
+				i++;
+			}
+			
+		}
+	}
+	//prods.close();
+	efWriter.flush();	
+	efWriter.close();
+
+   return PIPELET_NEXT;
+}

@@ -1,0 +1,11 @@
+/**
+* A blank function that will give you a breakpoint (when called) within a template.
+
+<isscript>importScript('JongTest:JK_Utility/templateDebugHelper.ds');</isscript>
+<isscript>debugHelper();</isscript>
+
+
+*/
+function debugHelper() {
+	return true;
+}

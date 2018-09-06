@@ -1,0 +1,57 @@
+<!--- TEMPLATENAME: HTTPTemplate.isml --->
+
+<style>
+table {
+  border-collapse: collapse;
+}
+th,
+td {
+  border: 1px solid #c6c7cc;
+  padding: 10px 15px;
+}
+th {
+  font-weight: bold;
+}
+span {
+  font-size: small;
+}
+</style>
+
+<table>
+
+<tr>
+<th scope="col">URL</th>
+<th scope="col">Status</th>
+<isif condition="${empty(pdict.HTTPResult.errorMessage)}">
+<th scope="col">Result Object</th>
+<iselse>
+<th scope="col">Error Message</th>
+</iselse>
+</isif>
+</tr>
+
+<tr>
+<td>${pdict.SVCConfig.URL}</td>
+<isif condition="${empty(pdict.HTTPResult.errorMessage)}">
+<td>${pdict.HTTPResult.msg}</td>
+<td>${pdict.HTTPResult.object}</td>
+<iselse>
+<td>${pdict.HTTPResult.status}</td>
+<td>${pdict.HTTPResult.errorMessage}</td>
+</iselse>
+</isif>
+</tr>
+
+</table>
+<br>
+
+<h3>Service Information</h3>
+<br>
+<h5>Configuration</h5>
+<span>${pdict.SVCConfig.configuration}</span>
+<p>
+<h5>Profile</h5>
+<span>${pdict.SVCConfig.configuration.profile}</span>
+<p>
+<h5>Credential</h5>
+<span>${pdict.SVCConfig.configuration.credential}</span>

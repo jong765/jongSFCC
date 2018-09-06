@@ -1,0 +1,82 @@
+<!--- TEMPLATENAME: SOAPTemplate.isml --->
+
+<style>
+table {
+  border-collapse: collapse;
+}
+th,
+td {
+  border: 1px solid #c6c7cc;
+  padding: 10px 15px;
+}
+th {
+  font-weight: bold;
+}
+span {
+  font-size: small;
+}
+</style>
+
+<table>
+
+<tr>
+<th scope="col">URL</th>
+<th scope="col">Status</th>
+<th scope="col">Result Object</th>
+</tr>
+
+
+<isif condition="${empty(pdict.SVCConfig.census)}">
+<tr>
+<td>SOAP Weather (1.2)</td>
+<isif condition="${empty(pdict.SOAPResult.errorMessage)}">
+<td>${pdict.SOAPResult.status}</td>
+<td>
+City: ${pdict.SOAPResult.object.city} <br>
+State: ${pdict.SOAPResult.object.state} <br>
+Forecast: ${pdict.SOAPResult.object.forecastResult.forecast}<br>
+<iselse>
+<td>${pdict.SOAPResult.status}</td>
+<td>${pdict.SOAPResult.errorMessage}</td>
+</iselse>
+</isif>
+</tr>
+</table>
+<span>Tested using <a href="http://wsf.cdyne.com/WeatherWS/Weather.asmx?op=GetCityWeatherByZIP">Weather SOAP</a></span>
+
+<iselse>
+
+<tr>
+<td>SOAP Census (1.1)</td>
+<isif condition="${empty(pdict.SOAPResult.errorMessage)}">
+<td>${pdict.SOAPResult.status}</td>
+<td>
+City: ${pdict.SOAPResult.object.NAME} <br>
+State: ${pdict.SOAPResult.object.STUSAB} <br>
+Population: ${pdict.SOAPResult.object.total}<br>
+Geo: ( ${pdict.SOAPResult.object.LAT}, ${pdict.SOAPResult.object.LON} )</td>
+<iselse>
+<td>${pdict.SOAPResult.status}</td>
+<td>${pdict.SOAPResult.errorMessage}</td>
+</iselse>
+</isif>
+</tr>
+</table>
+<br>
+<span>Tested using <a href="http://www.reportingsales.com/DeFactoSF1.asmx?op=DeFactoSF1Part1ByZip">Census SOAP</a></span>
+<br>
+<span>Get the api key <a href="http://www.reportingsales.com/signup.aspx">here</a>.</span>
+</iselse>
+</isif>
+
+
+<h3>Service Information</h3>
+<br>
+<h5>Configuration</h5>
+<span>${pdict.SVCConfig.configuration}</span>
+<p>
+<h5>Profile</h5>
+<span>${pdict.SVCConfig.configuration.profile}</span>
+<p>
+<h5>Credential</h5>
+<span>${pdict.SVCConfig.configuration.credential}</span>

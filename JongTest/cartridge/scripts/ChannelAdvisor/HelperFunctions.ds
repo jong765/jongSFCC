@@ -1,0 +1,1157 @@
+
+importPackage( dw.system );
+importPackage( dw.io );
+importPackage( dw.net );
+importPackage( dw.catalog );
+importPackage( dw.util );
+importPackage( dw.web );
+
+importScript('int_pacsun_api:util/UrlDomainUtil.ds');
+
+
+function getProductsFileNameIteration(fileCounter : Number) : String {
+	return '/src/channeladvisor/Products' + fileCounter.toFixed() + '.xml';
+}
+
+function getProductsFileName() : String {
+	return '/src/channeladvisor/Products.xml';
+}
+
+function getCatalogFileName() : String {
+	return '/src/channeladvisor/Catalog.xml';
+}
+
+function writeToFile(content : String, isAppend : Boolean, path : String) : Boolean {
+	try {		
+		var file : File = new File(File.IMPEX + path);
+		
+		if(!file.exists()) {
+			if(!file.createNewFile()) {
+				Logger.error("File "+file.name+" could not be created!");
+				return false;
+			}
+		} 
+		
+		var out : FileWriter = new FileWriter(file, isAppend);
+		out.write(content);
+		out.flush();
+		out.close();
+	}
+	catch(e) {
+			Logger.error("An error occured while exporting channel advisor XML products {0}.", e);
+			return false;
+	}	
+	
+	return true;
+}
+
+// FTP
+function FTPFile(vendorName : String, hostName : String, userId : String, password : String, remoteRelativePath : String, catalogFileName : String) : Boolean {
+	var ftp : FTPClient = new FTPClient(); 
+	ftp.setTimeout(0);
+	
+	try {
+		if(ftp.connect(hostName , userId, password)) {
+			Logger.info('Connected to {0} FTP', vendorName);
+	
+			var file : File = new File(File.IMPEX + getCatalogFileName());
+		
+			if(!file.exists()) {
+				return false;
+			} else {
+				if (!empty(remoteRelativePath))
+					ftp.cd(remoteRelativePath);
+				var fileTransfer : Boolean = ftp.putBinary(catalogFileName, file);
+				if (!fileTransfer)
+					Logger.error("FTP error: " + ftp.getReplyMessage());
+				
+				ftp.disconnect();
+				
+				if(fileTransfer == true) {
+					return true;
+				}
+			}
+			
+			return false;		
+		} else {
+			Logger.error("FTP error: " + ftp.getReplyMessage());
+		}
+	} catch(e) {
+		logError(e);
+		return false;
+	}
+	return false;
+}
+
+// SFTP
+function SFTPFile(vendorName : String, hostName : String, userId : String, password : String, remoteRelativePath : String, catalogFileName : String) : Boolean {
+	var sftp : SFTPClient = new SFTPClient(); 
+	sftp.setTimeout(0);
+	
+	try {
+		if(sftp.connect(hostName, 22, userId, password)) {
+			Logger.info('Connected to {0} SFTP', vendorName);
+	
+			var file : File = new File(File.IMPEX + getCatalogFileName());
+		
+			if(!file.exists()) {
+				return false;
+			} else {
+				if (!empty(remoteRelativePath))
+					sftp.cd(remoteRelativePath);
+				var fileTransfer : Boolean = sftp.putBinary(catalogFileName, file);
+				if (!fileTransfer)
+					Logger.error("SFTP error: " + sftp.getErrorMessage());
+				
+				sftp.disconnect();
+				
+				if(fileTransfer == true) {
+					return true;
+				}
+			}
+			return false;		
+		} else {
+			Logger.error("SFTP error: " + sftp.getErrorMessage());
+		}
+	} catch(e) {
+		logError(e);
+		return false;
+	}
+	return false;
+}
+
+
+function writeDefaultChannelAttributes(product: Product, masterProd: Product, productStringWriter: StringWriter, regExPattrn: RegExp) {
+	// according to attribute master list
+	// they say it should be SKU
+	if(!empty(product.ID))
+		productStringWriter.write('    <Model>' + product.ID + '</Model>\n');
+	else
+		productStringWriter.write('    <Model></Model>\n');
+		
+	if(!empty(product.manufacturerName))
+		productStringWriter.write('    <Manufacturer><![CDATA[' + product.manufacturerName + ']]></Manufacturer>\n');
+	else
+		productStringWriter.write('    <Manufacturer></Manufacturer>\n');
+		
+	if(!empty(product.manufacturerSKU)) {
+		productStringWriter.write('    <ManufacturerModel><![CDATA[' + product.manufacturerSKU + ']]></ManufacturerModel>\n');
+		productStringWriter.write('    <MPN><![CDATA[' + product.manufacturerSKU + ']]></MPN>\n');
+	} else {
+		productStringWriter.write('    <ManufacturerModel></ManufacturerModel>\n');
+		productStringWriter.write('    <MPN></MPN>\n');
+	}
+	
+	if(!empty(product.UPC) && product.UPC.search(regExPattrn) == -1)
+		productStringWriter.write('    <UPC><![CDATA[' + product.UPC + ']]></UPC>\n');
+	else
+		productStringWriter.write('    <UPC></UPC>\n');
+	
+	/*********************************************************************************
+	******************* START MERCHANT CATEGORY **************************************
+	**********************************************************************************/
+	var category : Category = product.primaryCategory;
+	if (category == null)
+		category = product.classificationCategory;
+		
+	if(category == null && !product.onlineCategories.empty)
+		category = product.onlineCategories[0];
+
+	var path : ArrayList = new ArrayList();
+	while( category != null && category.parent != null ) {
+		if( category.online ) path.addAt( 0, category );
+		category = category.parent;
+	}
+	
+	var pathStr : String = '';
+	var isFirst : Boolean = true;
+	var c : Category = null;
+	
+	for each(c in path) {
+		if(!isFirst)
+			pathStr += " - ";
+			
+		pathStr += c.displayName;
+		isFirst = false;
+	}
+	
+	if(!empty(pathStr))
+		productStringWriter.write('    <MerchantCategory><![CDATA[' + pathStr + ']]></MerchantCategory>\n');
+	else
+		productStringWriter.write('    <MerchantCategory></MerchantCategory>\n');	
+	/*********************************************************************************
+	******************* END MERCHANT CATEGORY ****************************************
+	**********************************************************************************/			
+	
+	/**********************************************************************************
+	******************* START BRAND ***************************************************
+	**********************************************************************************/
+	if(!empty(product.brand))
+		productStringWriter.write('    <Brand><![CDATA[' + product.brand + ']]></Brand>\n');
+	else
+		productStringWriter.write('    <Brand></Brand>\n');	
+	/**********************************************************************************
+	******************* END BRAND *****************************************************
+	**********************************************************************************/
+	var productName:String = !empty(product.name) ? product.name : (!empty(masterProd.name) ? masterProd.name : "");
+	
+	if(!empty(product.name))
+		productStringWriter.write('    <OfferName><![CDATA[' + product.name + ']]></OfferName>\n');
+	else
+		productStringWriter.write('    <OfferName></OfferName>\n');
+	
+	var productDesc = product.longDescription && !empty(product.longDescription.markup) ? product.longDescription.markup : (masterProd.longDescription && !empty(masterProd.longDescription.markup) ? masterProd.longDescription.markup : null); 
+	var shortDesc = product.shortDescription && !empty(product.shortDescription.markup) ? product.shortDescription.markup : (masterProd.shortDescription && !empty(masterProd.shortDescription.markup) ? masterProd.shortDescription.markup : null);
+	
+	productDesc = !empty(productDesc) ? productDesc : shortDesc;
+	
+	if(!empty(productName) || !empty(productDesc))
+		productStringWriter.write('    <OfferDescription><![CDATA[' + (!empty(productDesc) ? productDesc : product.name) + ']]></OfferDescription>\n');
+	else
+		productStringWriter.write('    <OfferDescription></OfferDescription>\n');
+	
+	if(!empty(product.ID))
+		productStringWriter.write('    <ActionURL><![CDATA[' + replaceWebsiteDomain(URLUtils.http('Product-Show', 'pid', product.ID).toString(),"www.pacsun.com") + ']]></ActionURL>\n');
+	else
+		productStringWriter.write('    <ActionURL></ActionURL>\n');
+
+	if(product.activeData.costPrice != null)
+		productStringWriter.write('    <ProductCost>' + product.activeData.costPrice.toFixed(2) + '</ProductCost>\n');
+	else
+		productStringWriter.write('    <ProductCost></ProductCost>\n');
+	
+	if(product.activeData.avgGrossMarginValueYear != null)
+		productStringWriter.write('    <ProductMargin>' + product.activeData.avgGrossMarginValueYear.toFixed(2) + '</ProductCost>\n');
+	else
+		productStringWriter.write('    <ProductMargin></ProductMargin>\n');
+	
+	var qty = product.availabilityModel.inventoryRecord != null ? product.availabilityModel.inventoryRecord.ATS.value : 0;
+	 
+	//for products which have less than specified unit threshold, we should mark them out of stock for our vendors
+	if (!isInStockThreshold(qty)) {		
+		qty=0;
+	}
+	
+	productStringWriter.write('    <Quantity>'+ StringUtils.stringToXml(qty)+'</Quantity>\n');	
+	//Custom1 = CAMarketplace
+	if(!empty(product.custom.caMarketPlace)) {
+		productStringWriter.write('    <Custom1>'+ product.custom.caMarketPlace+'</Custom1>\n');
+	}	
+}
+
+
+
+function writePriceInfo(product: Product, masterProd: Product, productStringWriter: StringWriter) {
+	var pb : String = ''; 
+		
+	if(('listPriceDefault' in dw.system.Site.current.preferences.custom) && !empty(dw.system.Site.current.preferences.custom.listPriceDefault))
+		pb = dw.system.Site.current.preferences.custom.listPriceDefault;
+	else	
+	    pb = 'pacsun_list_price';
+	
+	if(product.master && product.variationModel.variants.size() > 0) {
+		if(!empty(product.variationModel.variants[0].priceModel.getPriceBookPrice(pb).toNumberString()))
+			productStringWriter.write('    <RegularPrice>' + product.variationModel.variants[0].priceModel.getPriceBookPrice(pb).toNumberString() + '</RegularPrice>\n');
+		else
+			productStringWriter.write('    <RegularPrice></RegularPrice>\n');
+			productStringWriter.write('    <CurrentPrice>' + product.variationModel.variants[0].priceModel.price.toNumberString() + '</CurrentPrice>\n');
+	} else {
+		if(!empty(product.priceModel.getPriceBookPrice(pb).toNumberString()))
+			productStringWriter.write('    <RegularPrice>' + product.priceModel.getPriceBookPrice(pb).toNumberString() + '</RegularPrice>\n');
+		else
+			productStringWriter.write('    <RegularPrice></RegularPrice>\n');
+			productStringWriter.write('    <CurrentPrice>' + product.priceModel.price.toNumberString() + '</CurrentPrice>\n');
+	}
+	
+	/*
+	 *   START - New code to add promotional pricing to the feed. 
+	 */
+
+	var promos : Collection = dw.campaign.PromotionMgr.getActivePromotions().getProductPromotions(product);
+	var myPromoPrice = '';
+
+	for(var a in promos){
+		var promo : Promotion = promos[a];
+		if(promo.getPromotionClass() != null && promo.getPromotionClass().equals(dw.campaign.Promotion.PROMOTION_CLASS_PRODUCT) && !promo.basedOnCoupons && !promo.basedOnSourceCodes){
+			
+			if(product.optionProduct && promo.getPromotionalPrice(product, product.getOptionModel()) > 0)
+				myPromoPrice = promo.getPromotionalPrice(product, product.getOptionModel());
+			else if(promo.getPromotionalPrice(product) > 0)
+				myPromoPrice = promo.getPromotionalPrice(product);
+
+		}
+	}
+	
+	if(myPromoPrice !== '') myPromoPrice = myPromoPrice.toNumberString();
+	
+	productStringWriter.write('    <PromoPrice>' + myPromoPrice + '</PromoPrice>\n');
+	
+	/*
+	 *   END - New code to add promotional pricing to the feed. 
+	 */
+	
+	var qty = product.availabilityModel.inventoryRecord != null ? product.availabilityModel.inventoryRecord.ATS.value : 0;
+
+	var inStock : String = ((product.availabilityModel.inStock && isInStockThreshold(qty)) ? '1' : '0');
+			
+	productStringWriter.write('    <InStock>' + inStock + '</InStock>\n');	
+}
+
+function writeCustomAttributes(product: Product, masterProd: Product, productStringWriter: StringWriter) {
+	/************************* START CUSTOM ATTRIBUTES ********************************/
+			
+	// the classification categories from IP division,dept,subDept etc
+	// these attributes seem to only be defined at the master level
+	var otd : ObjectTypeDefinition = product.describe();
+
+	var division:String = 'division' in product.custom && !empty(product.custom.division) ? product.custom.division : ('division' in masterProd.custom && !empty(masterProd.custom.division) ? masterProd.custom.division : "" );
+	if(!empty(division) && division != "null") {
+		productStringWriter.write('    <IP-DIVISION><![CDATA[' + division+']]></IP-DIVISION>\n');
+	}
+
+	var department:String = 'department' in product.custom && !empty(product.custom.department) ?product.custom.department : ('department' in masterProd.custom && !empty(masterProd.custom.department) ? masterProd.custom.department : "");
+	if(!empty(department) && department !="null") {
+		productStringWriter.write('    <IP-DEPT><![CDATA[' + department+']]></IP-DEPT>\n');
+	}	
+
+	var subdepartment:String = 'subdepartment' in product.custom && !empty(product.custom.subdepartment) ?product.custom.subdepartment : ('subdepartment' in masterProd.custom && !empty(masterProd.custom.subdepartment) ? masterProd.custom.subdepartment : "");
+	if(!empty(subdepartment) && subdepartment !="null") {
+		productStringWriter.write('    <IP-SUBDEPT><![CDATA[' + subdepartment+']]></IP-SUBDEPT>\n');
+	}
+	
+	// have to rename this attribute as its a reserved keyword that is causing issues when trying to access the underlying data of this attribute
+	var className:String = "className" in product.custom && !empty(product.custom.className) ? product.custom.className : ("className" in masterProd.custom && !empty(masterProd.custom.className) ? masterProd.custom.className : "");
+	if(!empty(className) && className != "null") {
+		productStringWriter.write('    <IP-CLASS><![CDATA[' + className+']]></IP-CLASS>\n');
+	}
+	
+	var styleName:String = 'styleName' in product.custom && !empty(product.custom.styleName) ? product.custom.styleName : ('styleName' in masterProd.custom && !empty(masterProd.custom.styleName) ? masterProd.custom.styleName : "");
+	if(!empty(styleName) && styleName != "null") {
+		productStringWriter.write('    <IP-STYLE><![CDATA['+styleName+']]></IP-STYLE>\n');
+	}
+	
+	var exclusiveAttr:Boolean = ('exclusive' in product.custom  && !empty(product.custom.exclusive)) ? product.custom.exclusive : (('exclusive' in masterProd.custom  && !empty(masterProd.custom.exclusive)) ? masterProd.custom.exclusive : false);
+	productStringWriter.write('    <PACSUN-EXCLUSIVE><![CDATA['+exclusiveAttr+']]></PACSUN-EXCLUSIVE>\n');	
+	
+	var onlineExclusiveAttr:Boolean = ('onlineExclusive' in product.custom  && !empty(product.custom.onlineExclusive)) ? product.custom.onlineExclusive : (('onlineExclusive' in masterProd.custom  && !empty(masterProd.custom.onlineExclusive)) ? masterProd.custom.onlineExclusive : false);
+	productStringWriter.write('    <ONLINE-EXCLUSIVE><![CDATA['+onlineExclusiveAttr+']]></ONLINE-EXCLUSIVE>\n');	
+	
+	var originAttr:String = 'countryOfOrigin' in product.custom && !empty(product.custom.countryOfOrigin) ? product.custom.countryOfOrigin: ('countryOfOrigin' in masterProd.custom && !empty(masterProd.custom.countryOfOrigin) ? masterProd.custom.countryOfOrigin: "");
+	if(!empty(originAttr)) {
+		productStringWriter.write('    <ORIGIN><![CDATA['+originAttr+']]></ORIGIN>\n');
+	}
+
+	var marginAttr:String = 'retailMargin' in product.custom && !empty(product.custom.retailMargin) ? product.custom.retailMargin: ('retailMargin' in masterProd.custom && !empty(masterProd.custom.retailMargin) ? masterProd.custom.retailMargin: "");
+	if(!empty(marginAttr)) {
+		productStringWriter.write('    <MARGIN-RETAIL><![CDATA['+marginAttr+']]></MARGIN-RETAIL>\n');
+	}
+
+	var inventoryAttr:String = 'inventoryAvailable' in product.custom && !empty(product.custom.inventoryAvailable) ? product.custom.inventoryAvailable: ('inventoryAvailable' in masterProd.custom && !empty(masterProd.custom.inventoryAvailable) ? masterProd.custom.inventoryAvailable: "");
+	if(!empty(inventoryAttr)) {
+		productStringWriter.write('    <INVENTORY-PERCENT><![CDATA['+inventoryAttr+']]></INVENTORY-PERCENT>\n');
+	}
+	
+	// ACTIVE FLAG
+	productStringWriter.write('    <ACTIVE><![CDATA['+product.online+']]></ACTIVE>\n');
+	
+	/**********************************  BEGIN SUNGLASSES ATTRIBUTES ************************************/
+	var shoeFabricAttr:String = 'shoesMaterialFabric' in product.custom && !empty(product.custom.shoesMaterialFabric) && product.custom.shoesMaterialFabric != "null" ? product.custom.shoesMaterialFabric: ('shoesMaterialFabric' in masterProd.custom && !empty(masterProd.custom.shoesMaterialFabric) && masterProd.custom.shoesMaterialFabric != "null" ? masterProd.custom.shoesMaterialFabric: "");
+	if(!empty(shoeFabricAttr) && shoeFabricAttr != "null" && !empty(shoeFabricAttr.value)) {
+		productStringWriter.write('    <Shoes-Material-Fabric><![CDATA['+shoeFabricAttr+']]></Shoes-Material-Fabric>\n');
+	}
+	
+	var sgFrameTypeAttr:String = 'sunglassesFrameMaterialType' in product.custom && !empty(product.custom.sunglassesFrameMaterialType) && product.custom.sunglassesFrameMaterialType != "null" ? product.custom.sunglassesFrameMaterialType: ('sunglassesFrameMaterialType' in masterProd.custom && !empty(masterProd.custom.sunglassesFrameMaterialType) && masterProd.custom.sunglassesFrameMaterialType != "null" ? masterProd.custom.sunglassesFrameMaterialType: "");
+	if(!empty(sgFrameTypeAttr) && sgFrameTypeAttr != "null" && !empty(sgFrameTypeAttr.value)) {
+		productStringWriter.write('    <Sunglasses-Frame-Material-Type><![CDATA['+sgFrameTypeAttr+']]></Sunglasses-Frame-Material-Type>\n');
+	}
+	
+	var sgItemShapeAttr:String = 'sunglassesItemShape' in product.custom && !empty(product.custom.sunglassesItemShape) && product.custom.sunglassesItemShape != "null" ? product.custom.sunglassesItemShape: ('sunglassesItemShape' in masterProd.custom && !empty(masterProd.custom.sunglassesItemShape) && masterProd.custom.sunglassesItemShape != "null" ? masterProd.custom.sunglassesItemShape: "");
+	if(!empty(sgItemShapeAttr) && sgItemShapeAttr != "null" && !empty(sgItemShapeAttr.value)) {
+		productStringWriter.write('    <Sunglasses-Item-Shape><![CDATA['+sgItemShapeAttr+']]></Sunglasses-Item-Shape>\n');
+	}
+	
+	var sgLensColorAttr:String = 'sunglassesLensColor' in product.custom && !empty(product.custom.sunglassesLensColor) && product.custom.sunglassesLensColor != "null" ? product.custom.sunglassesLensColor: ('sunglassesLensColor' in masterProd.custom && !empty(masterProd.custom.sunglassesLensColor) && masterProd.custom.sunglassesLensColor != "null" ? masterProd.custom.sunglassesLensColor: "");
+	if(!empty(sgLensColorAttr) && sgLensColorAttr != "null" && !empty(sgLensColorAttr.value)) {
+		productStringWriter.write('    <Sunglasses-Lens-Color><![CDATA['+sgLensColorAttr+']]></Sunglasses-Lens-Color>\n');
+	}
+	
+	var sgLensTypeAttr:String = 'sunglassesLensMaterialType' in product.custom && !empty(product.custom.sunglassesLensMaterialType) && product.custom.sunglassesLensMaterialType != "null" ? product.custom.sunglassesLensMaterialType: ('sunglassesLensMaterialType' in masterProd.custom && !empty(masterProd.custom.sunglassesLensMaterialType) && masterProd.custom.sunglassesLensMaterialType != "null" ? masterProd.custom.sunglassesLensMaterialType: "");
+	if(!empty(sgLensTypeAttr) && sgLensTypeAttr != "null" && !empty(sgLensTypeAttr.value)) {
+		productStringWriter.write('    <Sunglasses-Lens-Material-Type><![CDATA['+sgLensTypeAttr+']]></Sunglasses-Lens-Material-Type>\n');
+	}
+	
+	var sgPolarAttr:String = 'sunglassesPolarizationType' in product.custom && !empty(product.custom.sunglassesPolarizationType) && product.custom.sunglassesPolarizationType != "null" ? product.custom.sunglassesPolarizationType: ('sunglassesPolarizationType' in masterProd.custom && !empty(masterProd.custom.sunglassesPolarizationType) && masterProd.custom.sunglassesPolarizationType != "null" ? masterProd.custom.sunglassesPolarizationType: "");
+	if(!empty(sgPolarAttr) && sgPolarAttr != "null" && !empty(sgPolarAttr.value)) {
+		productStringWriter.write('    <Sunglasses-Polarization-Type><![CDATA['+sgPolarAttr+']]></Sunglasses-Polarization-Type>\n');
+	}
+	/**********************************  END SUNGLASSES ATTRIBUTES ************************************/
+	
+	var handBagsMatAttr:String = 'handbagsMaterialFabric' in product.custom && !empty(product.custom.handbagsMaterialFabric) && product.custom.handbagsMaterialFabric != "null" ? product.custom.handbagsMaterialFabric: ('handbagsMaterialFabric' in masterProd.custom && !empty(masterProd.custom.handbagsMaterialFabric) && masterProd.custom.handbagsMaterialFabric != "null" ? masterProd.custom.handbagsMaterialFabric: "");
+	if(!empty(handBagsMatAttr) && handBagsMatAttr != "null" && !empty(handBagsMatAttr.value)) {
+		productStringWriter.write('    <Handbags-Material-Fabric><![CDATA['+handBagsMatAttr+']]></Handbags-Material-Fabric>\n');
+	}
+	
+	var imageViewsAttr:String = !empty(product.custom.viewCount) && product.custom.viewCount != "null" ? product.custom.viewCount: ('viewCount' in masterProd.custom && !empty(masterProd.custom.viewCount) && masterProd.custom.viewCount != "null" ? masterProd.custom.viewCount: "");
+	if(!empty(imageViewsAttr)) {
+		productStringWriter.write('    <IMAGE-VIEWS><![CDATA['+imageViewsAttr+']]></IMAGE-VIEWS>\n');
+	}
+
+	var smartSeason:String = !empty(product.custom.smartSeason) && product.custom.smartSeason!= "null" ? product.custom.smartSeason: ('smartSeason' in masterProd.custom && !empty(masterProd.custom.smartSeason) && masterProd.custom.smartSeason!= "null" ? masterProd.custom.smartSeason: "");
+	if(!empty(smartSeason) && smartSeason != "null") {
+		productStringWriter.write('    <SMART-SEASON><![CDATA['+smartSeason+']]></SMART-SEASON>\n');
+	}
+
+	var smartSeasonCode:String = !empty(product.custom.smartSeasonCode) && product.custom.smartSeasonCode!= "null" ? product.custom.smartSeasonCode: ('smartSeasonCode' in masterProd.custom && !empty(masterProd.custom.smartSeasonCode) && masterProd.custom.smartSeasonCode != "null" ? masterProd.custom.smartSeasonCode : "");
+	if(!empty(smartSeasonCode) && smartSeasonCode != "null") {
+		productStringWriter.write('    <SMART-SEASON-CODE><![CDATA['+smartSeasonCode+']]></SMART-SEASON-CODE>\n');
+	}
+	
+	//parentSku
+	var parentSKU:String = "";
+	if(product.variant && !empty(product.variationModel)) {
+		parentSKU  = product.variationModel.master.ID;
+	} else {
+		if(product.master) {
+			// then its either the master or its own master
+			parentSKU = "PARENT";
+		} else if(!product.variant) {
+			parentSKU = "PARENT";
+		}
+	}
+
+	if(!empty(parentSKU) && parentSKU != "null") {
+		productStringWriter.write('    <PARENT-SKU><![CDATA['+parentSKU+']]></PARENT-SKU>\n');
+	} 
+	
+	// newItemDate
+	var newAttr = 'newItem' in product.custom && !empty(product.custom.newItem) && product.custom.newItem != "null" ? product.custom.newItem: ('newItem' in masterProd.custom && !empty(masterProd.custom.newItem) && masterProd.custom.newItem != "null" ? masterProd.custom.newItem : "");
+	if(!empty(newAttr) && newAttr!= "null") {
+		productStringWriter.write('    <NEWITEMDATE><![CDATA['+newAttr+']]></NEWITEMDATE>\n');
+	} else {
+		productStringWriter.write('    <NEWITEMDATE></NEWITEMDATE>\n');	
+	}
+	
+	writeVariantAttributes(product,masterProd,productStringWriter);
+	
+	var pStyleAttr:String = !empty(product.custom.styleNumber) ? product.custom.styleNumber: (!empty(masterProd.custom.styleNumber) ? masterProd.custom.styleNumber: "");
+	if(!empty(pStyleAttr)) {
+		productStringWriter.write('    <PRODUCT-STYLE><![CDATA['+pStyleAttr+']]></PRODUCT-STYLE>\n');
+	}
+	
+	/******************************** Begin MERCH ATTRIBUTES ********************************/
+	
+	var mClassAttr:String = 'classCode' in product.custom && !empty(product.custom.classCode) ? product.custom.classCode: ('classCode' in masterProd.custom && !empty(masterProd.custom.classCode) ? masterProd.custom.classCode: "");
+	if(!empty(mClassAttr) && mClassAttr != "null") {
+		productStringWriter.write('    <MERCHCLASSNUMBER><![CDATA['+mClassAttr+']]></MERCHCLASSNUMBER>\n');
+	}
+
+	var mVendorAttr:String = 'vendorCode' in product.custom && !empty(product.custom.vendorCode) ? product.custom.vendorCode: ('vendorCode' in masterProd.custom && !empty(masterProd.custom.vendorCode) ? masterProd.custom.vendorCode: "");
+	if(!empty(mVendorAttr)) {
+		productStringWriter.write('    <MERCHVENDORNUMBER><![CDATA['+mVendorAttr+']]></MERCHVENDORNUMBER>\n');
+	}
+
+	var mStyleAttr:String = 'styleCode' in product.custom && !empty(product.custom.styleCode) ? product.custom.styleCode: ('styleCode' in masterProd.custom && !empty(masterProd.custom.styleCode) ? masterProd.custom.styleCode: "");
+	if(!empty(mStyleAttr)) {
+		productStringWriter.write('    <MERCHSTYLENUMBER><![CDATA['+mStyleAttr+']]></MERCHSTYLENUMBER>\n');
+	}
+	
+	/******************************** END MERCH ATTRIBUTES ********************************/
+	
+	var promoMsgAttr:String = !empty(product.custom.PromotionalMessage) ? product.custom.PromotionalMessage: (!empty(masterProd.custom.PromotionalMessage) ? masterProd.custom.PromotionalMessage: "");
+	if(!empty(promoMsgAttr)) {
+		productStringWriter.write('    <PromotionalText><![CDATA['+promoMsgAttr+']]></PromotionalText>\n');
+	}
+	/******************************** END CUSTOM   ATTRIBUTES ********************************/	
+}
+
+function writeExtendedAttributes(product: Product, masterProd: Product, productStringWriter: StringWriter) {
+	
+	var otd : ObjectTypeDefinition = product.describe();
+	
+	/******************************* BEGIN Extended Attributes *******************************/ 
+	var fitAttr:String = 'fit' in product.custom && !empty(product.custom.fit) && product.custom.fit != "null"  ? product.custom.fit: ('fit' in masterProd.custom && !empty(masterProd.custom.fit) && masterProd.custom.fit != "null" ? masterProd.custom.fit: "");
+	if(!empty(fitAttr) && fitAttr != "null") {
+		var attrDef:ObjectAttributeDefinition = otd.getCustomAttributeDefinition("fit");
+		if(empty(attrDef)) {
+			attrDef = otd.getSystemAttributeDefinition("fit");	
+		}
+		if(!empty(attrDef)) {
+			if(attrDef.multiValueType) { // assume that multiValueType means enum of String
+				var strBuilder:String = '';
+				var i = 0;
+				for each(var value in fitAttr) { // could be enum or set of string
+					if(!empty(value) && value != "null" && !empty(value.value) && value.value !="null") {
+						if(i> 0 && fitAttr.length > 1) {
+							strBuilder +=',';
+						}
+						strBuilder += value;
+					}
+					i++;
+				}	
+				if(!empty(strBuilder)) {
+					strBuilder = '    <FIT><![CDATA['+strBuilder+']]></FIT>\n';
+					productStringWriter.write(strBuilder);
+				}
+			} else {
+				if(!empty(fitAttr.value)) {
+					if(fitAttr.value != "null") {
+						productStringWriter.write('    <FIT><![CDATA['+fitAttr+']]></FIT>\n');
+					}
+				} else {
+					productStringWriter.write('    <FIT><![CDATA['+fitAttr+']]></FIT>\n');	
+				}
+			}
+		} else {
+			productStringWriter.write('    <FIT><![CDATA['+fitAttr+']]></FIT>\n');	
+		}
+	}
+	
+	var styleAttr:String = 'style' in product.custom && !empty(product.custom.style) && product.custom.style != "null"  ? product.custom.style: ('style' in masterProd.custom && !empty(masterProd.custom.style) && masterProd.custom.style != "null" ? masterProd.custom.style: "");
+	if(!empty(styleAttr) && styleAttr != "null") {
+		var attrDef:ObjectAttributeDefinition = otd.getCustomAttributeDefinition("style");
+		if(empty(attrDef)) {
+			attrDef = otd.getSystemAttributeDefinition("style");	
+		}
+		if(!empty(attrDef)) {
+			if(attrDef.multiValueType) { // assume that multiValueType means enum of String
+				var strBuilder:String = '';
+				var i = 0;
+				for each(var value in styleAttr) { // could be enum or set of string
+					if(!empty(value) && value != "null" && !empty(value.value) && value.value !="null") {
+						if(i> 0 && styleAttr.length > 1) {
+							strBuilder +=',';
+						}
+						strBuilder += value;
+					}
+					i++;
+				}	
+				if(!empty(strBuilder)) {
+					strBuilder = '    <STYLE><![CDATA['+strBuilder+']]></STYLE>\n';
+					productStringWriter.write(strBuilder);
+				}
+			} else {
+				if(!empty(styleAttr.value)) {
+					if(styleAttr.value != "null") {
+						productStringWriter.write('    <STYLE><![CDATA['+styleAttr+']]></STYLE>\n');
+					}
+				} else {
+					productStringWriter.write('    <STYLE><![CDATA['+styleAttr+']]></STYLE>\n');	
+				}
+			}
+		} else {
+			productStringWriter.write('    <STYLE><![CDATA['+styleAttr+']]></STYLE>\n');	
+		}
+	}
+	
+	var washAttr:String = 'wash' in product.custom && !empty(product.custom.wash) && product.custom.wash != "null"  ? product.custom.wash: ('wash' in masterProd.custom && !empty(masterProd.custom.wash) && masterProd.custom.wash != "null"  ? masterProd.custom.wash: "");
+	if(!empty(washAttr) && washAttr != "null") {
+		var attrDef:ObjectAttributeDefinition = otd.getCustomAttributeDefinition("wash");
+		if(empty(attrDef)) {
+			attrDef = otd.getSystemAttributeDefinition("wash");	
+		}
+		if(!empty(attrDef)) {
+			if(attrDef.multiValueType) { // assume that multiValueType means enum of String
+				var strBuilder:String = '';
+				var i = 0;
+				for each(var value in washAttr) {
+					if(!empty(value) && value != "null" && !empty(value.value) && value.value !="null") {
+						if(i> 0 && washAttr.length > 1) {
+							productStringWriter.write(",");
+							strBuilder +=',';
+						}
+						strBuilder += value;
+					}
+					i++;
+				}	
+				if(!empty(strBuilder)) {
+					strBuilder = '    <WASH><![CDATA['+strBuilder+']]></WASH>\n';
+					productStringWriter.write(strBuilder);
+				}
+				
+				
+			} else {
+				if(!empty(washAttr.value)) {
+					if(washAttr.value != "null") {
+						productStringWriter.write('    <WASH><![CDATA['+washAttr+']]></WASH>\n');
+					}
+				} else {
+					productStringWriter.write('    <WASH><![CDATA['+washAttr+']]></WASH>\n');	
+				}
+			}
+		} else {
+			productStringWriter.write('    <WASH><![CDATA['+washAttr+']]></WASH>\n');	
+		}
+		//productStringWriter.write('    <WASH><![CDATA['+washAttr+']]></WASH>\n');
+	}
+	
+	var trendAttr:String = 'trend' in product.custom && !empty(product.custom.trend) && product.custom.trend != "null"  ? product.custom.trend: ('trend' in masterProd.custom && !empty(masterProd.custom.trend) && masterProd.custom.fit != "trend"  ? masterProd.custom.trend: "");
+	if(!empty(trendAttr) && trendAttr != "null") {
+		var attrDef:ObjectAttributeDefinition = otd.getCustomAttributeDefinition("trend");
+		if(empty(attrDef)) {
+			attrDef = otd.getSystemAttributeDefinition("trend");	
+		}
+		if(!empty(attrDef)) {
+			if(attrDef.multiValueType) { // assume that multiValueType means enum of String
+				var strBuilder:String = '';
+				var i = 0;
+				for each(var value in trendAttr) {
+					if(!empty(value) && value != "null" && !empty(value.value) && value.value !="null") {
+						if(i> 0 && trendAttr.length > 1) {
+							strBuilder += ',';
+						}
+						strBuilder += value;
+					}
+					i++;
+				}	
+				if(!empty(strBuilder)) {
+					strBuilder = '    <TREND><![CDATA['+strBuilder+']]></TREND>\n';
+					productStringWriter.write(strBuilder);
+				}
+				
+			} else {
+				if(!empty(trendAttr.value)) {
+					if(trendAttr.value != "null") {
+						productStringWriter.write('    <TREND><![CDATA['+trendAttr+']]></TREND>\n');
+					}
+				} else {
+					productStringWriter.write('    <TREND><![CDATA['+trendAttr+']]></TREND>\n');	
+				}
+			}
+		} else { // this case should really never happen but just in case
+			productStringWriter.write('    <TREND><![CDATA['+trendAttr+']]></TREND>\n');	
+		}
+	}
+	
+	var necklineAttr:String = 'neckline' in product.custom && !empty(product.custom.neckline) && product.custom.neckline != "null"  ? product.custom.neckline: ('neckline' in masterProd.custom && !empty(masterProd.custom.neckline) && masterProd.custom.neckline != "null"  ? masterProd.custom.neckline: "");
+	if(!empty(necklineAttr) && necklineAttr != "null") {
+		var attrDef:ObjectAttributeDefinition = otd.getCustomAttributeDefinition("neckline");
+		if(empty(attrDef)) {
+			attrDef = otd.getSystemAttributeDefinition("neckline");	
+		}
+		if(!empty(attrDef)) {
+			if(attrDef.multiValueType) { // assume that multiValueType means enum of String
+				var strBuilder:String = '';
+				var i = 0;
+				for each(var value in necklineAttr) {
+					if(!empty(value) && value != "null" && !empty(value.value) && value.value !="null") {
+						if(i> 0 && necklineAttr.length > 1) {
+							strBuilder +=',';
+						}
+						strBuilder += value;
+					}
+					i++;
+				}	
+				if(!empty(strBuilder)) {
+					strBuilder ='    <NECKLINE><![CDATA['+strBuilder+']]></NECKLINE>\n';
+					productStringWriter.write(strBuilder);
+				}
+				
+			} else {
+				if(!empty(necklineAttr.value)) {
+					if(necklineAttr.value != "null") {
+						productStringWriter.write('    <NECKLINE><![CDATA['+necklineAttr+']]></NECKLINE>\n');
+					}
+				} else {
+					productStringWriter.write('    <NECKLINE><![CDATA['+necklineAttr+']]></NECKLINE>\n');	
+				}
+			}
+		} else { // this case should really never happen but just in case
+			productStringWriter.write('    <NECKLINE><![CDATA['+necklineAttr+']]></NECKLINE>\n');	
+		}
+	}
+	
+	var sleeveAttr:String = 'sleeveLength' in product.custom && !empty(product.custom.sleeveLength) && product.custom.sleeveLength != "null"  ? product.custom.sleeveLength: ('sleeveLength' in masterProd.custom && !empty(masterProd.custom.sleeveLength) && masterProd.custom.sleeveLength != "null"  ? masterProd.custom.sleeveLength: "");
+	if(!empty(sleeveAttr) && sleeveAttr != "null") {
+		var attrDef:ObjectAttributeDefinition = otd.getCustomAttributeDefinition("sleeveLength");
+		if(empty(attrDef)) {
+			attrDef = otd.getSystemAttributeDefinition("sleeveLength");	
+		}
+		if(!empty(attrDef)) {
+			if(attrDef.multiValueType) { // assume that multiValueType means enum of String
+				var strBuilder:String = '';
+				var i = 0;
+				for each(var value in sleeveAttr) {
+					if(!empty(value) && value != "null" && !empty(value.value) && value.value !="null") {
+						if(i> 0 && sleeveAttr.length > 1) {
+							strBuilder +=',';
+						}
+						strBuilder += value;
+					}
+					i++;
+				}	
+				if(!empty(strBuilder)) {
+					strBuilder = '    <SLEEVE-LENGTH><![CDATA['+strBuilder+']]></SLEEVE-LENGTH>\n';
+					productStringWriter.write(strBuilder);	
+				}
+			} else {
+				if(!empty(sleeveAttr.value)) {
+					if(sleeveAttr.value != "null") {
+						productStringWriter.write('    <SLEEVE-LENGTH><![CDATA['+sleeveAttr+']]></SLEEVE-LENGTH>\n');
+					}
+				} else {
+					productStringWriter.write('    <SLEEVE-LENGTH><![CDATA['+sleeveAttr+']]></SLEEVE-LENGTH>\n');	
+				}
+			}
+		} else { // this case should really never happen but just in case
+			productStringWriter.write('    <SLEEVE-LENGTH><![CDATA['+sleeveAttr+']]></SLEEVE-LENGTH>\n');	
+		}
+	}
+	
+	var patternAttr:String = 'pattern' in product.custom && !empty(product.custom.pattern) && product.custom.pattern != "null"  ? product.custom.pattern: ('pattern' in masterProd.custom && !empty(masterProd.custom.pattern) && masterProd.custom.pattern != "null"  ? masterProd.custom.pattern: "");
+	if(!empty(patternAttr) && patternAttr != "null") {
+		var attrDef:ObjectAttributeDefinition = otd.getCustomAttributeDefinition("pattern");
+		if(empty(attrDef)) {
+			attrDef = otd.getSystemAttributeDefinition("pattern");	
+		}
+		if(!empty(attrDef)) {
+			if(attrDef.multiValueType) { // assume that multiValueType means enum of String
+				var strBuilder:String = '';
+				var i = 0;
+				for each(var value in patternAttr) {
+					if(!empty(value) && value != "null" && !empty(value.value) && value.value !="null") {
+						if(i> 0 && patternAttr.length > 1) {
+							strBuilder +=',';
+						}
+						strBuilder +=value;
+					}
+					i++;
+				}	
+				if(!empty(strBuilder)) {
+					strBuilder = '    <PATTERN><![CDATA['+strBuilder+']]></PATTERN>\n';
+					productStringWriter.write(strBuilder);
+				}
+			} else {
+				if(!empty(patternAttr.value)) {
+					if(patternAttr.value != "null") {
+						productStringWriter.write('    <PATTERN><![CDATA['+patternAttr+']]></PATTERN>\n');
+					}
+				} else {
+					productStringWriter.write('    <PATTERN><![CDATA['+patternAttr+']]></PATTERN>\n');	
+				}
+					
+			}
+		} else { // this case should really never happen but just in case
+			productStringWriter.write('    <PATTERN><![CDATA['+patternAttr+']]></PATTERN>\n');	
+		}
+	}
+	
+	var lengthAttr:String = 'length' in product.custom && !empty(product.custom.length) && product.custom.length != "null"  ? product.custom.length: ('length' in masterProd.custom && !empty(masterProd.custom.length) && masterProd.custom.length != "null"  ? masterProd.custom.length: "");
+	if(!empty(lengthAttr) && lengthAttr != "null") {
+		var attrDef:ObjectAttributeDefinition = otd.getCustomAttributeDefinition("length");
+		if(empty(attrDef)) {
+			attrDef = otd.getSystemAttributeDefinition("length");	
+		}
+		if(!empty(attrDef)) {
+			if(attrDef.multiValueType) { // assume that multiValueType means enum of String
+				var strBuilder:String ='';
+				var i = 0;
+				for each(var value in lengthAttr) {
+					if(!empty(value) && value != "null" && !empty(value.value) && value.value !="null") {
+						if(i> 0 && lengthAttr.length > 1) {
+							strBuilder +=',';
+						}
+						strBuilder +=value;
+					}
+					i++;
+				}	
+				if(!empty(strBuilder)) {
+					strBuilder = '    <LENGTH><![CDATA['+strBuilder+']]></LENGTH>\n';
+					productStringWriter.write(strBuilder);
+				}
+			} else {
+				if(!empty(lengthAttr.value)) {
+					if(lengthAttr.value != "null") {
+						productStringWriter.write('    <LENGTH><![CDATA['+lengthAttr+']]></LENGTH>\n');
+					}
+				} else {
+					productStringWriter.write('    <LENGTH><![CDATA['+lengthAttr+']]></LENGTH>\n');	
+				}
+			}
+		} else { // this case should really never happen but just in case
+			productStringWriter.write('    <LENGTH><![CDATA['+lengthAttr+']]></LENGTH>\n');	
+		}
+	}
+	
+	var waterproofAttr:String = 'waterproof' in product.custom && !empty(product.custom.waterproof) && product.custom.waterproof != "null"  ? product.custom.waterproof: ('waterproof' in masterProd.custom && !empty(masterProd.custom.waterproof) && masterProd.custom.waterproof != "null"  ? masterProd.custom.waterproof: "");
+	if(!empty(waterproofAttr) && waterproofAttr != "null") {
+		var attrDef:ObjectAttributeDefinition = otd.getCustomAttributeDefinition("waterproof");
+		if(empty(attrDef)) {
+			attrDef = otd.getSystemAttributeDefinition("waterproof");	
+		}
+		if(!empty(attrDef)) {
+			if(attrDef.multiValueType) { // assume that multiValueType means enum of String
+				var strBuilder:String = '';
+				var i = 0;
+				for each(var value in waterproofAttr) {
+					if(!empty(value) && value != "null" && !empty(value.value) && value.value !="null") {
+						if(i> 0 && waterproofAttr.length > 1) {
+							strBuilder +=',';
+						}
+						strBuilder +=value;
+					}
+					i++;
+				}	
+				if(!empty(strBuilder)) {
+					productStringWriter.write('    <WATERPROOF><![CDATA['+strBuilder+']]></WATERPROOF>\n');
+				}
+			} else {
+				if(!empty(waterproofAttr.value)) {
+					if(waterproofAttr.value != "null") {
+						productStringWriter.write('    <WATERPROOF><![CDATA['+waterproofAttr+']]></WATERPROOF>\n');
+					}
+				} else {
+					productStringWriter.write('    <WATERPROOF><![CDATA['+waterproofAttr+']]></WATERPROOF>\n');	
+				}	
+			}
+		} else { // this case should really never happen but just in case
+			productStringWriter.write('    <WATERPROOF><![CDATA['+waterproofAttr+']]></WATERPROOF>\n');	
+		}
+	}
+	var snowAttr:String = 'snow' in product.custom && !empty(product.custom.snow) && product.custom.snow != "null"  ? product.custom.snow: ('snow' in masterProd.custom && !empty(masterProd.custom.snow) && masterProd.custom.snow != "null"  ? masterProd.custom.snow: "");
+	if(!empty(snowAttr) && snowAttr != "null" ) {
+		var attrDef:ObjectAttributeDefinition = otd.getCustomAttributeDefinition("snow");
+		if(empty(attrDef)) {
+			attrDef = otd.getSystemAttributeDefinition("snow");	
+		}
+		if(!empty(attrDef)) {
+			if(attrDef.multiValueType) { // assume that multiValueType means enum of String
+				var strBuilder:String ='';
+				var i = 0;
+				for each(var value in snowAttr) {
+					if(!empty(value) && value != "null" && !empty(value.value) && value.value !="null") {
+						if(i> 0 && snowAttr.length > 1) {
+							strBuilder +=',';
+						}
+						strBuilder +=value; 
+					}
+					i++;
+				}	
+				if(!empty(strBuilder)) {
+					productStringWriter.write('    <SNOW><![CDATA['+strBuilder+']]></SNOW>\n');	
+				}
+			} else {
+				if(!empty(snowAttr.value)) {
+					if(snowAttr.value != "null") {
+						productStringWriter.write('    <SNOW><![CDATA['+snowAttr+']]></SNOW>\n');
+					}
+				} else {
+					productStringWriter.write('    <SNOW><![CDATA['+snowAttr+']]></SNOW>\n');	
+				}	
+			}
+		} else { // this case should really never happen but just in case
+			productStringWriter.write('    <SNOW><![CDATA['+snowAttr+']]></SNOW>\n');	
+		}
+	}
+	
+	var fabricAttr:String = 'fabric' in product.custom && !empty(product.custom.fabric) && product.custom.fabric != "null" ? product.custom.fabric: ('fabric' in masterProd.custom && !empty(masterProd.custom.fabric) && masterProd.custom.fabric != "null" ? masterProd.custom.fabric: "");
+	if(!empty(fabricAttr) && fabricAttr != "null") {
+		var attrDef:ObjectAttributeDefinition = otd.getCustomAttributeDefinition("fabric");
+		if(empty(attrDef)) {
+			attrDef = otd.getSystemAttributeDefinition("fabric");	
+		}
+		if(!empty(attrDef)) {
+			if(attrDef.multiValueType) { // assume that multiValueType means enum of String
+				var strBuilder:String = '';
+				var i = 0;
+				for each(var value in fabricAttr) {
+					if(!empty(value) && value != "null" && !empty(value.value) && value.value !="null") {
+						if(i> 0 && fabricAttr.length > 1) {
+							strBuilder +=',';
+						}
+						strBuilder +=value;
+					}
+					i++;
+				}	
+				if(!empty(strBuilder)) {
+					productStringWriter.write('    <FABRIC><![CDATA['+strBuilder+']]></FABRIC>\n');
+				}
+			} else {
+				if(!empty(fabricAttr.value)) {
+					if(fabricAttr.value != "null") {
+						productStringWriter.write('    <FABRIC><![CDATA['+fabricAttr+']]></FABRIC>\n');
+					}
+				} else {
+					productStringWriter.write('    <FABRIC><![CDATA['+fabricAttr+']]></FABRIC>\n');	
+				}
+			}
+		} else { // this case should really never happen but just in case
+			productStringWriter.write('    <FABRIC><![CDATA['+fabricAttr+']]></FABRIC>\n');	
+		}
+	}
+	
+	var careAttr:String = 'care' in product.custom && !empty(product.custom.care) && product.custom.care != "null"  ? product.custom.care: ('care' in masterProd.custom && !empty(masterProd.custom.care) && product.custom.care != "null" ? masterProd.custom.care: "");
+	if(!empty(careAttr) && careAttr != "null") {
+		var attrDef:ObjectAttributeDefinition = otd.getCustomAttributeDefinition("care");
+		if(empty(attrDef)) {
+			attrDef = otd.getSystemAttributeDefinition("care");	
+		}
+		if(!empty(attrDef)) {
+			if(attrDef.multiValueType) { // assume that multiValueType means enum of String
+				var strBuilder:String = '';
+				var i = 0;
+				for each(var value in careAttr) {
+					if(!empty(value) && value != "null" && !empty(value.value) && value.value !="null") {
+						if(i> 0 && careAttr.length > 1) {
+							strBuilder+=',';
+						}
+						strBuilder += value;
+					}
+					i++;
+				}	
+				if(!empty(strBuilder)) {
+					productStringWriter.write('    <CARE><![CDATA['+strBuilder+']]></CARE>\n');
+				}
+			} else {
+				if(!empty(careAttr.value)) {
+					if(careAttr.value != "null") {
+						productStringWriter.write('    <CARE><![CDATA['+careAttr+']]></CARE>\n');
+					}
+				} else {
+					productStringWriter.write('    <CARE><![CDATA['+careAttr+']]></CARE>\n');	
+				}
+			}
+		} else { // this case should really never happen but just in case
+			productStringWriter.write('    <CARE><![CDATA['+careAttr+']]></CARE>\n');	
+		}
+	}
+	
+	/******************************** END Extended Attributes ********************************/
+	
+}
+
+function writeVariantAttributes(product: Product, masterProd: Product, productStringWriter: StringWriter) {
+	/******************************** BEGIN VARIANT ATTRIBUTES ********************************/		
+	var colorAttr:String = !empty(product.custom.color) ? product.custom.color: (!empty(masterProd.custom.color) ? masterProd.custom.color: "");
+	if(!empty(colorAttr)) {
+		productStringWriter.write('    <COLOR-NAME><![CDATA['+colorAttr+']]></COLOR-NAME>\n');
+	}
+	
+	var colorCodeAttr:String = !empty(product.custom.colorCode) ? product.custom.colorCode: (!empty(masterProd.custom.colorCode) ? masterProd.custom.colorCode: "");
+	if(!empty(colorCodeAttr)) {
+		productStringWriter.write('    <COLOR-CODE><![CDATA['+colorCodeAttr+']]></COLOR-CODE>\n');
+	}
+	
+	var sizeAttr:String = !empty(product.custom.size) ? product.custom.size: (!empty(masterProd.custom.size) ? masterProd.custom.size: "");
+	if(!empty(sizeAttr)) {
+		productStringWriter.write('    <SIZE-NAME><![CDATA['+sizeAttr+']]></SIZE-NAME>\n');
+	}
+	
+	var sizeCodeAttr:String = !empty(product.custom.sizeCode) ? product.custom.sizeCode: (!empty(masterProd.custom.sizeCode) ? masterProd.custom.sizeCode: "");
+	if(!empty(sizeCodeAttr)) {
+		productStringWriter.write('    <SIZE-CODE><![CDATA['+sizeCodeAttr+']]></SIZE-CODE>\n');
+	}
+	
+	var sizeUnitsAttr:String = !empty(product.custom.sizeUnits) ? product.custom.sizeUnits: (!empty(masterProd.custom.sizeUnits) ? masterProd.custom.sizeUnits: "");
+	if(!empty(sizeUnitsAttr)) {
+		productStringWriter.write('    <SIZE-UNITS><![CDATA['+sizeUnitsAttr+']]></SIZE-UNITS>\n');
+	}
+
+	var pLengthAttr:String = !empty(product.custom.productLength) ? product.custom.productLength: (!empty(masterProd.custom.productLength) ? masterProd.custom.productLength: "");
+	if(!empty(pLengthAttr)) {
+		productStringWriter.write('    <SIZE-LENGTH><![CDATA['+pLengthAttr+']]></SIZE-LENGTH>\n');
+	}
+	
+	var pWidthAttr:String = !empty(product.custom.productWidth) ? product.custom.productWidth: (!empty(masterProd.custom.productWidth) ? masterProd.custom.productWidth: "");
+	if(!empty(pWidthAttr)) {
+		productStringWriter.write('    <SIZE-WIDTH><![CDATA['+pWidthAttr+']]></SIZE-WIDTH>\n');
+	}
+	
+	var pHeightAttr:String = !empty(product.custom.productHeight) ? product.custom.productHeight: (!empty(masterProd.custom.productHeight) ? masterProd.custom.productHeight: "");
+	if(!empty(pHeightAttr)) {
+		productStringWriter.write('    <SIZE-HEIGHT><![CDATA['+pHeightAttr+']]></SIZE-HEIGHT>\n');
+	}
+		
+	var weightUnitsAttr:String = !empty(product.custom.weightUnits) ? product.custom.weightUnits: (!empty(masterProd.custom.weightUnits) ? masterProd.custom.weightUnits: "");
+	if(!empty(weightUnitsAttr)) {
+		productStringWriter.write('    <WEIGHT-UNITS><![CDATA['+weightUnitsAttr+']]></WEIGHT-UNITS>\n');
+	}
+	
+	var netWeightAttr:String = !empty(product.custom.netWeight) ? product.custom.netWeight: (!empty(masterProd.custom.netWeight) ? masterProd.custom.netWeight: "");
+	if(!empty(netWeightAttr)) {
+		productStringWriter.write('    <WEIGHT><![CDATA['+netWeightAttr+']]></WEIGHT>\n');
+	}
+	
+	/******************************** END VARIANT ATTRIBUTES **********************************/	
+}
+
+
+function writeImageData(product: Product, masterProd: Product, productStringWriter: StringWriter) {
+
+	
+	// PRODUCT IMAGES
+	var imageArray = null;
+	
+	var varAttrColor : dw.catalog.ProductVariationAttribute = null;
+	var varVal: dw.catalog.ProductVariationAttributeValue = null;
+	var varVals:dw.util.Collection = null;
+	if( !empty(product.variationModel) ) {
+		var varModel : dw.catalog.ProductVariationModel = product.variationModel;
+		varAttrColor = varModel.getProductVariationAttribute("color");
+		if(varAttrColor == null) {
+			varAttrColor = varModel.getProductVariationAttribute("colorCode");	
+		}
+		varVals = !empty(varAttrColor) ? varModel.getAllValues(varAttrColor) : null;
+		varVal = !empty(varVals) && varVals.length > 0 ? varVals[0] : null;	
+	}
+	
+	
+	//image index mapping, ex 01234213123NEW_01_010.jpg maps to image index 0 in product image array 
+	var imageIndexMap = {"00":-1, "01":0, "02":1, "03":2, "04":3, "05":4, "06":5, "07":6, "08":7, "09":8, "10":9};
+	
+	//default reference image is only set in master product level
+	var referenceImage : String = masterProd.custom.channelAdvisorReferenceImage;
+		
+	var imageIndex : Number = 0;
+	
+	if (referenceImage!=null) {
+		selectedImageIndex=imageIndexMap[referenceImage];
+		if (selectedImageIndex!=null)
+			imageIndex=selectedImageIndex;
+	}
+		
+	
+	//-1 means to show 00 as default image, which is always added as last image in imageArray
+	if (imageIndex==-1) {
+		
+		imageArray = product.getImages('product-list');
+
+		var is00Image : Boolean = true;
+
+		if (imageArray!=null && !imageArray.isEmpty()) {	
+			
+			imageIndex=imageArray.size()-1;
+			imageArray = setReferenceImage(product, imageIndex, productStringWriter, is00Image);
+			
+		} else if (varVal!=null) {
+			
+			imageArray=varVal.getImages('product-list');
+		
+			if (imageArray!=null && !imageArray.isEmpty())
+				imageIndex=imageArray.size()-1;
+			else {
+				imageIndex=0;
+				is00Image=false;
+			}
+			
+			imageArray = setReferenceImage(varVal, imageIndex, productStringWriter, is00Image);
+	
+		} else {
+			productStringWriter.write('    <ReferenceImageURL><![CDATA[' + URLUtils.httpStatic('/images/noimagelarge.png').toString().replace("staging.web.pacsun.demandware.net", "www.pacsun.com") + ']]></ReferenceImageURL>\n');
+
+		}
+
+			
+	} else if (product.getImage('product-list',imageIndex)) {
+
+		imageArray = setReferenceImage(product, imageIndex, productStringWriter, false);
+		
+	} else if (varVal != null) {
+				
+		imageArray = setReferenceImage(varVal, imageIndex, productStringWriter, false);
+
+	} else {
+		productStringWriter.write('    <ReferenceImageURL><![CDATA[' + URLUtils.httpStatic('/images/noimagelarge.png').toString().replace("staging.web.pacsun.demandware.net", "www.pacsun.com") + ']]></ReferenceImageURL>\n');
+	}
+	
+	
+	
+	
+	if(imageArray != null) {
+		var counter:Number = 1;
+		for each(var image:MediaFile in imageArray) {
+			if(counter <=6) {
+				var index = image.absURL.toString().indexOf("?");
+				var imageURL = image.absURL.toString().substring(0,index);
+				productStringWriter.write('    <ITEMIMAGEURL'+counter+'><![CDATA[' + imageURL.replace("staging.web.pacsun.demandware.net", "www.pacsun.com") + ']]></ITEMIMAGEURL'+counter+'>\n');
+			} else {
+				break;	
+			}
+			counter++;
+		}
+	}
+	if(!(!empty(varVals) && varVals.length == 1)) {
+		if(product.getImage('pdp-swatches',0)) {
+			var index = product.getImage('pdp-swatches',0).absURL.toString().indexOf("?");
+			var imageURL = product.getImage('pdp-swatches',0).absURL.toString().substring(0,index);
+			productStringWriter.write('    <SWATCHIMAGE><![CDATA[' + imageURL.replace("staging.web.pacsun.demandware.net", "www.pacsun.com") + ']]></SWATCHIMAGE>\n');
+			//imageArray = product.getImages('product-thumb');
+		} else if (varVal != null) {
+			if(!empty(varVal.getImage('pdp-swatches'))) {
+				var index = varVal.getImage('pdp-swatches').absURL.toString().indexOf("?");
+				var imageURL = varVal.getImage('pdp-swatches').absURL.toString().substring(0,index);
+				//imageArray =varVal.getImages('product-list');
+				productStringWriter.write('    <SWATCHIMAGE><![CDATA[' + imageURL.replace("staging.web.pacsun.demandware.net", "www.pacsun.com") + ']]></SWATCHIMAGE>\n');
+			} else if (!empty(varVal.getImage('pdp-swatches',0))) {
+				var index = varVal.getImage('pdp-swatches',0).absURL.toString().indexOf("?");
+				var imageURL = varVal.getImage('pdp-swatches',0).absURL.toString().substring(0,index);
+				//imageArray = varVal.getImages('product-list');
+				productStringWriter.write('    <SWATCHIMAGE><![CDATA[' + imageURL.replace("staging.web.pacsun.demandware.net", "www.pacsun.com") + ']]></SWATCHIMAGE>\n');
+			} else {
+				productStringWriter.write('    <SWATCHIMAGE><![CDATA[' + URLUtils.httpStatic('/images/noimagelarge.png').toString().replace("staging.web.pacsun.demandware.net", "www.pacsun.com") + ']]></SWATCHIMAGE>\n');	
+			}
+		}
+		else {
+			productStringWriter.write('    <SWATCHIMAGE><![CDATA[' + URLUtils.httpStatic('/images/noimagelarge.png').toString().replace("staging.web.pacsun.demandware.net", "www.pacsun.com") + ']]></SWATCHIMAGE>\n');
+		}
+	}
+	// additional item image url's (guessing this is for the default colorway and showing the views)
+}
+
+function isInStockThreshold(qty) : Boolean {
+	
+	//for products which have less than specified threshold units, we should mark them out of stock for our vendors
+	if (qty > dw.system.Site.getCurrent().preferences.custom.ChannelAdvisorInStockThreshold)
+		return true;
+	else
+		return false;
+		
+}
+
+
+function setReferenceImage(product, imageIndex, productStringWriter, is00Image) : List {
+	
+	var imageArray = product.getImages('product-list');
+
+	var imageURL : String = "";
+	
+    if (product.getImage('product-list',imageIndex)) {
+	
+		var index = product.getImage('product-list',imageIndex).absURL.toString().indexOf("?");
+		
+		imageURL = product.getImage('product-list',imageIndex).absURL.toString().substring(0,index);
+	
+		//sometimes, the imageIndex may return 00 if it specifies the last product index accidentally by user
+		//which is not what the user wanted.. so check for 00 image and make it 01 instead
+		if (!is00Image && (imageURL.indexOf("_00_")!=-1)) {
+			var index = product.getImage('product-list',0).absURL.toString().indexOf("?");			
+			imageURL = product.getImage('product-list',0).absURL.toString().substring(0,index);
+		}
+		
+		
+		productStringWriter.write('    <ReferenceImageURL><![CDATA[' + imageURL.replace("staging.web.pacsun.demandware.net", "www.pacsun.com") + ']]></ReferenceImageURL>\n');
+	
+	} else if (product.getImage('product-list',0)) {
+		
+		var index = product.getImage('product-list',0).absURL.toString().indexOf("?");
+		
+		imageURL = product.getImage('product-list',0).absURL.toString().substring(0,index);
+		productStringWriter.write('    <ReferenceImageURL><![CDATA[' + imageURL.replace("staging.web.pacsun.demandware.net", "www.pacsun.com") + ']]></ReferenceImageURL>\n');
+		
+	} else  {		
+		productStringWriter.write('    <ReferenceImageURL><![CDATA[' + URLUtils.httpStatic('/images/noimagelarge.png').toString().replace("staging.web.pacsun.demandware.net", "www.pacsun.com") + ']]></ReferenceImageURL>\n');
+	}
+	
+	return imageArray;
+	
+}
+
+function logError(e : Error) {
+	var errmsg="Error in line " + e.lineNumber;
+	if (e.message) errmsg += ", " + e.message;
+	if (e.faultDetail) errmsg += ", " + e.faultDetail;
+	errmsg += ", " + e.stack.trim();
+		
+	Logger.error(errmsg);
+}
+
+

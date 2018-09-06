@@ -1,0 +1,130 @@
+/**
+*  
+* 	Utility methods for retrieving site preferences
+*/
+
+importPackage( dw.system );
+importPackage( dw.util );
+importPackage( dw.io );
+
+importScript( "common/fiftyone_site.ds" );
+
+function getMerchantId()
+{
+	var merchantId = dw.system.Site.current.preferences.custom.fiftyone_merchantId;
+	if(!merchantId)
+		throw new Error("FiftyOne Merchant Id could not be determined");
+	return merchantId;
+}
+
+function getMerchantName()
+{
+	var merchantName = dw.system.Site.current.preferences.custom.fiftyone_merchantName;
+	if(!merchantName)
+		throw new Error("FiftyOne Merchant Name could not be determined");
+	return merchantName;
+}
+
+function getExportOnlineOnly()
+{
+	var onlineOnly = dw.system.Site.current.preferences.custom.fiftyone_onlineOnly;
+	if(empty(onlineOnly))
+		throw new Error("FiftyOne Export Online Only setting could not be determined");
+	return onlineOnly;
+}
+
+function getStrictExport()
+{
+	var strictExport = dw.system.Site.current.preferences.custom.fiftyone_strictExport;
+	if(empty(strictExport))
+		throw new Error("FiftyOne Strict Export setting could not be determined");
+	return strictExport;
+}
+
+function getFtpCredentials()
+{
+	var merchantId = getMerchantId();
+	var password = dw.system.Site.current.preferences.custom.fiftyone_ftpPassword;
+	if(!password)
+		throw new Error("FiftyOne FTP password could not be determined");
+	return {id:merchantId, password:password};
+}
+
+function getFtpAddress()
+{
+	var ftpAddress = dw.system.Site.current.preferences.custom.fiftyone_ftp;	
+			
+	if(!ftpAddress)
+		throw new Error("FiftyOne FTP address could not be determined");
+		
+	return ftpAddress;
+}
+
+function getLocalizationAddress()
+{
+	var apiAddress = dw.system.Site.current.preferences.custom.fiftyone_localizationAPI;
+			
+	if(!apiAddress)
+		throw new Error("FiftyOne Localization API address could not be determined");
+		
+	return apiAddress;
+}
+
+function getBtpAddress()
+{
+	var btpAddress = dw.system.Site.current.preferences.custom.fiftyone_btpRequestUrl;
+			
+	if(!btpAddress)
+		throw new Error("FiftyOne Localization API address could not be determined");
+		
+	return btpAddress;
+}
+
+function getOrderAPIAddress()
+{
+	var orderAddress = dw.system.Site.current.preferences.custom.fiftyone_orderAPI;
+			
+	if(!orderAddress)
+		throw new Error("FiftyOne Order API address could not be determined");
+		
+	return orderAddress;
+}
+
+function getOrderDomain()
+{
+	var orderDomain = dw.system.Site.current.preferences.custom.fiftyone_orderDomain;
+			
+	if(empty(orderDomain) || empty(orderDomain.value))
+		throw new Error("FiftyOne Order Domain could not be determined");
+		
+	return orderDomain.value.toString();
+}
+
+function getAPICredentials()
+{
+	var sitePrefs = dw.system.Site.current.preferences.custom;
+	var userId = sitePrefs.fiftyone_apiUser;
+	var password = sitePrefs.fiftyone_apiPassword;
+	if(!password || ! userId)
+	{
+		var ex = new Error("FiftyOne API credentials could not be determined");
+		logError(ex);
+		throw ex;
+	}
+	return {userId:userId, password:password};
+}
+
+function getSimpleAuthCredentials()
+{
+	var creds = getAPICredentials(); 
+	var credentials = StringUtils.encodeBase64(StringUtils.format("{0}:{1}",creds.userId,creds.password));
+	return credentials;
+}
+
+function getPaypalImageUrl()
+{
+	var sitePrefs = dw.system.Site.current.preferences.custom; 
+	var imageUrl = sitePrefs.fiftyone_paypalImage;
+		
+	return imageUrl;
+}

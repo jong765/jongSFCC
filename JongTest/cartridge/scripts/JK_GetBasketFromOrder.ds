@@ -1,0 +1,32 @@
+/**
+* Script file for use in the Script pipelet node.
+* To define input and output parameters, create entries of the form:
+*
+* @<paramUsageType> <paramName> : <paramDataType> [<paramComment>]
+*
+* where
+*   <paramUsageType> can be either 'input' or 'output'
+*   <paramName> can be any valid parameter name
+*   <paramDataType> identifies the type of the parameter
+*   <paramComment> is an optional comment
+*
+* For example:
+*
+*    @input OrderNumber : String		Order number
+*    @output Basket : dw.order.Basket	Basket
+*
+*/
+importPackage( dw.system );
+importPackage( dw.order );
+
+function execute( pdict : PipelineDictionary ) : Number
+{
+	var orderNumber : String = pdict.OrderNumber;
+	
+	var order : Order = OrderMgr.getOrder(orderNumber);
+	var basket : Basket = BasketMgr.createBasketFromOrder(order);
+	
+	pdict.Basket = basket;
+	
+   return PIPELET_NEXT;
+}

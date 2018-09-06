@@ -1,0 +1,31 @@
+importPackage( dw.system );
+importPackage( dw.io );
+importPackage( dw.net );
+importPackage( dw.catalog );
+importPackage( dw.util );
+importPackage( dw.web );
+
+function readStringFromFile(folderName:String, fileName:String):String {
+	
+	var resultString:String = "";
+
+    var folderPath:String = File.IMPEX + File.SEPARATOR + "src" + File.SEPARATOR + folderName;
+	var folder:File = new File(folderPath);
+	
+	if (!folder.exists()){ // if folder doesn't exist - create folder	
+		Logger.error("Error reading file: folder " + folder.fullPath + " does not exist");
+		return resultString;
+	}
+
+	var file:File = new File(folder, fileName);
+	if (!file.exists())
+		return resultString;
+		
+	var inReader:FileReader = new FileReader(file);
+
+	while (text = inReader.readLine()) {
+		resultString+= text;
+	}
+	inReader.close();
+	return resultString;
+}

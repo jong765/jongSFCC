@@ -1,0 +1,5 @@
+<!--- TEMPLATENAME: JK_PackageMovementInformationServiceDisplay.isml --->
+Web Service Response >>>
+${pdict.serviceAvailable}
+
+

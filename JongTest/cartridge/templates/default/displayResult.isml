@@ -1,0 +1,64 @@
+<!--- TEMPLATENAME: displayResult.isml --->
+<isinclude template="util/modules"/>
+
+<isset name="Order" value="${pdict.ApiResponse.order_shipments[0]}"
+	scope="page" />
+<isset name="firstShip" value="${Order.order_ship_to[0]}" scope="page" />
+<isset name="orderBillToAddress" value="${firstShip.order_billTo}" scope="page" />
+
+<div class="orderdate">
+	<span class="label">${Resource.msg('orderdetails.orderdate','components',null)}</span>
+	<isset name="dateArray"
+		value="${!empty(firstShip.orderShipDate) ? firstShip.orderShipDate.split(' ') : new Array()}"
+		scope="page" />
+   <span class="value">
+		<isprint value="${dateArray[0] + ' ' + dateArray[1] + ' ' + dateArray[2]}" /></span>
+</div>
+<!-- END: orderdate -->
+
+		<div class="orderpayment">
+			<h5 class="grey_header">${Resource.msg('orderdetails.paymentinfo','components',null)}</h5>
+			<div class="orderpaymentdetails">
+				<table class="orderpaymentdetailstable" summary="Order Payment Details">
+					<tr>
+						<td class="orderbilling">
+							<div class="label">${Resource.msg('orderdetails.billingaddress','components',null)}</div>
+							<isminipswsaddress ws_billingaddress="${orderBillToAddress}"/>
+						</td>
+						<td class="ordershipping">
+							<div class="label">${Resource.msg('orderdetails.shippingaddress','components',null)}</div>
+							<isminiaddress ws_address="${firstShip}"/>
+						</td>
+						<td class="orderpaymentinstruments">
+							<isset name="paymentCount" value="${0}" scope="page"/> 
+							<isloop items="${Order.order_ship_to}" var="shipments">
+								<isif condition="${!empty(shipments.order_payments)}">
+									<isset name="paymentCount" value="${paymentCount + shipments.order_payments.length}" scope="page"/>
+								</isif>
+							</isloop>
+							<isif condition="${paymentCount == 1}">
+								<div class="label">${Resource.msg('orderdetails.paymentmethod','components',null)}</div>
+							<iselse/>
+								<div class="label">${Resource.msg('orderdetails.paymentmethods','components',null)}</div>
+							</isif>
+							<isloop items="${Order.order_ship_to}" var="shipments">
+								<isloop items="${shipments.order_payments}" var="payment">
+									<div class="paymenttype"><isprint value="${payment.paymentType}"/></div>
+									<div class="paymentamount">
+										<span class="label">${Resource.msg('global.amount','locale',null)}:</span>
+										<span class="value">$<isprint value="${payment.paymentAmount}"/></span>
+									</div><!-- END: paymentamount -->
+									<div>&nbsp;</div>
+								</isloop>
+							</isloop>
+						</td>
+						<td class="orderpaymentsummary">
+							<div class="label paymenttotal">${Resource.msg('orderdetails.paymenttotal','components',null)}</div>
+							<div class="orderdetailsummary">
+								<isordertotals p_lineitemctnr="${Order}" p_showshipmentinfo="${true}" p_shipmenteditable="${false}" p_totallabel="${Resource.msg('global.ordertotal','locale',null)}"/>
+							</div>
+						</td>
+					</tr>
+				</table>
+			</div><!-- END: orderpaymentdetails -->
+		</div><!-- END: orderpayment -->

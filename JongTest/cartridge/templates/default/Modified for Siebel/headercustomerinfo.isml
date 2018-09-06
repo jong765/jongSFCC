@@ -1,0 +1,92 @@
+<isset name="isRegistered" value="${pdict.CurrentCustomer.registered}" scope="page" />
+<isinclude template="util/modules"/>
+
+<div class="headercustomerinfo">
+	<iscomment>TEMP: Facebook Login button</iscomment>
+	<iscomment>
+	<isif condition="${pdict.CurrentCustomer.authenticated}">
+		<div id="facebook-login">
+			<isgigyashowconnectionssmall width="18" height="18"></isgigyashowconnectionssmall>
+		</div>
+		<div id="gigyaloginlabel"><a class="gigyaeditconnections" href="${'#'}" onclick="javascript:return false;">EDIT</a></div>
+	<iselse>
+		<div id="facebook-login">
+			<isgigyaloginsmall width="18" height="18"></isgigyaloginsmall>
+		</div>
+		<div id="gigyaloginlabel"><span>LOG IN WITH:</span></div>
+	</isif>
+	</iscomment>
+	
+	<a href="${URLUtils.https('Account-Show')}" title="${Resource.msg('global.accountlink','locale',null)}" class="my-account-link"><span>${Resource.msg('global.accountlink','locale',null)}</span></a>
+	
+	<isif condition="${isRegistered}">
+    	<isif condition="${pdict.CurrentCustomer.getProfile().getCustom().isGigyaShow}">
+	    	<isif condition="${!empty(pdict.CurrentSession.custom.loggedInWithGigya)}">
+	    		<span class="welcomemessage"><img class="gigyaThumbnail" src="${pdict.CurrentSession.custom.gigyaThumbnailURL}" /> ${Resource.msgf('headercustomerinfo.welcome', 'components', null, pdict.CurrentSession.custom.gigyaFirstName + ' ' +pdict.CurrentSession.custom.gigyaLastName)}</span>
+	    	<iselse>
+	        	<span class="welcomemessage">${Resource.msgf('headercustomerinfo.welcome', 'components', null, pdict.CurrentCustomer.profile.firstName)}</span>
+			</isif>
+		<iselse>
+			<isif condition="${!empty(pdict.CurrentSession.custom.loggedInWithGigya)}">
+	    		<span class="welcomemessage"><img class="gigyaThumbnail" src="${pdict.CurrentSession.custom.gigyaThumbnailURL}" style="display:none;"/> ${Resource.msgf('headercustomerinfo.welcome', 'components', null, pdict.CurrentCustomer.profile.firstName)}</span>
+	    	<iselse>
+	        	<span class="welcomemessage">${Resource.msgf('headercustomerinfo.welcome', 'components', null, pdict.CurrentCustomer.profile.firstName)}</span>
+			</isif>
+		</isif>
+	</isif>
+	
+	<isbigDoorAuth bd_ismobile="${false}"></isbigDoorAuth>
+	<isgigyaraaslogin isdialog="${true}" ismobile="${false}"></isgigyaraaslogin>
+	    		
+    <div class="my-account-dropdown<isif condition="${pdict.CurrentCustomer.authenticated}"> loggedIn</isif>">
+    	<ul>
+	    	<isif condition="${isRegistered}">
+	    		<li><a href="${URLUtils.https('Login-Logout')}" title="${Resource.msg('global.logout','locale',null)}"><span>${Resource.msg('global.logout','locale',null)}</span></a></li>
+	    		<li><a href="${URLUtils.https('Wishlist-Show')}" title="${Resource.msg('header.wishlistlink','components',null)}"><span>${Resource.msg('header.wishlistlink','components',null)}</span></a></li>
+	    		<iscomment><li><a href="${URLUtils.https('Order-History')}" title="${Resource.msg('global.orderstatus','locale',null)}"><span>${Resource.msg('global.orderstatus','locale',null)}</span></a></li></iscomment>
+	    		<li><a href="${URLUtils.https('Order-Status')}" title="${Resource.msg('global.orderstatus','locale',null)}"><span>${Resource.msg('global.orderstatus','locale',null)}</span></a></li>
+	    	<iselse>
+	    		<li><a href="#" onclick="loginForwardUrl='${URLUtils.https('Account-Show')}';displayDialog();" title="${Resource.msg('global.login','locale',null)}"><span>${Resource.msg('global.login','locale',null)}</span></a></li>	    		
+	    		<li><a href="#" onclick="loginForwardUrl='${URLUtils.https('Account-Show')}';displayRegistration();" title="${Resource.msg('global.register','locale',null)}"><span>${Resource.msg('global.register','locale',null)}</span></a></li>	    		
+	    		<li><a href="${URLUtils.https('Wishlist-Show')}" title="${Resource.msg('header.wishlistlink','components',null)}"><span>${Resource.msg('header.wishlistlink','components',null)}</span></a></li>
+	    		<li><a href="${URLUtils.https('Order-Status')}" title="${Resource.msg('global.orderstatus','locale',null)}"><span>${Resource.msg('global.orderstatus','locale',null)}</span></a></li>
+	    	</isif>
+	    </ul>
+    </div>
+
+    <div class="clear"><!-- FLOAT CLEAR --></div>
+</div><!-- END: headercustomerinfo -->
+
+<script type="text/javascript">
+<!--
+jQuery(document).ready(function(){
+	
+	var headerCustomerInfo = jQuery("#header .headercustomerinfo"),
+		myAccountLink = jQuery("#header .my-account-link"),
+		myAccountDropdown = jQuery("#header .my-account-dropdown"),
+		hideTimer = setTimeout(function() {  }, 1);
+	
+	jQuery(myAccountLink).add(myAccountDropdown).mouseenter(function(){
+		clearTimeout(hideTimer);
+		app.minicart.close();
+		myAccountLink.addClass('accountOver');
+		myAccountDropdown.fadeIn("fast");
+	});
+
+	jQuery(myAccountLink).add(myAccountDropdown).mouseleave(function(){
+	    clearTimeout(hideTimer);
+		hideTimer = setTimeout(function() { 
+			myAccountDropdown.fadeOut("fast");
+			myAccountLink.removeClass('accountOver');
+		}, 500);		
+	});
+
+	jQuery("#gigyaloginlabel .gigyaeditconnections").click(function(e) {			
+		app.dialog.open("${URLUtils.url('Gigya-EditConnectionsDialog')}", "Edit Connections", "accountdialog", function(){
+			jQuery("#dialogcontainer").dialog("option", "width", 330);
+		});		
+	});
+	
+});
+//-->
+</script>

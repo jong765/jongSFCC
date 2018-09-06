@@ -1,0 +1,64 @@
+/**
+*
+*	@output OfflineProducts : ArrayList A list of offline products
+*
+*/
+
+importPackage( dw.system );
+importPackage( dw.io );
+importPackage( dw.util );
+
+function execute( args : PipelineDictionary ) : Number
+{
+	var offlineProducts : ArrayList = new ArrayList();
+	var catalogFile : File = new File(File.IMPEX  + "/src/catalog/offlineproducts.xml");		
+	
+	if(!catalogFile.file)
+	{
+		Logger.error("Catalog file: offlineproducts.xml does not exist");
+		return PIPELET_ERROR;
+	}
+		
+	var fileReader : FileReader = new FileReader(catalogFile, "UTF-8");
+	var xmlStreamReader : XMLStreamReader = new XMLStreamReader(fileReader);
+	var next : Number = null;
+	var productId : String = null;
+	
+	while (xmlStreamReader.hasNext())
+	{
+		if (xmlStreamReader.next() == XMLStreamConstants.START_ELEMENT)
+		{
+			if(xmlStreamReader.getLocalName() == "product")
+			{
+				productId = xmlStreamReader.getAttributeValue(0);
+				
+				while(xmlStreamReader.hasNext())
+				{
+					next = xmlStreamReader.next();
+					
+					if(next == XMLStreamConstants.END_ELEMENT)
+					{
+						if(xmlStreamReader.getLocalName() == "product")
+							break;
+					}
+					else if (next == XMLStreamConstants.START_ELEMENT)
+					{
+						if(xmlStreamReader.getLocalName() == "online-flag")
+						{	
+							if(xmlStreamReader.elementText == "false")
+								offlineProducts.add(productId);							
+															
+						}
+					}
+				}
+			}
+		}
+	}
+	
+	xmlStreamReader.close();
+	fileReader.close();
+	
+	args.OfflineProducts = offlineProducts;
+	
+	return PIPELET_NEXT;
+}

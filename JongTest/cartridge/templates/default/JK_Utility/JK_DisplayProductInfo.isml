@@ -1,0 +1,8 @@
+<!--- TEMPLATENAME: TestTemplate.isml --->
+<p><b> Product ID: ${pdict.Product.ID}</b></p>
+<p> Online: ${pdict.Product.isOnline()} </p>
+<p> Prevent export to 51: ${pdict.Product.custom.fiftyone_exportProduct} </p>
+<p> Consignment code: ${pdict.Product.custom.consignmentCode} </p>
+<p> Variant?: ${pdict.Product.isVariant()}</p>
+<p> Product set?: ${pdict.Product.isProductSet()}</p>
+<p> Regular price: ${pdict.Product.priceModel.getPriceBookPrice('pacsun_list_price').toNumberString()}</p>

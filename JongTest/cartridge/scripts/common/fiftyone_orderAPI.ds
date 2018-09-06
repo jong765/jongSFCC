@@ -1,0 +1,42 @@
+/**
+*  
+* 	Utility methods for FiftyOne Order API calls
+*
+*/
+
+importPackage( dw.system );
+importPackage( dw.net );
+importPackage( dw.util );
+importPackage( dw.order );
+
+importScript( "common/fiftyone_site.ds" );
+importScript( "common/fiftyone_preferences.ds" );
+importScript( "common/fiftyone_api.ds" );
+
+function getOrderStateXml(orderId : String, isMerchantRef : Boolean)
+{
+	var idType = isMerchantRef ? 'MerchantOrderRef' : 'E4XOrderNum';
+	var request = generateRequest(orderId, idType);
+	var timeoutPeriod = 5000; //timeout for API request (in milliseconds)
+	var response = sendRequest(request, getOrderAPIAddress(),'application/soap+xml',timeoutPeriod);
+	
+	var xmlResponse : XML = new XML(response);
+	
+	return xmlResponse;
+	
+	function generateRequest(orderId : String, idType : String)
+	{
+		var xmlBuilder : ArrayList = new ArrayList();
+		xmlBuilder.add1('<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:v1="http://services.fiftyone.com/ws/merchantAPI/v1.0">');
+		xmlBuilder.add1('<soap:Header/><soap:Body><v1:getOrderDetails>');
+		xmlBuilder.add1(StringUtils.format('<referenceName>{0}</referenceName>', idType));
+		xmlBuilder.add1(StringUtils.format('<referenceValue>{0}</referenceValue>',encodeXml(orderId)));
+		xmlBuilder.add1('</v1:getOrderDetails></soap:Body></soap:Envelope>');
+		return xmlBuilder.join('\n');
+	}
+}
+
+function getBasketSalePrice(basket : Basket)
+{
+	return moneyStr(basket.getAdjustedMerchandizeTotalPrice(false).value);
+}

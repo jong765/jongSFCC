@@ -1,0 +1,55 @@
+/*
+* deleteFilesJob.ds
+*
+* Deletes files in the /bloomreach directory in IMPEX older than a number of days specified in site preferences.
+*/
+importPackage( dw.system );
+importPackage( dw.io );
+importPackage( dw.util );
+
+function execute( args : PipelineDictionary ) : Number
+{
+	//get the directory the feed files are in
+	var dir : dw.io.File = new File(dw.io.File.getRootDirectory("IMPEX"), "/bloomreach");
+	var isDir = dir.isDirectory();
+	var MyDate = new Date();
+	
+	if(Site.getCurrent().preferences.custom.BR_FeedFile_Expiration == null) {
+		logFailure("Bloomreach job settings not defined.");
+		return PIPELET_ERROR;
+	}	
+	
+	MyDate.setDate(MyDate.getDate() -dw.system.Site.getCurrent().preferences.custom.BR_FeedFile_Expiration);
+	
+	var dateStr : String;
+	
+	dateStr =  MyDate.getFullYear() + '' + ('0' + (MyDate.getMonth()+1)).slice(-2) + '' + ('0' + MyDate.getDate()).slice(-2);
+	var olderThan : Number = parseInt(dateStr);	
+	
+	//make sure its a directory
+	if(isDir)
+	{
+		//for each File in the directory
+		for each(var tempFile : File in dir.listFiles()){
+			//if the filename is long enough to contain the date
+			if(tempFile.name.length >= 12){
+				
+			//if file is in correct format (feedXXXXXXX.zip) this should get the date as a number
+			var dateNum = parseInt(tempFile.name.substr(4,8));
+			//compare
+			if(dateNum < olderThan){
+				//.remove returns boolean of attempt
+				if(!tempFile.remove()){
+					dw.system.Logger.error("Failed to delete Feed File : {0}", tempFile.name);
+				}
+			
+			}
+			}
+		}
+	}
+	else
+	{
+		return PIPELET_ERROR;
+	}	
+   return PIPELET_NEXT;
+}

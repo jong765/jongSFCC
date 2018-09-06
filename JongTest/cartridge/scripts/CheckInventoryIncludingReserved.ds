@@ -1,0 +1,53 @@
+/**
+* Demandware Script File
+* To define input and output parameters, create entries of the form:
+*
+* @<paramUsageType> <paramName> : <paramDataType> [<paramComment>]
+*
+* where
+*   <paramUsageType> can be either 'input' or 'output'
+*   <paramName> can be any valid parameter name
+*   <paramDataType> identifies the type of the parameter
+*   <paramComment> is an optional comment
+*
+* For example:
+*
+*    @input Basket :	dw.order.Basket
+*    @output CanAddProducts :	Boolean
+*
+*/
+importPackage( dw.system );
+importPackage( dw.catalog );
+
+function execute( pdict : PipelineDictionary ) : Number
+{
+	var canAddProducts : Boolean = true;
+	try {
+		var basket = pdict.Basket.allProductLineItems;
+		for (var i = 0; i < basket.length; i++){
+			if(basket[i].productName != 'PACSUN GIFT CARD'){
+				var productId : String = basket[i].productID;
+				if(!productId.match(/[a-zA-Z]/i)){
+					var product : Product = ProductMgr.getProduct(productId);
+					var inventoryRecord:ProductInventoryRecord = product.getAvailabilityModel().getInventoryRecord();
+					if (inventoryRecord) {
+						var ATS : Quantity = inventoryRecord.getATS();
+						if (ATS) {
+							var reserved : Quantity = inventoryRecord.getReserved();
+							var quantity = basket[i].quantityValue;
+							if (ATS < (reserved + quantity)) {
+								canAddProducts = false;
+							}
+						}
+					}
+				}
+			}
+		}
+	} catch(e) {
+		// Do nothing
+	}
+	
+	pdict.CanAddProducts = true;
+
+   return PIPELET_NEXT;
+}

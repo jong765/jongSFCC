@@ -1,0 +1,46 @@
+/**
+* Script file for use in the Script pipelet node.
+* To define input and output parameters, create entries of the form:
+*
+* @<paramUsageType> <paramName> : <paramDataType> [<paramComment>]
+*
+* where
+*   <paramUsageType> can be either 'input' or 'output'
+*   <paramName> can be any valid parameter name
+*   <paramDataType> identifies the type of the parameter
+*   <paramComment> is an optional comment
+*
+* For example:
+*
+*-   @input ExampleIn : String This is a sample comment.
+*-   @output ExampleOut : Number
+*
+*/
+importPackage( dw.system );
+importPackage( dw.util );
+
+var JK_ArrayListUtil = require('JongTest/cartridge/scripts/JK_Utility/JK_ArrayListUtil.js');
+
+function execute( args : PipelineDictionary ) : Number
+{
+	var clickList : List = new ArrayList();
+	
+	clickList.add("click 1");
+	clickList.add("click 2");
+	clickList.add("click 3");
+	clickList.add("click 4");
+	clickList.add("click 5");
+	clickList.add("click 6");
+	clickList.add("click 7");
+	clickList.add("click 8");
+	clickList.add("click 9");
+	clickList.add("click 10");
+	
+	// print the last 5 click streams
+	var clickStreams : Array = [];
+
+	clickStreams = JK_ArrayListUtil.getLast_N_ElementsOfArrayList(clickList, 1);
+	
+
+   return PIPELET_NEXT;
+}

@@ -1,0 +1,563 @@
+/**
+* createBloomReachFeed.ds
+*	This script iterates over all site products, serializes it to XML in a format consumable by BloomReach, and writes them all to file in the Import/Export directory.
+*
+*	@output ProductFeedFileName : String
+*   @output CatalogFeedFileName : String
+*
+*/
+importPackage( dw.system );
+importPackage( dw.io );
+importPackage( dw.catalog );
+importPackage( dw.util );
+importPackage( dw.web );
+importPackage( dw.content );
+importScript( 'bloomreach/logBloomReachError.ds' );
+
+function execute( pdict : PipelineDictionary ) : Number
+{
+	var brDir : File = new dw.io.File(File.IMPEX + '/src/bloomreach/');
+	if(!brDir.exists()){ brDir.mkdirs();}
+	
+	pdict.ProductFeedFileName = createProductCatalogFeed(brDir);
+	pdict.CatalogFeedFileName = createCategoryTreeFeed(brDir);
+	
+   return PIPELET_NEXT;
+}
+
+function createProductCatalogFeed(brDir:File) : String {
+	var fileName:String = File.IMPEX + '/src/bloomreach/ProductCatalog_' + StringUtils.formatCalendar(Calendar(),'yyyyMMdd') + '.xml';
+	var file:File = new dw.io.File(fileName);
+	if(!file.exists()) 
+	{
+		if(!file.createNewFile())
+		{
+			logFailure("File "+file.name+" could not be created!");
+			return false;
+		}
+	} 
+	
+	var fileWriter : FileWriter = new FileWriter(file, "UTF-8");
+ 	var xsw : XMLStreamWriter = new XMLStreamWriter(fileWriter);
+
+	xsw.writeStartDocument();
+ 	xsw.writeStartElement("catalog");
+    writeAllCatalogProducts(xsw);
+    xsw.writeEndElement();
+    xsw.writeEndDocument();
+ 	xsw.close();
+ 	fileWriter.close();	
+
+	var zipfile : File = new dw.io.File(fileName + '.gz');
+	if(!file.exists()) 
+	{
+		if(!file.createNewFile())
+		{
+			logFailure("File "+file.name+" could not be created!");
+			return false;
+		}
+	} 
+	file.gzip(zipfile);
+	file.remove();
+	
+	return zipfile.getName();
+}
+
+function createCategoryTreeFeed(brDir:File) : String {
+	var fileName:String = File.IMPEX + '/src/bloomreach/CategoryTree_' + StringUtils.formatCalendar(Calendar(),'yyyyMMdd') + '.xml';
+	var file : File = new dw.io.File(fileName);
+	if(!file.exists()) 
+	{
+		if(!file.createNewFile())
+		{
+			logFailure("File "+file.name+" could not be created!");
+			return false;
+		}
+	} 
+	
+	var fileWriter : FileWriter = new FileWriter(file, "UTF-8");
+ 	var xsw : XMLStreamWriter = new XMLStreamWriter(fileWriter);
+ 	
+ 	xsw.writeStartDocument();
+ 	xsw.writeStartElement("catalog");
+    writeAllCategories(xsw);
+    xsw.writeEndElement();
+    xsw.writeEndDocument();
+ 	xsw.close();
+ 	fileWriter.close();	
+
+	var zipfile : File = new dw.io.File(fileName + '.gz');
+	if(!file.exists()) 
+	{
+		if(!file.createNewFile())
+		{
+			logFailure("File "+file.name+" could not be created!");
+			return false;
+		}
+	} 
+	file.gzip(zipfile);
+	file.remove();
+	
+	return zipfile.getName();
+}
+
+function writeAllCatalogProducts(xmlWriter : XMLStreamWriter)
+{
+	var pb:String = ''; 
+	if(('listPriceDefault' in dw.system.Site.current.preferences.custom) && !empty(dw.system.Site.current.preferences.custom.listPriceDefault))
+		pb = dw.system.Site.current.preferences.custom.listPriceDefault;
+	else	
+	    pb = 'pacsun_list_price';
+
+//	var products : SeekableIterator = ProductMgr.queryAllSiteProducts();
+	var productList:ArrayList = new ArrayList();
+	
+	productList.add(ProductMgr.getProduct("0870480460234"));
+	productList.add(ProductMgr.getProduct("2738128"));
+	
+	productList.add(ProductMgr.getProduct("0172059400004"));
+	productList.add(ProductMgr.getProduct("3312808"));
+	productList.add(ProductMgr.getProduct("3312816"));
+	productList.add(ProductMgr.getProduct("3312824"));
+	productList.add(ProductMgr.getProduct("3312832"));
+	productList.add(ProductMgr.getProduct("3312840"));
+	productList.add(ProductMgr.getProduct("3312857"));
+	productList.add(ProductMgr.getProduct("3312865"));
+	productList.add(ProductMgr.getProduct("0098059400467"));
+	productList.add(ProductMgr.getProduct("3312873"));
+	productList.add(ProductMgr.getProduct("3312881"));
+	productList.add(ProductMgr.getProduct("3312899"));
+	productList.add(ProductMgr.getProduct("3312907"));
+	productList.add(ProductMgr.getProduct("3312915"));
+	productList.add(ProductMgr.getProduct("3312923"));
+	productList.add(ProductMgr.getProduct("3312931"));
+	var products:Iterator = productList.iterator();
+
+	try
+	{
+		for each(var product:Product in products)
+		{
+			if (!product.variant && product.isOnline()) {
+				xmlWriter.writeStartElement("product");
+				
+					xmlWriter.writeStartElement("pid");
+					xmlWriter.writeCharacters(product.getID());
+					xmlWriter.writeEndElement(); // pid
+					
+					xmlWriter.writeStartElement("title");
+					xmlWriter.writeCData(StringUtils.trim(product.getName()));
+					xmlWriter.writeEndElement(); // title
+					
+					if(!empty(product.getBrand()))
+					{
+						xmlWriter.writeStartElement("brand");
+						xmlWriter.writeCData(StringUtils.trim(product.getBrand()));
+						xmlWriter.writeEndElement(); // brand
+					}
+					
+					xmlWriter.writeStartElement("launch_date");
+					var date1:Calendar = new Calendar(product.getOnlineFrom());
+    				date1.timeZone = "PST";
+    				var date2String:String = StringUtils.formatCalendar(date1, "yyyyMMdd");
+					xmlWriter.writeCharacters(date2String);
+					xmlWriter.writeEndElement(); // launch_date
+					
+					xmlWriter.writeStartElement("availability");
+					switch(product.getAvailabilityModel().getAvailabilityStatus())
+					{
+						case ProductAvailabilityModel.AVAILABILITY_STATUS_IN_STOCK :
+						  	xmlWriter.writeCharacters("in stock");
+						  	break;
+						case ProductAvailabilityModel.AVAILABILITY_STATUS_PREORDER :
+							xmlWriter.writeCharacters("pre-order");
+							break
+						case ProductAvailabilityModel.AVAILABILITY_STATUS_BACKORDER :
+							xmlWriter.writeCharacters("available for order");				
+						  break;
+						default:
+							xmlWriter.writeCharacters("out of stock");
+					}
+					xmlWriter.writeEndElement();
+					
+					xmlWriter.writeStartElement("categories");
+					var categoryList: ArrayList = product.onlineCategories;
+					var category: Category = null;
+					for each(category in categoryList) {
+						xmlWriter.writeStartElement("category");
+						xmlWriter.writeAttribute("id", category.ID);
+						xmlWriter.writeEndElement(); // category
+					}
+					xmlWriter.writeEndElement(); // categories
+					
+					xmlWriter.writeStartElement("large_image");
+					xmlWriter.writeAttribute("url", getProductImageURL(product, 'product-list'));
+					xmlWriter.writeEndElement(); // large-image
+					
+					xmlWriter.writeStartElement("thumb_image");
+					xmlWriter.writeAttribute("url", getProductImageURL(product, 'product-thumb'));
+					xmlWriter.writeEndElement(); // large-image
+					
+					xmlWriter.writeStartElement("url");
+					xmlWriter.writeCharacters(URLUtils.http('Product-Show', 'pid', product.ID).toString().replace("staging.web.pacsun.demandware.net", "www.pacsun.com"));
+					xmlWriter.writeEndElement(); // url
+					
+					if(product.priceModel != null && product.getPriceModel().getPrice() != dw.value.Money.NOT_AVAILABLE)
+					{
+						xmlWriter.writeStartElement("price");
+						xmlWriter.writeCharacters(product.priceModel.getPriceBookPrice(pb));
+						xmlWriter.writeEndElement(); // price
+					}
+					
+					if(product.priceModel != null && product.getPriceModel().getPrice() != dw.value.Money.NOT_AVAILABLE)
+					{
+						xmlWriter.writeStartElement("sale-price");
+						xmlWriter.writeCharacters(product.priceModel.price);
+						xmlWriter.writeEndElement(); // sale-price
+					}
+					
+					xmlWriter.writeStartElement("keywords");
+					if (product.pageKeywords != null)
+						xmlWriter.writeCData(product.pageKeywords);
+					xmlWriter.writeEndElement(); // keywords
+					
+					if (product.master) {
+						writeVariants(xmlWriter, product);
+					}
+					
+				xmlWriter.writeEndElement(); // product
+			}
+		}
+	}
+	catch(e)
+	{
+		logFailure(e.toString());
+	}
+	//products.close();
+	
+}
+
+function writeVariants(xmlWriter : XMLStreamWriter, product: Product)
+{
+	var pb:String = ''; 
+	if(('listPriceDefault' in dw.system.Site.current.preferences.custom) && !empty(dw.system.Site.current.preferences.custom.listPriceDefault))
+		pb = dw.system.Site.current.preferences.custom.listPriceDefault;
+	else	
+	    pb = 'pacsun_list_price';
+	
+	xmlWriter.writeStartElement("variants");
+	for(var i=0;i<product.variants.length;i++) {
+		
+		var variant:Product = product.variants[i];
+		
+		xmlWriter.writeStartElement("variant");
+		
+		xmlWriter.writeStartElement("skuid");
+		xmlWriter.writeCharacters(variant.ID);
+		xmlWriter.writeEndElement(); // skuid
+		
+		xmlWriter.writeStartElement("price");
+		xmlWriter.writeCharacters(variant.priceModel.getPriceBookPrice(pb));
+		xmlWriter.writeEndElement(); // price
+		
+		xmlWriter.writeStartElement("sale_price");
+		xmlWriter.writeCharacters(variant.priceModel.price);
+		xmlWriter.writeEndElement(); // sale_price
+		
+		xmlWriter.writeStartElement("color");
+		xmlWriter.writeCData(getVariantColorAttr(product, variant));
+		xmlWriter.writeEndElement(); // color
+		
+		xmlWriter.writeStartElement("size");
+		xmlWriter.writeCharacters(getVariantSizeAttr(product, variant));
+		xmlWriter.writeEndElement(); // size
+		
+		xmlWriter.writeStartElement("availability");
+		switch(variant.getAvailabilityModel().getAvailabilityStatus())
+		{
+			case ProductAvailabilityModel.AVAILABILITY_STATUS_IN_STOCK :
+			  	xmlWriter.writeCharacters("in stock");
+			  	break;
+			case ProductAvailabilityModel.AVAILABILITY_STATUS_PREORDER :
+				xmlWriter.writeCharacters("pre-order");
+				break
+			case ProductAvailabilityModel.AVAILABILITY_STATUS_BACKORDER :
+				xmlWriter.writeCharacters("available for order");				
+			  break;
+			default:
+				xmlWriter.writeCharacters("out of stock");
+		}
+		xmlWriter.writeEndElement(); // availability
+		writeVariantImages(xmlWriter, variant);
+		
+		xmlWriter.writeEndElement(); // variant
+	}
+	xmlWriter.writeEndElement(); // variants
+}
+
+function getVariantColorAttr(product: Product, variant: Product):String {
+	var colorAttr:String = !empty(variant.custom.color) ? variant.custom.color: (!empty(product.custom.color) ? product.custom.color: "");
+	if (empty(colorAttr)) {
+		colorAttr = !empty(variant.custom.colorCode) ? variant.custom.colorCode: (!empty(product.custom.colorCode) ? product.custom.colorCode: "");
+	}
+	return colorAttr;
+}
+
+function getVariantSizeAttr(product: Product, variant: Product):String {
+	var sizeAttr:String = !empty(variant.custom.size) ? variant.custom.size: (!empty(product.custom.size) ? product.custom.size: "");
+	return sizeAttr;
+}
+
+function writeVariantImages(xmlWriter : XMLStreamWriter, variant: Product) {
+	var imageArray:ArrayList = null;
+	var varAttrColor : dw.catalog.ProductVariationAttribute = null;
+	var varVal: dw.catalog.ProductVariationAttributeValue = null;
+	var varVals:dw.util.Collection = null;
+	
+	if( !empty(variant.variationModel) )
+	{
+		var varModel : dw.catalog.ProductVariationModel = variant.variationModel;
+		varAttrColor = varModel.getProductVariationAttribute("color");
+		if(varAttrColor == null) {
+			varAttrColor = varModel.getProductVariationAttribute("colorCode");	
+		}
+		try {
+		varVals = varModel.getAllValues(varAttrColor);
+		} catch(e) {
+			Logger.error("variant productId=" + variant.ID);
+		}
+		varVal = !empty(varVals) && varVals.length > 0 ? varVals[0] : null;
+	}
+	
+	if(variant.getImage('product-list',0)) {
+		imageArray = variant.getImages('product-list');
+	} else if (varVal != null) {
+		if(!empty(varVal.getImage('product-list'))) {
+			imageArray =varVal.getImages('product-list');
+		} else if (!empty(varVal.getImage('product-list',0))) {
+			imageArray = varVal.getImages('product-list');
+		}
+	}
+	
+	xmlWriter.writeStartElement("image-set");
+
+	if(imageArray != null) {
+		var counter:Number = 1;
+		if (imageArray.length == 0) {
+			var imageURL = URLUtils.httpStatic('/images/noimagemedium-m.png');
+			xmlWriter.writeStartElement("image");
+			xmlWriter.writeAttribute("url", imageURL);
+			xmlWriter.writeAttribute("order", counter);
+			xmlWriter.writeEndElement(); // image
+		} else {
+			for each(var image:MediaFile in imageArray) {
+				if(counter <=6) {
+					var index = image.absURL.toString().indexOf("?");
+					var imageURL = image.absURL.toString().substring(0,index);
+					xmlWriter.writeStartElement("image");
+					xmlWriter.writeAttribute("url", imageURL);
+					xmlWriter.writeAttribute("order", counter);
+					xmlWriter.writeEndElement(); // image
+				} else {
+					break;	
+				}
+				counter++;
+			}
+		}
+	} else {
+		var imageURL = URLUtils.httpStatic('/images/noimagemedium-m.png');
+		xmlWriter.writeStartElement("image");
+		xmlWriter.writeAttribute("url", imageURL + '" order="1"');
+		xmlWriter.writeEndElement(); // image
+	}
+	
+	xmlWriter.writeEndElement(); // image-set
+	
+	if(!(!empty(varVals) && varVals.length == 1)) {
+		if(variant.getImage('swatches',0)) {
+			var index = variant.getImage('swatches',0).absURL.toString().indexOf("?");
+			var imageURL = variant.getImage('swatches',0).absURL.toString().substring(0,index);
+			xmlWriter.writeStartElement("swatch");
+			xmlWriter.writeAttribute("url", imageURL);
+			xmlWriter.writeEndElement(); // swatch
+		} else if (varVal != null) {
+			if(!empty(varVal.getImage('swatches'))) {
+				var index = varVal.getImage('swatches').absURL.toString().indexOf("?");
+				var imageURL = varVal.getImage('swatches').absURL.toString().substring(0,index);
+				xmlWriter.writeStartElement("swatch");
+				xmlWriter.writeAttribute("url", imageURL);
+				xmlWriter.writeEndElement(); // swatch
+			} else if (!empty(varVal.getImage('swatches',0))) {
+				var index = varVal.getImage('swatches',0).absURL.toString().indexOf("?");
+				var imageURL = varVal.getImage('swatches',0).absURL.toString().substring(0,index);
+				xmlWriter.writeStartElement("swatch");
+				xmlWriter.writeAttribute("url", imageURL);
+				xmlWriter.writeEndElement(); // swatch
+			}
+		}
+	}
+}
+
+function getProductCategories(xmlWriter : XMLStreamWriter, product: Product)
+{
+		xmlWriter.writeStartElement("product_type");
+		var category : dw.catalog.Category = null;
+		var masterProduct : Product = product; // categories are on master products
+		
+		if(product.isVariant())
+		{
+			masterProduct = product.getVariationModel().getMaster(); 
+		}
+		category = masterProduct.getPrimaryCategory();
+		if(category == null) // No primary category assigned
+		{
+			category = masterProduct.getClassificationCategory();
+		}
+		if(category == null) //no primary or classification category, use first category in list.  
+		{
+			category = masterProduct.getCategories()[0];
+		}
+		
+		if(category != null)
+		{
+			var categoryString: String = "";
+			while( category.parent != null )
+			{
+				if( category.online )
+				{
+					if(categoryString != "") 
+					{
+						categoryString += " > ";
+					}
+					categoryString += category.displayName;
+				}
+				category = category.parent;
+			}
+			xmlWriter.writeCData(categoryString);
+		}
+		xmlWriter.writeEndElement();	
+}
+
+function getProductImageURL(product:Product, viewType:String): String {
+	var imageURL : String = URLUtils.httpStatic('/images/noimagemedium-m.png');
+	var varAttrColor : dw.catalog.ProductVariationAttribute = null;
+	var varVal: dw.catalog.ProductVariationAttributeValue = null;
+	var varVals:dw.util.Collection = null;
+	
+	if( !empty(product.variationModel) )
+	{
+		var varModel : dw.catalog.ProductVariationModel = product.variationModel;
+		varAttrColor = varModel.getProductVariationAttribute("color");
+		if(varAttrColor == null) {
+			varAttrColor = varModel.getProductVariationAttribute("colorCode");	
+		}
+		if(varAttrColor == null) {
+			return imageURL;
+		}
+		varVals = varModel.getAllValues(varAttrColor);
+		varVal = !empty(varVals) && varVals.length > 0 ? varVals[0] : null;
+	}
+	
+	if(product.getImage(viewType,0)) {
+		var index = product.getImage(viewType,0).absURL.toString().indexOf("?");
+		if (viewType == "product-list")
+			imageURL = product.getImage(viewType,0).absURL.toString().substring(0,index);
+		else
+			imageURL = product.getImage(viewType,0).absURL.toString();
+	} else if (varVal != null) {
+		if(!empty(varVal.getImage(viewType))) {
+			var index = varVal.getImage(viewType).absURL.toString().indexOf("?");
+			if (viewType == "product-list")
+				imageURL = varVal.getImage(viewType).absURL.toString().substring(0,index);
+			else
+				imageURL = varVal.getImage(viewType).absURL.toString();
+		
+		} else if (!empty(varVal.getImage(viewType,0))) {
+			var index = varVal.getImage(viewType,0).absURL.toString().indexOf("?");
+			if (viewType == "product-list")
+				imageURL = varVal.getImage(viewType,0).absURL.toString().substring(0,index);
+			else
+				imageURL = varVal.getImage(viewType,0).absURL.toString();
+			
+		} else {
+			imageURL = URLUtils.httpStatic('/images/noimagemedium-m.png');	
+		}
+	}
+	else {
+		imageURL = URLUtils.httpStatic('/images/noimagemedium-m.png');
+	}
+	
+	return imageURL;
+}
+
+function writeAllCategories(xmlWriter : XMLStreamWriter) {
+	var siteCatalog : dw.catalog.Catalog = dw.catalog.CatalogMgr.getSiteCatalog();
+	var root : dw.catalog.Category = null;
+	if(siteCatalog != null)
+	{
+		root = siteCatalog.getRoot();
+	}
+	
+	xmlWriter.writeStartElement("categories");
+	
+	writeCategories(root, 1, xmlWriter);
+
+	xmlWriter.writeEndElement(); // categories
+}
+
+function writeCategories(category:Category, seq:Number, xmlWriter:XMLStreamWriter) {
+	xmlWriter.writeStartElement("category");
+	xmlWriter.writeAttribute("category_id", category.ID);
+	xmlWriter.writeAttribute("sequence", seq);
+
+	var categoryName: String = category.displayName;
+	
+	if (categoryName != null && categoryName.indexOf("&") >= 0){
+		categoryName = categoryName.replace(/&/g,'&amp;');
+	}
+	if (categoryName != null && categoryName.indexOf("'") >= 0) {
+		categoryName = categoryName.replace(/'/g,'&quot;');
+	}
+	xmlWriter.writeStartElement("name");
+	xmlWriter.writeCharacters(categoryName);
+	xmlWriter.writeEndElement(); // name
+	
+	if (category.parent != null && category.parent.ID != null) {
+		xmlWriter.writeStartElement("parent_category_id");
+		xmlWriter.writeCharacters(category.parent.ID);
+		xmlWriter.writeEndElement(); // parent_category_id
+	}
+	
+	xmlWriter.writeStartElement("breadcrumb");
+	xmlWriter.writeCharacters(getBreadcrumb(category));
+	xmlWriter.writeEndElement(); // breadcrumb
+	
+	xmlWriter.writeStartElement("url");
+	xmlWriter.writeCharacters(URLUtils.http('Search-Show', 'cgid', category.ID).toString().replace("staging.web.pacsun.demandware.net", "www.pacsun.com"));
+	xmlWriter.writeEndElement(); // url
+	
+	xmlWriter.writeStartElement("primary_category");
+	xmlWriter.writeCharacters("true");
+	xmlWriter.writeEndElement(); // url
+
+	xmlWriter.writeEndElement(); // category
+	
+	if (category.onlineSubCategories != null && category.onlineSubCategories.length > 0) {
+		seq = 0;
+		for each(var cat : Category in category.onlineSubCategories) {
+			seq = seq + 1;
+			writeCategories(cat, seq, xmlWriter);
+		}	
+	}
+}
+
+function getBreadcrumb(category:Category):String {
+	if (category.parent != null) {
+		return getBreadcrumb(category.parent) + '/' + category.ID;
+	}
+	else {
+		if (category.ID == "root")
+			return '';
+		else 
+			return '/' + category.ID;
+	}
+}

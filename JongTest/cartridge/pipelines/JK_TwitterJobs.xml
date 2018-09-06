@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<?demandware-pipeline version="2.0"?>
+
+<pipeline type="process">
+  <branch basename="Start">
+    <segment>
+      <node>
+        <start-node call-mode="private" name="Start" secure="false"/>
+        <node-display x="1" y="1"/>
+      </node>
+      <simple-transition>
+        <transition-display>
+          <bend-point relative-to="source" x="0" y="1"/>
+        </transition-display>
+      </simple-transition>
+      <node>
+        <pipelet-node pipelet-name="Script" pipelet-set-identifier="bc_api">
+          <config-property key="Transactional" value="false"/>
+          <config-property key="OnError" value="PIPELET_ERROR"/>
+          <config-property key="ScriptFile" value="twitter/getFilePath.ds"/>
+          <key-binding alias="null" key="ScriptLog"/>
+          <key-binding alias="'twitter'" key="FolderName"/>
+          <key-binding alias="'Catalog.xml'" key="FileName"/>
+          <key-binding alias="filePath" key="FilePath"/>
+        </pipelet-node>
+        <node-display x="0" y="1"/>
+      </node>
+      <simple-transition>
+        <transition-display>
+          <bend-point relative-to="source" x="0" y="1"/>
+        </transition-display>
+      </simple-transition>
+      <node>
+        <pipelet-node pipelet-name="Script" pipelet-set-identifier="bc_api">
+          <config-property key="Transactional" value="false"/>
+          <config-property key="OnError" value="PIPELET_ERROR"/>
+          <config-property key="ScriptFile" value="twitter/selectProducts.ds"/>
+          <key-binding alias="null" key="ScriptLog"/>
+          <key-binding alias="ProductList" key="ProductList"/>
+        </pipelet-node>
+        <node-display x="0" y="1"/>
+      </node>
+      <simple-transition>
+        <transition-display>
+          <bend-point relative-to="source" x="0" y="1"/>
+        </transition-display>
+      </simple-transition>
+      <node>
+        <pipelet-node pipelet-name="ExportCatalog" pipelet-set-identifier="bc_api">
+          <key-binding alias="dw.catalog.CatalogMgr.getSiteCatalog()" key="Catalog"/>
+          <key-binding alias="filePath" key="ExportFile"/>
+          <key-binding alias="null" key="ExportProducts"/>
+          <key-binding alias="false" key="ExportCategories"/>
+          <key-binding alias="false" key="ExportSubCategories"/>
+          <key-binding alias="null" key="OverwriteExportFile"/>
+          <key-binding alias="null" key="ErrorCode"/>
+          <key-binding alias="null" key="ErrorMsg"/>
+          <key-binding alias="null" key="LogFileName"/>
+          <key-binding alias="null" key="Status"/>
+          <key-binding alias="false" key="ExportCategoryAssignments"/>
+          <key-binding alias="false" key="ExportRecommendations"/>
+          <key-binding alias="false" key="ExportProductOptions"/>
+          <key-binding alias="null" key="ExportVariationAttributes"/>
+          <key-binding alias="ProductList" key="Products"/>
+          <key-binding alias="null" key="Categories"/>
+        </pipelet-node>
+        <node-display x="0" y="1"/>
+      </node>
+      <simple-transition>
+        <transition-display>
+          <bend-point relative-to="source" x="0" y="1"/>
+        </transition-display>
+      </simple-transition>
+      <node>
+        <end-node/>
+        <node-display x="0" y="1"/>
+      </node>
+    </segment>
+  </branch>
+</pipeline>

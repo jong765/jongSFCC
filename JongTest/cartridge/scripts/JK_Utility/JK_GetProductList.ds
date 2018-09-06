@@ -1,0 +1,194 @@
+/**
+* CreateCatalogStructureIterator Script File
+*
+*   @input  NumberOfProducts : String
+*   @input  OnlineTopCategories : String
+*   @output ProductList : dw.util.Iterator
+*
+*/
+
+
+importPackage( dw.system );
+importPackage( dw.catalog );
+importPackage( dw.util );
+importPackage( dw.object );
+
+function execute( pdict : PipelineDictionary ) : Number
+{
+	try {
+		var log : Logger = Logger.getLogger("CatalogReducer","");
+		
+		var numberofProducts : Number = pdict.NumberOfProducts;
+		var onlineTopCategories : Array = pdict.OnlineTopCategories.split(",");
+	    var onlineProducts : Boolean = true;
+	    var productList : ArrayList = new ArrayList();
+	    
+	    // Loop through online top categories
+	    for (var i:Number = 0; i < onlineTopCategories.length; i++) {
+    		var topCategory : Category = CatalogMgr.getCategory(onlineTopCategories[i]);
+    		log.info("Top Category: " + topCategory.ID);
+    		var subCategories :  Collection  = topCategory.getOnlineSubCategories();
+			
+			//Calls recursive function to work through catalog structure to get products of all categories
+			productList = getProductsfromSubCategories(subCategories, productList, numberofProducts, onlineProducts, log);
+		}
+		pdict.ProductList = productList.iterator();
+		log.info("Total product count:" + productList.size());
+	} catch (e) {
+		logError(e);
+		return PIPELET_ERROR;
+	}
+
+   return PIPELET_NEXT;
+}
+
+// Function will recursively call itself to get through all subcategories of a catalog and grab Products for each category
+function getProductsfromSubCategories(rootSubCategories : Collection, productList : ArrayList, numberofProducts : Number, onlineProducts : boolean, log : Logger)
+{
+	for each (var subCategory : Category in  rootSubCategories)
+    {
+    	log.info("Reading subCategory: " + subCategory.ID);
+    	if (subCategory.getOnlineSubCategories().length > 0)
+        {
+        	getProductsfromSubCategories(subCategory.getOnlineSubCategories(), productList, numberofProducts, onlineProducts, log);
+        }
+        else
+        {
+        	if(onlineProducts == true)
+        	{
+        		var productsCol : Collection = subCategory.getOnlineProducts();
+            	var products: Iterator = productsCol.iterator();
+            }
+            else
+            {
+            	var productsCol : Collection = subCategory.getProducts();
+            	var products: Iterator = productsCol.iterator();
+            }
+                
+         	var count : Number = 0;
+                
+            while(products.hasNext() && numberofProducts > count)
+            {
+            	var product : Product = products.next();
+           		if(product.isMaster() == true || product.isProductSet() == true || product.isBundle() == true)
+            	{   
+            		//Called to get all products that make up a complexs type
+            		getAllProductsofComplexType(product, productList, onlineProducts, log);
+            	}
+            		
+            	if(productList.contains(product) != true)
+            	{
+            		quotaProtection(productList, product);
+            	}
+           	
+            	count++;                
+            }
+       }
+	}
+return productList;
+}
+
+//Function takes the user inputted ProductIDS and adds the product object to the array if it is not already added.
+//function assignspecificProductstoArrays(specificProductIDArrayList : ArrayList, productList : ArrayList, log : Logger)
+//{
+//    for each(var productID : String in specificProductIDArrayList)
+//    {
+//        var product : Product = ProductMgr.getProduct(productID);
+//
+//        if(product.isMaster() == true || product.isProductSet() == true || product.isBundle() == true)
+//        {   
+//        	//Handle Master's Variations
+//            getAllProductsofComplexType(product, productList, false, log);
+//        }
+//              
+//        if(productList.contains(product) != true)
+//        {
+//           quotaProtection(productList, product);
+//        }    
+//    }    
+//}
+
+//This function gets all the products for complex Product Types(Masters,ProductSets,Bundles) and adds them to the correct export Array
+function getAllProductsofComplexType(product : Product, productList : ArrayList, onlineProducts : Boolean, log : Logger)
+{
+	var productCollection : Collection = productTypeCollection(product);
+	var count : Number = 0;
+	
+	for each( var supportingProduct : Product in productCollection)
+	{
+		if(supportingProduct.isMaster() == true || supportingProduct.isProductSet() == true || supportingProduct.isBundle() == true)
+        {   
+        		//Handle Master's Variations
+            	getAllProductsofComplexType(supportingProduct, productList, onlineProducts, log);
+        }
+        else
+        {	
+			if(onlineProducts == true)
+			{
+				if(supportingProduct.isOnline() == true && productList.contains(supportingProduct) != true)
+				{
+					  quotaProtection(productList, supportingProduct);
+           	 	}		
+			}
+			else
+			{
+				if(productList.contains(supportingProduct) != true)
+				{
+					 quotaProtection(productList, supportingProduct);
+            	}			
+			}
+		}
+		
+		count++;
+		//This limits variations of a master to 25 variations
+		if(product.isMaster() == true && count == 25)
+		{
+			break;
+		}	
+	}
+	
+}
+
+// Get the collection of Products for Complex Product Types
+function productTypeCollection(product : Product) : Collection
+{
+	 if(product.isMaster() == true)
+	 {
+	 	var  productCollection : Collection = product.getVariants();
+	 } 
+	 else if (product.isProductSet() == true)
+	 {
+	 	var  productCollection : Collection = product.getProductSetProducts();
+	 }
+	 else if(product.isBundle() == true)
+	 {
+	 	
+	 	var  productCollection : Collection = product.getBundledProducts();
+	 }
+	 
+	return productCollection;
+}
+
+// Function ensures 20000 collection size quota limit is not violated, will stop at 20k regardless
+function quotaProtection(productList : ArrayList, product : Product, log : Logger)
+{
+	if(productList.size() == 20000)
+	{
+		log.error("20000 quota limit reached for api.dw.util.collectionSize. Stopping product collection");
+		return PIPELET_NEXT;
+	}
+	else
+	{
+		if (productList.contains(product) != true)
+			productList.push(product);
+	} 
+}
+
+function logError(e : Error) {
+	var errmsg="Error in line " + e.lineNumber;
+	if (e.message) errmsg += ", " + e.message;
+	if (e.faultDetail) errmsg += ", " + e.faultDetail;
+	errmsg += ", " + e.stack.trim();
+		
+	Logger.error(errmsg);
+}

@@ -1,0 +1,4 @@
+<!--- TEMPLATENAME: displayNotEmpty.isml --->
+<isdecorate template="content/home/pt_storefront">
+The param is ${pdict.CurrentHttpParameterMap.param.stringValue}
+</isdecorate>

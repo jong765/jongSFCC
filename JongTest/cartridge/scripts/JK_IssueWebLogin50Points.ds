@@ -1,0 +1,109 @@
+/**
+* Demandware Script File
+* To define input and output parameters, create entries of the form:
+*
+* @<paramUsageType> <paramName> : <paramDataType> [<paramComment>]
+*
+* where
+*   <paramUsageType> can be either 'input' or 'output'
+*   <paramName> can be any valid parameter name
+*   <paramDataType> identifies the type of the parameter
+*   <paramComment> is an optional comment
+*
+* For example:
+*
+*
+*
+*/
+importPackage( dw.system );
+importPackage( dw.object );
+importPackage( dw.util );
+importPackage( dw.rpc );
+importPackage( dw.net );
+importPackage( dw.value );
+importPackage( dw.ws );
+importPackage( dw.svc );
+
+function execute( pdict : PipelineDictionary ) : Number
+{
+	let relateCustomerID : String = "70537689";
+	let cardNumber : String = "2348395331737000";
+	let loyaltyAccountId : String = "14178244";
+
+	try {
+    	if (isEligibleForPoints(cardNumber)) {
+    		Logger.debug("IssuePoints API called.");
+    	}
+    } catch (e) {
+		var errmsg : String = "Error occured for: relateCustomerID=" + relateCustomerID + ", cardNumber=" + cardNumber + ", loyaltyAccountId=" + loyaltyAccountId;
+		Logger.error(errmsg);
+		logError(e);
+		return PIPELET_ERROR;
+	}
+
+   return PIPELET_NEXT;
+}
+
+function isEligibleForPoints(cardNumber : String) : Boolean {
+	var isEligible : Boolean = true;
+	
+	var startDate : Date = new Date(); 
+	var endDate : Date = new Date(); 
+	var message : String = "";
+
+	var startCalendar : Calendar = new Calendar(startDate);
+	var endCalendar : Calendar = new Calendar(endDate);
+	
+	var agingPeriod : Number = dw.system.Site.getCurrent().getCustomPreferenceValue('Relate_APP_WEB_LOGIN_50_Aging_Period');
+
+	startCalendar.add(startCalendar.DATE, agingPeriod * -1);
+	
+	try {
+		var service : Service = ServiceRegistry.get("relate.soap.loyalty");
+		var params : Object = {
+			requestType      : 'loyaltyAccountHistory',
+			cardNumber       : cardNumber,
+			cardSwiped       : false,
+			securityUserId   : "300",
+			currencyCode     : "USD",
+			historyStartDate : startCalendar,
+			historyEndDate   : endCalendar
+		};
+		
+		var result = service.setThrowOnError().call(params);
+		var responseObject = result.object;
+		
+		if (!result.ok) {
+			throw new Error(result.errorMessage);
+		}
+		
+		var history = responseObject._return.instrument.loyaltyAccount[0].loyaltyActivityList;
+	
+		for (var i = 0; i < history.length; i++){
+			message = message + ", " + history[i].transactionType;
+			if(history[i].transactionType == "Issue"){
+				var ruleName = history[i].ruleName;
+				message = message + ", " + ruleName + "\n";
+				if (ruleName == "APP_WEB_LOGIN_50" || ruleName == "LOYALTY_REGISTRATION") {
+					Logger.debug("Points issued already for " + ruleName);
+					isEligible = false;
+					break;
+				}
+			}
+		}
+	} catch (e) {
+		logError(e);
+		return false;
+	}
+	Logger.debug("isEligible=" + isEligible);
+	return isEligible;
+}
+
+function logError(e : Error) {
+	var errmsg="Error in line " + e.lineNumber;
+	if (e.message) errmsg += ", " + e.message;
+	if (e.faultDetail) errmsg += ", " + e.faultDetail;
+	errmsg += ", " + e.stack.trim();
+		
+	Logger.error(errmsg);
+}

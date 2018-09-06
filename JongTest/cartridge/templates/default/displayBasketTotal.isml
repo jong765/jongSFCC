@@ -1,0 +1,5 @@
+<!--- TEMPLATENAME: displayBasketTotal.isml --->
+The products are: <br/>
+<isloop iterator="${pdict.Basket.productLineItems}" var="PLI">
+<isprint value = "${PLI.product.name}"> <br/>
+</isloop>

@@ -1,0 +1,23 @@
+/**
+*
+*   @output offlineProducts : ArrayList
+*
+*/
+importPackage( dw.system );
+importPackage( dw.io );
+importPackage( dw.util );
+
+function execute( args : PipelineDictionary ) : Number
+{
+    var offlineProducts : ArrayList = new ArrayList();
+    var catalogFile : File = new File(File.IMPEX + "/src/catalog/staging_fullcatalog_130813.xml");
+    var xmlString : XML = new XML(catalogFile);
+
+    // insert business logic here
+
+    // write pipeline dictionary output parameter
+
+    // args.ExampleOut = ...
+
+    return PIPELET_NEXT;
+}

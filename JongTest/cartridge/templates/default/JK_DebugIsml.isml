@@ -1,0 +1,3 @@
+<!--- TEMPLATENAME: JK_DebugIsml.isml --->
+<script>console.log('RefinementDefinition:' + "${RefinementDefinition.displayName}");</script>
+<script>console.log('jktest');</script>

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<?demandware-pipeline version="2.0"?>
+
+<pipeline type="view">
+  <branch basename="Start">
+    <segment>
+      <node>
+        <start-node call-mode="private" name="Start" secure="false"/>
+        <node-display x="1" y="1"/>
+      </node>
+      <simple-transition>
+        <transition-display>
+          <bend-point relative-to="source" x="0" y="1"/>
+        </transition-display>
+      </simple-transition>
+      <node>
+        <pipelet-node pipelet-name="ExportCatalog" pipelet-set-identifier="bc_api">
+          <key-binding alias="Catalog" key="Catalog"/>
+          <key-binding alias="ExportFile" key="ExportFile"/>
+          <key-binding alias="null" key="Categories"/>
+          <key-binding alias="false" key="ExportProducts"/>
+          <key-binding alias="null" key="ExportCategories"/>
+          <key-binding alias="null" key="ExportSubCategories"/>
+          <key-binding alias="null" key="OverwriteExportFile"/>
+          <key-binding alias="null" key="ErrorCode"/>
+          <key-binding alias="null" key="ErrorMsg"/>
+          <key-binding alias="null" key="LogFileName"/>
+          <key-binding alias="null" key="Status"/>
+          <key-binding alias="false" key="ExportCategoryAssignments"/>
+          <key-binding alias="null" key="ExportRecommendations"/>
+          <key-binding alias="null" key="ExportProductOptions"/>
+          <key-binding alias="null" key="ExportVariationAttributes"/>
+          <key-binding alias="null" key="Products"/>
+        </pipelet-node>
+        <node-display x="0" y="1"/>
+      </node>
+      <simple-transition>
+        <transition-display>
+          <bend-point relative-to="source" x="0" y="1"/>
+        </transition-display>
+      </simple-transition>
+      <node>
+        <end-node/>
+        <node-display x="0" y="1"/>
+      </node>
+    </segment>
+  </branch>
+</pipeline>

@@ -1,0 +1,1243 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<?demandware-pipeline version="2.0"?>
+
+<pipeline type="job">
+  <branch basename="_ANONYMOUS_BRANCH_1">
+    <segment>
+      <node>
+        <text-node>
+          <description>Calls a series of sub-pipelines to export the storefront catalog to FiftyOne.</description>
+        </text-node>
+        <node-display width="2" x="0" y="0"/>
+      </node>
+    </segment>
+  </branch>
+  <branch basename="_ANONYMOUS_BRANCH_2">
+    <segment>
+      <node>
+        <text-node>
+          <description>The catalog export operation. Calls sub-pipelines to create the export folder, generate the XML feeds, zip them up, and upload them to the FiftyOne FTP site.</description>
+        </text-node>
+        <node-display width="2" x="3" y="0"/>
+      </node>
+    </segment>
+  </branch>
+  <branch basename="ValidateAndExport">
+    <segment>
+      <node>
+        <start-node call-mode="private" name="ValidateAndExport" secure="false"/>
+        <node-display x="0" y="1"/>
+      </node>
+      <simple-transition/>
+      <node>
+        <call-node start-name-ref="51ExportCatalog-DeleteExportFiles"/>
+        <node-display x="0" y="1"/>
+      </node>
+      <simple-transition/>
+      <node>
+        <call-node start-name-ref="51SiteUtility-AssignCategoryIds"/>
+        <node-display x="0" y="1"/>
+      </node>
+      <simple-transition>
+        <transition-display>
+          <bend-point relative-to="source" x="0" y="1"/>
+        </transition-display>
+      </simple-transition>
+      <node>
+        <call-node start-name-ref="51ExportCatalog-ValidateCategories"/>
+        <node-display x="0" y="1"/>
+      </node>
+      <simple-transition>
+        <transition-display>
+          <bend-point relative-to="source" x="0" y="1"/>
+        </transition-display>
+      </simple-transition>
+      <node>
+        <call-node start-name-ref="51ExportCatalog-Export"/>
+        <node-display x="0" y="1"/>
+      </node>
+      <simple-transition/>
+      <node>
+        <end-node/>
+        <node-display x="0" y="1"/>
+      </node>
+    </segment>
+  </branch>
+  <branch basename="Export">
+    <segment>
+      <node>
+        <start-node call-mode="private" name="Export" secure="false"/>
+        <node-display x="3" y="1"/>
+      </node>
+      <simple-transition>
+        <transition-display>
+          <bend-point relative-to="source" x="0" y="1"/>
+        </transition-display>
+      </simple-transition>
+      <node>
+        <call-node start-name-ref="51ExportCatalog-CreateExportFolder"/>
+        <node-display x="0" y="1"/>
+      </node>
+      <simple-transition>
+        <transition-display>
+          <bend-point relative-to="source" x="0" y="1"/>
+        </transition-display>
+      </simple-transition>
+      <node>
+        <call-node start-name-ref="51ExportCatalog-ExportCategories"/>
+        <node-display x="0" y="1"/>
+      </node>
+      <simple-transition/>
+      <node>
+        <call-node start-name-ref="51ExportCatalog-ExportProductsNew"/>
+        <node-display x="0" y="1"/>
+      </node>
+      <simple-transition/>
+      <node>
+        <call-node start-name-ref="51ExportCatalog-ExportKits"/>
+        <node-display x="0" y="1"/>
+      </node>
+      <simple-transition>
+        <transition-display>
+          <bend-point relative-to="source" x="0" y="1"/>
+        </transition-display>
+      </simple-transition>
+      <node>
+        <pipelet-node pipelet-name="Script" pipelet-set-identifier="bc_api">
+          <config-property key="Transactional" value="false"/>
+          <config-property key="OnError" value="PIPELET_ERROR"/>
+          <config-property key="ScriptFile" value="exportCatalog/fiftyone_zipFolder.ds"/>
+          <key-binding alias="null" key="ScriptLog"/>
+          <key-binding alias="ExportFolder" key="ExportFolder"/>
+          <key-binding alias="ExportZip" key="ExportZip"/>
+          <key-binding alias="BatchId" key="BatchId"/>
+        </pipelet-node>
+        <node-display x="0" y="1"/>
+        <branch basename="b2" source-connector="error">
+          <transition target-connector="in1" target-path="./b3.1"/>
+        </branch>
+      </node>
+      <simple-transition/>
+      <node>
+        <pipelet-node pipelet-name="Script" pipelet-set-identifier="bc_api">
+          <config-property key="Transactional" value="false"/>
+          <config-property key="OnError" value="PIPELET_ERROR"/>
+          <config-property key="ScriptFile" value="exportCatalog/fiftyone_pushCatalog.ds"/>
+          <key-binding alias="null" key="ScriptLog"/>
+          <key-binding alias="ExportZip" key="ExportZip"/>
+        </pipelet-node>
+        <node-display x="0" y="1"/>
+        <branch basename="b3" source-connector="error">
+          <transition target-connector="in1">
+            <transition-display>
+              <bend-point relative-to="source" x="1" y="0"/>
+            </transition-display>
+          </transition>
+          <segment>
+            <node>
+              <join-node/>
+              <node-display x="1" y="-1"/>
+            </node>
+            <simple-transition/>
+            <node>
+              <pipelet-node pipelet-name="SendMail" pipelet-set-identifier="bc_api">
+                <key-binding alias="dw.system.Site.current.preferences.custom.fiftyone_fromEmail" key="MailFrom"/>
+                <key-binding alias="&quot;custom/email/catalogExportError_email&quot;" key="MailTemplate"/>
+                <key-binding alias="dw.system.Site.current.preferences.custom.fiftyone_administratorEmail" key="MailTo"/>
+                <key-binding alias="&quot;Failure while zipping and sending catalog&quot;" key="MailSubject"/>
+                <key-binding alias="null" key="LocaleID"/>
+                <key-binding alias="null" key="MailCC"/>
+                <key-binding alias="null" key="MailBCC"/>
+              </pipelet-node>
+              <node-display x="0" y="1"/>
+            </node>
+            <simple-transition>
+              <transition-display>
+                <bend-point relative-to="source" x="0" y="1"/>
+              </transition-display>
+            </simple-transition>
+            <node>
+              <stop-node/>
+              <node-display x="0" y="1"/>
+            </node>
+          </segment>
+        </branch>
+      </node>
+      <simple-transition/>
+      <node>
+        <end-node name="Finish"/>
+        <node-display x="0" y="1"/>
+      </node>
+    </segment>
+  </branch>
+  <branch basename="_ANONYMOUS_BRANCH_5">
+    <segment>
+      <node>
+        <text-node>
+          <description>Creates the categories export XML feed.</description>
+        </text-node>
+        <node-display width="2" x="6" y="0"/>
+      </node>
+    </segment>
+  </branch>
+  <branch basename="ExportCategories">
+    <segment>
+      <node>
+        <start-node call-mode="private" name="ExportCategories" secure="false"/>
+        <node-display x="6" y="1"/>
+      </node>
+      <simple-transition>
+        <transition-display>
+          <bend-point relative-to="source" x="0" y="1"/>
+        </transition-display>
+      </simple-transition>
+      <node>
+        <pipelet-node pipelet-name="ExportCatalog" pipelet-set-identifier="bc_api">
+          <key-binding alias="dw.catalog.CatalogMgr.getSiteCatalog()" key="Catalog"/>
+          <key-binding alias="ExportedCategoriesFileName" key="ExportFile"/>
+          <key-binding alias="null" key="Categories"/>
+          <key-binding alias="false" key="ExportProducts"/>
+          <key-binding alias="null" key="ExportSubCategories"/>
+          <key-binding alias="true" key="OverwriteExportFile"/>
+          <key-binding alias="null" key="ErrorCode"/>
+          <key-binding alias="null" key="ErrorMsg"/>
+          <key-binding alias="null" key="LogFileName"/>
+          <key-binding alias="null" key="Status"/>
+          <key-binding alias="false" key="ExportCategoryAssignments"/>
+          <key-binding alias="false" key="ExportRecommendations"/>
+          <key-binding alias="false" key="ExportProductOptions"/>
+          <key-binding alias="null" key="ExportVariationAttributes"/>
+          <key-binding alias="null" key="Products"/>
+          <key-binding alias="true" key="ExportCategories"/>
+        </pipelet-node>
+        <node-display x="0" y="1"/>
+        <branch basename="b2" source-connector="error">
+          <transition target-connector="in2" target-path="./b3.1">
+            <transition-display>
+              <bend-point relative-to="source" x="2" y="0"/>
+            </transition-display>
+          </transition>
+        </branch>
+      </node>
+      <simple-transition/>
+      <node>
+        <pipelet-node pipelet-name="Script" pipelet-set-identifier="bc_api">
+          <config-property key="Transactional" value="false"/>
+          <config-property key="OnError" value="PIPELET_ERROR"/>
+          <config-property key="ScriptFile" value="exportCatalog/fiftyone_exportCategories.ds"/>
+          <config-property key="Timeout" value="3600"/>
+          <key-binding alias="null" key="ScriptLog"/>
+          <key-binding alias="ExportedCategoriesFileName" key="FileName"/>
+          <key-binding alias="ExportFolder" key="ExportFolder"/>
+          <key-binding alias="BatchId" key="BatchId"/>
+          <key-binding alias="CategoryHash" key="CategoryHash"/>
+        </pipelet-node>
+        <node-display x="0" y="1"/>
+        <branch basename="b3" source-connector="error">
+          <transition target-connector="in1"/>
+          <segment>
+            <node>
+              <join-node/>
+              <node-display x="1" y="0"/>
+            </node>
+            <simple-transition>
+              <transition-display>
+                <bend-point relative-to="source" x="0" y="1"/>
+              </transition-display>
+            </simple-transition>
+            <node>
+              <pipelet-node pipelet-name="SendMail" pipelet-set-identifier="bc_api">
+                <key-binding alias="dw.system.Site.current.preferences.custom.fiftyone_fromEmail" key="MailFrom"/>
+                <key-binding alias="&quot;custom/email/catalogExportError_email&quot;" key="MailTemplate"/>
+                <key-binding alias="dw.system.Site.current.preferences.custom.fiftyone_administratorEmail" key="MailTo"/>
+                <key-binding alias="&quot;Failed Exporting Categories&quot;" key="MailSubject"/>
+                <key-binding alias="null" key="LocaleID"/>
+                <key-binding alias="null" key="MailCC"/>
+                <key-binding alias="null" key="MailBCC"/>
+              </pipelet-node>
+              <node-display x="0" y="1"/>
+            </node>
+            <simple-transition>
+              <transition-display>
+                <bend-point relative-to="source" x="0" y="1"/>
+              </transition-display>
+            </simple-transition>
+            <node>
+              <stop-node/>
+              <node-display x="0" y="1"/>
+            </node>
+          </segment>
+        </branch>
+      </node>
+      <simple-transition>
+        <transition-display>
+          <bend-point relative-to="target" x="0" y="-1"/>
+        </transition-display>
+      </simple-transition>
+      <node>
+        <end-node/>
+        <node-display x="0" y="2"/>
+      </node>
+    </segment>
+  </branch>
+  <branch basename="_ANONYMOUS_BRANCH_7">
+    <segment>
+      <node>
+        <text-node>
+          <description>Creates the kits export XML feed.</description>
+        </text-node>
+        <node-display width="2" x="9" y="0"/>
+      </node>
+    </segment>
+  </branch>
+  <branch basename="ExportKits">
+    <segment>
+      <node>
+        <start-node call-mode="private" name="ExportKits" secure="false"/>
+        <node-display x="9" y="1"/>
+      </node>
+      <simple-transition>
+        <transition-display>
+          <bend-point relative-to="source" x="0" y="1"/>
+        </transition-display>
+      </simple-transition>
+      <node>
+        <pipelet-node pipelet-name="Script" pipelet-set-identifier="bc_api">
+          <config-property key="Transactional" value="false"/>
+          <config-property key="OnError" value="PIPELET_ERROR"/>
+          <config-property key="ScriptFile" value="exportCatalog/fiftyone_exportKits.ds"/>
+          <config-property key="Timeout" value="1800"/>
+          <key-binding alias="null" key="ScriptLog"/>
+          <key-binding alias="BatchId" key="BatchId"/>
+          <key-binding alias="ExportFolder" key="ExportFolder"/>
+          <key-binding alias="LastExecutionDate" key="LastExport"/>
+          <key-binding alias="CategoryHash" key="CategoryHash"/>
+        </pipelet-node>
+        <node-display x="0" y="1"/>
+        <branch basename="b2" source-connector="error">
+          <transition target-connector="in">
+            <transition-display>
+              <bend-point relative-to="source" x="2" y="0"/>
+            </transition-display>
+          </transition>
+          <segment>
+            <node>
+              <pipelet-node pipelet-name="SendMail" pipelet-set-identifier="bc_api">
+                <key-binding alias="dw.system.Site.current.preferences.custom.fiftyone_fromEmail" key="MailFrom"/>
+                <key-binding alias="&quot;custom/email/catalogExportError_email&quot;" key="MailTemplate"/>
+                <key-binding alias="dw.system.Site.current.preferences.custom.fiftyone_administratorEmail" key="MailTo"/>
+                <key-binding alias="&quot;Failed Exporting Kits&quot;" key="MailSubject"/>
+                <key-binding alias="null" key="LocaleID"/>
+                <key-binding alias="null" key="MailCC"/>
+                <key-binding alias="null" key="MailBCC"/>
+              </pipelet-node>
+              <node-display x="1" y="1"/>
+            </node>
+            <simple-transition/>
+            <node>
+              <stop-node/>
+              <node-display x="0" y="1"/>
+            </node>
+          </segment>
+        </branch>
+      </node>
+      <simple-transition>
+        <transition-display>
+          <bend-point relative-to="target" x="0" y="-1"/>
+        </transition-display>
+      </simple-transition>
+      <node>
+        <end-node/>
+        <node-display x="0" y="2"/>
+      </node>
+    </segment>
+  </branch>
+  <branch basename="_ANONYMOUS_BRANCH_9">
+    <segment>
+      <node>
+        <text-node>
+          <description>Creates the products export XML feed.</description>
+        </text-node>
+        <node-display width="3" x="12" y="0"/>
+      </node>
+    </segment>
+  </branch>
+  <branch basename="ExportProducts">
+    <segment>
+      <node>
+        <start-node call-mode="private" name="ExportProducts" secure="false"/>
+        <node-display x="12" y="1"/>
+      </node>
+      <simple-transition>
+        <transition-display>
+          <bend-point relative-to="source" x="0" y="1"/>
+        </transition-display>
+      </simple-transition>
+      <node>
+        <pipelet-node pipelet-name="Script" pipelet-set-identifier="bc_api">
+          <config-property key="Transactional" value="false"/>
+          <config-property key="OnError" value="PIPELET_ERROR"/>
+          <config-property key="ScriptFile" value="exportCatalog/fiftyone_exportProducts.ds"/>
+          <config-property key="Timeout" value="3600"/>
+          <key-binding alias="null" key="ScriptLog"/>
+          <key-binding alias="BatchId" key="BatchId"/>
+          <key-binding alias="ExportFolder" key="ExportFolder"/>
+          <key-binding alias="LastExecutionDate" key="LastExport"/>
+          <key-binding alias="NewExecutionDate" key="ExportDate"/>
+          <key-binding alias="NewExecutionDate" key="NewExportDate"/>
+          <key-binding alias="CategoryHash" key="CategoryHash"/>
+          <key-binding alias="FailExport" key="FailExport"/>
+          <key-binding alias="ErrorsFound" key="ErrorsFound"/>
+        </pipelet-node>
+        <node-display x="0" y="1"/>
+        <branch basename="b2" source-connector="error">
+          <transition target-connector="in"/>
+          <segment>
+            <node>
+              <pipelet-node pipelet-name="SendMail" pipelet-set-identifier="bc_api">
+                <key-binding alias="dw.system.Site.current.preferences.custom.fiftyone_fromEmail" key="MailFrom"/>
+                <key-binding alias="&quot;custom/email/catalogExportError_email&quot;" key="MailTemplate"/>
+                <key-binding alias="dw.system.Site.current.preferences.custom.fiftyone_administratorEmail" key="MailTo"/>
+                <key-binding alias="&quot;Failed Exporting Products&quot;" key="MailSubject"/>
+                <key-binding alias="null" key="LocaleID"/>
+                <key-binding alias="null" key="MailCC"/>
+                <key-binding alias="null" key="MailBCC"/>
+              </pipelet-node>
+              <node-display orientation="horizontal" x="1" y="0"/>
+            </node>
+            <simple-transition>
+              <transition-display>
+                <bend-point relative-to="source" x="1" y="0"/>
+              </transition-display>
+            </simple-transition>
+            <node>
+              <stop-node/>
+              <node-display orientation="horizontal" x="1" y="0"/>
+            </node>
+          </segment>
+        </branch>
+      </node>
+      <simple-transition/>
+      <node>
+        <decision-node condition-key="ErrorsFound" condition-operator="expr"/>
+        <node-display x="0" y="1"/>
+        <branch basename="b3" source-connector="yes">
+          <transition target-connector="in">
+            <transition-display>
+              <bend-point relative-to="source" x="0" y="1"/>
+            </transition-display>
+          </transition>
+          <segment>
+            <node>
+              <pipelet-node pipelet-name="SendMail" pipelet-set-identifier="bc_api">
+                <key-binding alias="dw.system.Site.current.preferences.custom.fiftyone_fromEmail" key="MailFrom"/>
+                <key-binding alias="&quot;custom/email/catalogValidationError_email&quot;" key="MailTemplate"/>
+                <key-binding alias="dw.system.Site.current.preferences.custom.fiftyone_administratorEmail" key="MailTo"/>
+                <key-binding alias="&quot;Catalog validation errors were found&quot;" key="MailSubject"/>
+                <key-binding alias="null" key="LocaleID"/>
+                <key-binding alias="null" key="MailCC"/>
+                <key-binding alias="null" key="MailBCC"/>
+              </pipelet-node>
+              <node-display x="0" y="1"/>
+            </node>
+            <simple-transition/>
+            <node>
+              <decision-node condition-key="dw.system.Site.current.preferences.custom.fiftyone_strictExport" condition-operator="expr"/>
+              <node-display x="0" y="1"/>
+              <branch basename="b2" source-connector="yes">
+                <transition target-connector="in"/>
+                <segment>
+                  <node>
+                    <stop-node/>
+                    <node-display x="0" y="1"/>
+                  </node>
+                </segment>
+              </branch>
+            </node>
+            <transition target-connector="in2" target-path="../+1"/>
+          </segment>
+        </branch>
+      </node>
+      <transition target-connector="in1" target-path="./+1">
+        <transition-display>
+          <bend-point relative-to="source" x="2" y="0"/>
+        </transition-display>
+      </transition>
+    </segment>
+    <segment>
+      <node>
+        <join-node/>
+        <node-display x="1" y="2"/>
+      </node>
+      <simple-transition/>
+      <node>
+        <end-node/>
+        <node-display x="0" y="1"/>
+      </node>
+    </segment>
+  </branch>
+  <branch basename="ExportProductsNew">
+    <segment>
+      <node>
+        <start-node call-mode="private" name="ExportProductsNew" secure="false"/>
+        <node-display x="15" y="1"/>
+      </node>
+      <simple-transition>
+        <transition-display>
+          <bend-point relative-to="source" x="0" y="1"/>
+        </transition-display>
+      </simple-transition>
+      <node>
+        <pipelet-node pipelet-name="Assign" pipelet-set-identifier="bc_api">
+          <config-property key="Transactional" value="false"/>
+          <key-binding alias="1" key="From_1"/>
+          <key-binding alias="RequestNumber" key="To_1"/>
+          <key-binding alias="false" key="From_2"/>
+          <key-binding alias="ErrorsFound" key="To_2"/>
+          <key-binding alias="0" key="From_3"/>
+          <key-binding alias="CurrentCount" key="To_3"/>
+          <key-binding alias="null" key="From_4"/>
+          <key-binding alias="null" key="To_4"/>
+          <key-binding alias="null" key="From_5"/>
+          <key-binding alias="null" key="To_5"/>
+          <key-binding alias="null" key="From_6"/>
+          <key-binding alias="null" key="To_6"/>
+          <key-binding alias="null" key="From_7"/>
+          <key-binding alias="null" key="To_7"/>
+          <key-binding alias="null" key="From_8"/>
+          <key-binding alias="null" key="To_8"/>
+          <key-binding alias="null" key="From_9"/>
+          <key-binding alias="null" key="To_9"/>
+        </pipelet-node>
+        <node-display x="0" y="1"/>
+      </node>
+      <simple-transition/>
+      <node>
+        <pipelet-node pipelet-name="Script" pipelet-set-identifier="bc_api">
+          <config-property key="Transactional" value="false"/>
+          <config-property key="OnError" value="PIPELET_ERROR"/>
+          <config-property key="ScriptFile" value="exportCatalog/fiftyone_getProductFileList.ds"/>
+          <config-property key="Timeout" value="3600"/>
+          <key-binding alias="scrLog" key="ScriptLog"/>
+          <key-binding alias="Products" key="ProductList"/>
+          <key-binding alias="ProductFiles" key="ProductFiles"/>
+        </pipelet-node>
+        <node-display x="0" y="1"/>
+        <branch basename="b2" source-connector="error">
+          <transition target-connector="in">
+            <transition-display>
+              <bend-point relative-to="source" x="1" y="0"/>
+            </transition-display>
+          </transition>
+          <segment>
+            <node>
+              <pipelet-node pipelet-name="SendMail" pipelet-set-identifier="bc_api">
+                <key-binding alias="dw.system.Site.current.preferences.custom.fiftyone_fromEmail" key="MailFrom"/>
+                <key-binding alias="&quot;custom/email/catalogExportError_email&quot;" key="MailTemplate"/>
+                <key-binding alias="dw.system.Site.current.preferences.custom.fiftyone_administratorEmail" key="MailTo"/>
+                <key-binding alias="&quot;Failed Exporting Products&quot;" key="MailSubject"/>
+                <key-binding alias="null" key="LocaleID"/>
+                <key-binding alias="null" key="MailCC"/>
+                <key-binding alias="null" key="MailBCC"/>
+              </pipelet-node>
+              <node-display orientation="horizontal" x="1" y="0"/>
+            </node>
+            <simple-transition>
+              <transition-display>
+                <bend-point relative-to="source" x="1" y="0"/>
+              </transition-display>
+            </simple-transition>
+            <node>
+              <stop-node/>
+              <node-display orientation="horizontal" x="1" y="0"/>
+            </node>
+          </segment>
+        </branch>
+      </node>
+      <transition target-connector="in" target-path="./+1"/>
+    </segment>
+    <segment>
+      <node>
+        <loop-node element-key="ProductFile" iterator-key="ProductFiles"/>
+        <node-display x="0" y="1"/>
+        <branch basename="b2" source-connector="do">
+          <transition target-connector="in"/>
+          <segment>
+            <node>
+              <pipelet-node pipelet-name="Script" pipelet-set-identifier="bc_api">
+                <config-property key="Transactional" value="false"/>
+                <config-property key="OnError" value="PIPELET_ERROR"/>
+                <config-property key="ScriptFile" value="exportCatalog/fiftyone_getProductArrayFromFile.ds"/>
+                <key-binding alias="scrLog" key="ScriptLog"/>
+                <key-binding alias="ProductFile" key="ProductFile"/>
+                <key-binding alias="Products" key="Products"/>
+              </pipelet-node>
+              <node-display x="0" y="2"/>
+              <branch basename="b2" source-connector="error">
+                <transition target-connector="in">
+                  <transition-display>
+                    <bend-point relative-to="source" x="1" y="0"/>
+                  </transition-display>
+                </transition>
+                <segment>
+                  <node>
+                    <pipelet-node pipelet-name="SendMail" pipelet-set-identifier="bc_api">
+                      <key-binding alias="dw.system.Site.current.preferences.custom.fiftyone_fromEmail" key="MailFrom"/>
+                      <key-binding alias="&quot;custom/email/catalogExportError_email&quot;" key="MailTemplate"/>
+                      <key-binding alias="dw.system.Site.current.preferences.custom.fiftyone_administratorEmail" key="MailTo"/>
+                      <key-binding alias="&quot;Failed Exporting Products&quot;" key="MailSubject"/>
+                      <key-binding alias="null" key="LocaleID"/>
+                      <key-binding alias="null" key="MailCC"/>
+                      <key-binding alias="null" key="MailBCC"/>
+                    </pipelet-node>
+                    <node-display orientation="horizontal" x="1" y="0"/>
+                  </node>
+                  <simple-transition>
+                    <transition-display>
+                      <bend-point relative-to="source" x="1" y="0"/>
+                    </transition-display>
+                  </simple-transition>
+                  <node>
+                    <stop-node/>
+                    <node-display orientation="horizontal" x="1" y="0"/>
+                  </node>
+                </segment>
+              </branch>
+            </node>
+            <transition target-connector="in" target-path="./+1"/>
+          </segment>
+          <segment>
+            <node>
+              <loop-node element-key="ProductId" iterator-key="Products"/>
+              <node-display x="0" y="1"/>
+              <branch basename="b2" source-connector="do">
+                <transition target-connector="in"/>
+                <segment>
+                  <node>
+                    <pipelet-node pipelet-name="GetProduct" pipelet-set-identifier="bc_api">
+                      <key-binding alias="Product" key="Product"/>
+                      <key-binding alias="ProductId" key="ProductID"/>
+                    </pipelet-node>
+                    <node-display x="0" y="1"/>
+                    <branch basename="b2" source-connector="error">
+                      <transition target-connector="in2" target-path="./b3.1"/>
+                    </branch>
+                  </node>
+                  <simple-transition/>
+                  <node>
+                    <pipelet-node pipelet-name="Script" pipelet-set-identifier="bc_api">
+                      <config-property key="Transactional" value="false"/>
+                      <config-property key="OnError" value="PIPELET_ERROR"/>
+                      <config-property key="ScriptFile" value="exportCatalog/fiftyone_exportProducts_new.ds"/>
+                      <config-property key="Timeout" value="3600"/>
+                      <key-binding alias="scrLog" key="ScriptLog"/>
+                      <key-binding alias="BatchId" key="BatchId"/>
+                      <key-binding alias="CategoryHash" key="CategoryHash"/>
+                      <key-binding alias="Product" key="CurrentProduct"/>
+                      <key-binding alias="ExportFolder" key="ExportFolder"/>
+                      <key-binding alias="RequestNumber" key="StartingRequestNumber"/>
+                      <key-binding alias="ErrorFound" key="ErrorsFound"/>
+                      <key-binding alias="RequestNumber" key="RequestNumber"/>
+                      <key-binding alias="CurrentCount" key="StartingCurrentCount"/>
+                      <key-binding alias="CurrentCount" key="CurrentCount"/>
+                    </pipelet-node>
+                    <node-display x="0" y="1"/>
+                    <branch basename="b3" source-connector="error">
+                      <transition target-connector="in1"/>
+                      <segment>
+                        <node>
+                          <join-node/>
+                          <node-display x="1" y="0"/>
+                        </node>
+                        <simple-transition/>
+                        <node>
+                          <pipelet-node pipelet-name="SendMail" pipelet-set-identifier="bc_api">
+                            <key-binding alias="dw.system.Site.current.preferences.custom.fiftyone_fromEmail" key="MailFrom"/>
+                            <key-binding alias="&quot;custom/email/catalogExportError_email&quot;" key="MailTemplate"/>
+                            <key-binding alias="dw.system.Site.current.preferences.custom.fiftyone_administratorEmail" key="MailTo"/>
+                            <key-binding alias="&quot;Failed Exporting Products&quot;" key="MailSubject"/>
+                            <key-binding alias="null" key="LocaleID"/>
+                            <key-binding alias="null" key="MailCC"/>
+                            <key-binding alias="null" key="MailBCC"/>
+                          </pipelet-node>
+                          <node-display orientation="horizontal" x="1" y="0"/>
+                        </node>
+                        <simple-transition>
+                          <transition-display>
+                            <bend-point relative-to="source" x="1" y="0"/>
+                          </transition-display>
+                        </simple-transition>
+                        <node>
+                          <stop-node/>
+                          <node-display orientation="horizontal" x="1" y="0"/>
+                        </node>
+                      </segment>
+                    </branch>
+                  </node>
+                  <simple-transition>
+                    <transition-display>
+                      <bend-point relative-to="source" x="0" y="1"/>
+                    </transition-display>
+                  </simple-transition>
+                  <node>
+                    <pipelet-node pipelet-name="Assign" pipelet-set-identifier="bc_api">
+                      <config-property key="Transactional" value="false"/>
+                      <key-binding alias="ErrorFound||ErrorsFound" key="From_0"/>
+                      <key-binding alias="ErrorsFound" key="To_0"/>
+                      <key-binding alias="null" key="From_1"/>
+                      <key-binding alias="null" key="To_1"/>
+                      <key-binding alias="null" key="From_2"/>
+                      <key-binding alias="null" key="To_2"/>
+                      <key-binding alias="null" key="From_3"/>
+                      <key-binding alias="null" key="To_3"/>
+                      <key-binding alias="null" key="From_4"/>
+                      <key-binding alias="null" key="To_4"/>
+                      <key-binding alias="null" key="From_5"/>
+                      <key-binding alias="null" key="To_5"/>
+                      <key-binding alias="null" key="From_6"/>
+                      <key-binding alias="null" key="To_6"/>
+                      <key-binding alias="null" key="From_7"/>
+                      <key-binding alias="null" key="To_7"/>
+                      <key-binding alias="null" key="From_8"/>
+                      <key-binding alias="null" key="To_8"/>
+                      <key-binding alias="null" key="From_9"/>
+                      <key-binding alias="null" key="To_9"/>
+                    </pipelet-node>
+                    <node-display x="0" y="1"/>
+                  </node>
+                  <transition target-connector="loop" target-path="..">
+                    <transition-display>
+                      <bend-point relative-to="source" x="0" y="1"/>
+                      <bend-point relative-to="source" x="-1" y="1"/>
+                      <bend-point relative-to="target" x="-1" y="0"/>
+                    </transition-display>
+                  </transition>
+                </segment>
+              </branch>
+            </node>
+            <transition target-connector="loop" target-path="..">
+              <transition-display>
+                <bend-point relative-to="source" x="5" y="0"/>
+                <bend-point relative-to="source" x="7" y="4"/>
+                <bend-point relative-to="source" x="5" y="8"/>
+                <bend-point relative-to="source" x="-2" y="8"/>
+                <bend-point relative-to="target" x="-2" y="0"/>
+              </transition-display>
+            </transition>
+          </segment>
+        </branch>
+      </node>
+      <simple-transition>
+        <transition-display>
+          <bend-point relative-to="source" x="1" y="0"/>
+        </transition-display>
+      </simple-transition>
+      <node>
+        <pipelet-node pipelet-name="Script" pipelet-set-identifier="bc_api">
+          <config-property key="Transactional" value="false"/>
+          <config-property key="OnError" value="PIPELET_ERROR"/>
+          <config-property key="ScriptFile" value="exportCatalog/fiftyone_writeClosingTags.ds"/>
+          <key-binding alias="null" key="ScriptLog"/>
+          <key-binding alias="CurrentCount" key="CurrentCount"/>
+          <key-binding alias="ExportFolder" key="ExportFolder"/>
+          <key-binding alias="RequestNumber" key="RequestNumber"/>
+          <key-binding alias="BatchId" key="BatchId"/>
+        </pipelet-node>
+        <node-display orientation="horizontal" x="1" y="0"/>
+      </node>
+      <simple-transition>
+        <transition-display>
+          <bend-point relative-to="source" x="1" y="0"/>
+        </transition-display>
+      </simple-transition>
+      <node>
+        <decision-node condition-key="ErrorsFound" condition-operator="expr"/>
+        <node-display orientation="horizontal" x="1" y="0"/>
+        <branch basename="b3" source-connector="yes">
+          <transition target-connector="in">
+            <transition-display>
+              <bend-point relative-to="source" x="1" y="0"/>
+            </transition-display>
+          </transition>
+          <segment>
+            <node>
+              <pipelet-node pipelet-name="SendMail" pipelet-set-identifier="bc_api">
+                <key-binding alias="dw.system.Site.current.preferences.custom.fiftyone_fromEmail" key="MailFrom"/>
+                <key-binding alias="&quot;custom/email/catalogValidationError_email&quot;" key="MailTemplate"/>
+                <key-binding alias="dw.system.Site.current.preferences.custom.fiftyone_administratorEmail" key="MailTo"/>
+                <key-binding alias="&quot;Catalog validation errors were found&quot;" key="MailSubject"/>
+                <key-binding alias="null" key="LocaleID"/>
+                <key-binding alias="null" key="MailCC"/>
+                <key-binding alias="null" key="MailBCC"/>
+              </pipelet-node>
+              <node-display orientation="horizontal" x="1" y="0"/>
+            </node>
+            <simple-transition>
+              <transition-display>
+                <bend-point relative-to="source" x="1" y="0"/>
+              </transition-display>
+            </simple-transition>
+            <node>
+              <decision-node condition-key="dw.system.Site.current.preferences.custom.fiftyone_strictExport" condition-operator="expr"/>
+              <node-display orientation="horizontal" x="1" y="0"/>
+              <branch basename="b2" source-connector="yes">
+                <transition target-connector="in">
+                  <transition-display>
+                    <bend-point relative-to="source" x="1" y="0"/>
+                  </transition-display>
+                </transition>
+                <segment>
+                  <node>
+                    <stop-node/>
+                    <node-display orientation="horizontal" x="1" y="0"/>
+                  </node>
+                </segment>
+              </branch>
+            </node>
+            <transition target-connector="in1" target-path="../+1"/>
+          </segment>
+        </branch>
+      </node>
+      <transition target-connector="in2" target-path="./+1">
+        <transition-display>
+          <bend-point relative-to="source" x="0" y="2"/>
+        </transition-display>
+      </transition>
+    </segment>
+    <segment>
+      <node>
+        <join-node/>
+        <node-display x="2" y="1"/>
+      </node>
+      <simple-transition/>
+      <node>
+        <end-node/>
+        <node-display orientation="horizontal" x="1" y="0"/>
+      </node>
+    </segment>
+  </branch>
+  <branch basename="_ANONYMOUS_BRANCH_12">
+    <segment>
+      <node>
+        <text-node>
+          <description>Validates the data in the storefront catalog and creates an error log that gets emailed to the administrator.</description>
+        </text-node>
+        <node-display width="3" x="0" y="11"/>
+      </node>
+    </segment>
+  </branch>
+  <branch basename="_ANONYMOUS_BRANCH_13">
+    <segment>
+      <node>
+        <text-node>
+          <description>Generates the batch number and creates the export folder to contain the export files.</description>
+        </text-node>
+        <node-display width="2" x="4" y="11"/>
+      </node>
+    </segment>
+  </branch>
+  <branch basename="_ANONYMOUS_BRANCH_14">
+    <segment>
+      <node>
+        <text-node>
+          <description>Cleans up export files from previous FiftyOne catalog export operations.</description>
+        </text-node>
+        <node-display width="2" x="7" y="11"/>
+      </node>
+    </segment>
+  </branch>
+  <branch basename="_ANONYMOUS_BRANCH_15">
+    <segment>
+      <node>
+        <text-node>
+          <description>Checks the FiftyOne FTP site for .err files. If found, they are moved locally and the administrator is emailed.</description>
+        </text-node>
+        <node-display width="3" x="10" y="11"/>
+      </node>
+    </segment>
+  </branch>
+  <branch basename="ValidateCategories">
+    <segment>
+      <node>
+        <start-node call-mode="private" name="ValidateCategories" secure="false"/>
+        <node-display x="0" y="12"/>
+      </node>
+      <simple-transition/>
+      <node>
+        <call-node start-name-ref="51ExportCatalog-CreateExportFolder"/>
+        <node-display x="0" y="1"/>
+      </node>
+      <simple-transition/>
+      <node>
+        <pipelet-node pipelet-name="ExportCatalog" pipelet-set-identifier="bc_api">
+          <key-binding alias="dw.catalog.CatalogMgr.getSiteCatalog()" key="Catalog"/>
+          <key-binding alias="ExportedCategoriesFileName" key="ExportFile"/>
+          <key-binding alias="null" key="Categories"/>
+          <key-binding alias="false" key="ExportProducts"/>
+          <key-binding alias="null" key="ExportSubCategories"/>
+          <key-binding alias="true" key="OverwriteExportFile"/>
+          <key-binding alias="null" key="ErrorCode"/>
+          <key-binding alias="null" key="ErrorMsg"/>
+          <key-binding alias="null" key="LogFileName"/>
+          <key-binding alias="null" key="Status"/>
+          <key-binding alias="false" key="ExportCategoryAssignments"/>
+          <key-binding alias="false" key="ExportRecommendations"/>
+          <key-binding alias="false" key="ExportProductOptions"/>
+          <key-binding alias="null" key="ExportVariationAttributes"/>
+          <key-binding alias="null" key="Products"/>
+          <key-binding alias="true" key="ExportCategories"/>
+        </pipelet-node>
+        <node-display x="0" y="1"/>
+        <branch basename="b2" source-connector="error">
+          <transition target-connector="in2" target-path="./b3.1">
+            <transition-display>
+              <bend-point relative-to="target" x="0" y="-2"/>
+            </transition-display>
+          </transition>
+        </branch>
+      </node>
+      <simple-transition/>
+      <node>
+        <pipelet-node pipelet-name="Script" pipelet-set-identifier="bc_api">
+          <config-property key="Transactional" value="false"/>
+          <config-property key="OnError" value="PIPELET_ERROR"/>
+          <config-property key="ScriptFile" value="exportCatalog/fiftyone_validateCategories.ds"/>
+          <config-property key="Timeout" value="3600"/>
+          <key-binding alias="null" key="ScriptLog"/>
+          <key-binding alias="CatalogErrorFound" key="ErrorFound"/>
+          <key-binding alias="CatalogErrorLogFile" key="ErrorFile"/>
+          <key-binding alias="BatchId" key="BatchId"/>
+          <key-binding alias="ExportFolder" key="ExportFolder"/>
+          <key-binding alias="ExportedCategoriesFileName" key="FileName"/>
+        </pipelet-node>
+        <node-display x="0" y="1"/>
+        <branch basename="b3" source-connector="error">
+          <transition target-connector="in1"/>
+          <segment>
+            <node>
+              <join-node/>
+              <node-display x="2" y="0"/>
+            </node>
+            <simple-transition/>
+            <node>
+              <pipelet-node pipelet-name="SendMail" pipelet-set-identifier="bc_api">
+                <key-binding alias="dw.system.Site.current.preferences.custom.fiftyone_fromEmail" key="MailFrom"/>
+                <key-binding alias="&quot;custom/email/catalogExportError_email&quot;" key="MailTemplate"/>
+                <key-binding alias="dw.system.Site.current.preferences.custom.fiftyone_administratorEmail" key="MailTo"/>
+                <key-binding alias="&quot;Failure while validating catalog&quot;" key="MailSubject"/>
+                <key-binding alias="null" key="LocaleID"/>
+                <key-binding alias="null" key="MailCC"/>
+                <key-binding alias="null" key="MailBCC"/>
+              </pipelet-node>
+              <node-display x="0" y="1"/>
+            </node>
+            <simple-transition>
+              <transition-display>
+                <bend-point relative-to="source" x="0" y="1"/>
+              </transition-display>
+            </simple-transition>
+            <node>
+              <stop-node/>
+              <node-display x="0" y="1"/>
+            </node>
+          </segment>
+        </branch>
+      </node>
+      <simple-transition>
+        <transition-display>
+          <bend-point relative-to="source" x="0" y="1"/>
+        </transition-display>
+      </simple-transition>
+      <node>
+        <decision-node condition-key="CatalogErrorFound" condition-operator="expr"/>
+        <node-display x="0" y="1"/>
+        <branch basename="b4" source-connector="yes">
+          <transition target-connector="in">
+            <transition-display>
+              <bend-point relative-to="source" x="0" y="1"/>
+            </transition-display>
+          </transition>
+          <segment>
+            <node>
+              <pipelet-node pipelet-name="SendMail" pipelet-set-identifier="bc_api">
+                <key-binding alias="dw.system.Site.current.preferences.custom.fiftyone_fromEmail" key="MailFrom"/>
+                <key-binding alias="&quot;custom/email/catalogValidationError_email&quot;" key="MailTemplate"/>
+                <key-binding alias="dw.system.Site.current.preferences.custom.fiftyone_administratorEmail" key="MailTo"/>
+                <key-binding alias="&quot;Catalog validation errors were found&quot;" key="MailSubject"/>
+                <key-binding alias="null" key="LocaleID"/>
+                <key-binding alias="null" key="MailCC"/>
+                <key-binding alias="null" key="MailBCC"/>
+              </pipelet-node>
+              <node-display x="0" y="1"/>
+            </node>
+            <simple-transition>
+              <transition-display>
+                <bend-point relative-to="source" x="0" y="1"/>
+              </transition-display>
+            </simple-transition>
+            <node>
+              <stop-node/>
+              <node-display x="0" y="1"/>
+            </node>
+          </segment>
+        </branch>
+      </node>
+      <simple-transition>
+        <transition-display>
+          <bend-point relative-to="source" x="2" y="0"/>
+        </transition-display>
+      </simple-transition>
+      <node>
+        <end-node name="Success"/>
+        <node-display x="1" y="2"/>
+      </node>
+    </segment>
+  </branch>
+  <branch basename="CreateExportFolder">
+    <segment>
+      <node>
+        <start-node call-mode="private" name="CreateExportFolder" secure="false"/>
+        <node-display x="4" y="12"/>
+      </node>
+      <simple-transition>
+        <transition-display>
+          <bend-point relative-to="source" x="0" y="1"/>
+        </transition-display>
+      </simple-transition>
+      <node>
+        <decision-node condition-key="empty(BatchId)" condition-operator="expr"/>
+        <node-display x="0" y="1"/>
+        <branch basename="b2" source-connector="yes">
+          <transition target-connector="in"/>
+          <segment>
+            <node>
+              <pipelet-node pipelet-name="Script" pipelet-set-identifier="bc_api">
+                <config-property key="Transactional" value="false"/>
+                <config-property key="OnError" value="PIPELET_ERROR"/>
+                <config-property key="ScriptFile" value="exportCatalog/fiftyone_createExportFolder.ds"/>
+                <key-binding alias="null" key="ScriptLog"/>
+                <key-binding alias="BatchId" key="BatchId"/>
+                <key-binding alias="ExportFolder" key="ExportFolder"/>
+              </pipelet-node>
+              <node-display x="0" y="1"/>
+              <branch basename="b2" source-connector="error">
+                <transition target-connector="in">
+                  <transition-display>
+                    <bend-point relative-to="source" x="2" y="0"/>
+                  </transition-display>
+                </transition>
+                <segment>
+                  <node>
+                    <pipelet-node pipelet-name="SendMail" pipelet-set-identifier="bc_api">
+                      <key-binding alias="dw.system.Site.current.preferences.custom.fiftyone_fromEmail" key="MailFrom"/>
+                      <key-binding alias="&quot;custom/email/genericError_email&quot;" key="MailTemplate"/>
+                      <key-binding alias="dw.system.Site.current.preferences.custom.fiftyone_administratorEmail" key="MailTo"/>
+                      <key-binding alias="&quot;Failure while creating export folder for catalog validation&quot;" key="MailSubject"/>
+                      <key-binding alias="null" key="LocaleID"/>
+                      <key-binding alias="null" key="MailCC"/>
+                      <key-binding alias="null" key="MailBCC"/>
+                    </pipelet-node>
+                    <node-display x="1" y="1"/>
+                  </node>
+                  <simple-transition>
+                    <transition-display>
+                      <bend-point relative-to="source" x="0" y="1"/>
+                    </transition-display>
+                  </simple-transition>
+                  <node>
+                    <stop-node/>
+                    <node-display x="0" y="1"/>
+                  </node>
+                </segment>
+              </branch>
+            </node>
+            <simple-transition/>
+            <node>
+              <pipelet-node pipelet-name="Eval" pipelet-set-identifier="bc_api">
+                <config-property key="OnError" value="null"/>
+                <config-property key="Transactional" value="false"/>
+                <config-property key="Expression" value="dw.util.StringUtils.format(&quot;catalog/export/{0}.xml&quot;,BatchId)"/>
+                <key-binding alias="ExportedCategoriesFileName" key="Result"/>
+              </pipelet-node>
+              <node-display x="0" y="1"/>
+            </node>
+            <simple-transition>
+              <transition-display>
+                <bend-point relative-to="source" x="0" y="1"/>
+              </transition-display>
+            </simple-transition>
+            <node>
+              <end-node name="FolderCreated"/>
+              <node-display x="0" y="1"/>
+            </node>
+          </segment>
+        </branch>
+      </node>
+      <simple-transition>
+        <transition-display>
+          <bend-point relative-to="source" x="1" y="0"/>
+        </transition-display>
+      </simple-transition>
+      <node>
+        <end-node name="FolderAlreadyExists"/>
+        <node-display orientation="horizontal" x="1" y="0"/>
+      </node>
+    </segment>
+  </branch>
+  <branch basename="DeleteExportFiles">
+    <segment>
+      <node>
+        <start-node call-mode="private" name="DeleteExportFiles" secure="false"/>
+        <node-display x="7" y="12"/>
+      </node>
+      <simple-transition>
+        <transition-display>
+          <bend-point relative-to="source" x="0" y="1"/>
+        </transition-display>
+      </simple-transition>
+      <node>
+        <pipelet-node pipelet-name="Script" pipelet-set-identifier="bc_api">
+          <config-property key="Transactional" value="false"/>
+          <config-property key="OnError" value="PIPELET_ERROR"/>
+          <config-property key="ScriptFile" value="exportCatalog/fiftyone_deleteExportFiles.ds"/>
+          <key-binding alias="null" key="ScriptLog"/>
+        </pipelet-node>
+        <node-display x="0" y="1"/>
+        <branch basename="b2" source-connector="error">
+          <transition target-connector="in">
+            <transition-display>
+              <bend-point relative-to="source" x="2" y="0"/>
+              <bend-point relative-to="target" x="0" y="-1"/>
+            </transition-display>
+          </transition>
+          <segment>
+            <node>
+              <pipelet-node pipelet-name="SendMail" pipelet-set-identifier="bc_api">
+                <key-binding alias="dw.system.Site.current.preferences.custom.fiftyone_fromEmail" key="MailFrom"/>
+                <key-binding alias="&quot;custom/email/genericError_email&quot;" key="MailTemplate"/>
+                <key-binding alias="dw.system.Site.current.preferences.custom.fiftyone_administratorEmail" key="MailTo"/>
+                <key-binding alias="&quot;Failure while deleting old catalog export files&quot;" key="MailSubject"/>
+                <key-binding alias="null" key="LocaleID"/>
+                <key-binding alias="null" key="MailCC"/>
+                <key-binding alias="null" key="MailBCC"/>
+              </pipelet-node>
+              <node-display x="1" y="1"/>
+            </node>
+            <simple-transition>
+              <transition-display>
+                <bend-point relative-to="source" x="0" y="1"/>
+              </transition-display>
+            </simple-transition>
+            <node>
+              <end-node name="Error"/>
+              <node-display x="0" y="1"/>
+            </node>
+          </segment>
+        </branch>
+      </node>
+      <simple-transition/>
+      <node>
+        <end-node name="Success"/>
+        <node-display x="0" y="2"/>
+      </node>
+    </segment>
+  </branch>
+  <branch basename="CheckExport">
+    <segment>
+      <node>
+        <start-node call-mode="private" name="CheckExport" secure="false"/>
+        <node-display x="10" y="12"/>
+      </node>
+      <simple-transition/>
+      <node>
+        <pipelet-node pipelet-name="Script" pipelet-set-identifier="bc_api">
+          <config-property key="Transactional" value="false"/>
+          <config-property key="OnError" value="PIPELET_ERROR"/>
+          <config-property key="ScriptFile" value="exportCatalog/fiftyone_checkFtpErrors.ds"/>
+          <key-binding alias="null" key="ScriptLog"/>
+          <key-binding alias="ErrorFiles" key="ErrorFiles"/>
+        </pipelet-node>
+        <node-display x="0" y="1"/>
+        <branch basename="b2" source-connector="error">
+          <transition target-connector="in">
+            <transition-display>
+              <bend-point relative-to="source" x="4" y="0"/>
+            </transition-display>
+          </transition>
+          <segment>
+            <node>
+              <pipelet-node pipelet-name="SendMail" pipelet-set-identifier="bc_api">
+                <key-binding alias="dw.system.Site.current.preferences.custom.fiftyone_fromEmail" key="MailFrom"/>
+                <key-binding alias="&quot;custom/email/genericError_email&quot;" key="MailTemplate"/>
+                <key-binding alias="dw.system.Site.current.preferences.custom.fiftyone_administratorEmail" key="MailTo"/>
+                <key-binding alias="&quot;Failed to check for ftp errors.&quot;" key="MailSubject"/>
+                <key-binding alias="null" key="LocaleID"/>
+                <key-binding alias="null" key="MailCC"/>
+                <key-binding alias="null" key="MailBCC"/>
+              </pipelet-node>
+              <node-display x="2" y="2"/>
+            </node>
+            <simple-transition>
+              <transition-display>
+                <bend-point relative-to="source" x="0" y="1"/>
+              </transition-display>
+            </simple-transition>
+            <node>
+              <stop-node/>
+              <node-display x="0" y="1"/>
+            </node>
+          </segment>
+        </branch>
+      </node>
+      <simple-transition>
+        <transition-display>
+          <bend-point relative-to="source" x="0" y="1"/>
+        </transition-display>
+      </simple-transition>
+      <node>
+        <decision-node condition-key="empty(ErrorFiles)" condition-operator="expr"/>
+        <node-display x="0" y="1"/>
+        <branch basename="b3" source-connector="yes">
+          <transition target-connector="in">
+            <transition-display>
+              <bend-point relative-to="target" x="0" y="-1"/>
+            </transition-display>
+          </transition>
+          <segment>
+            <node>
+              <end-node name="NoErrors"/>
+              <node-display x="0" y="2"/>
+            </node>
+          </segment>
+        </branch>
+      </node>
+      <simple-transition>
+        <transition-display>
+          <bend-point relative-to="source" x="2" y="0"/>
+          <bend-point relative-to="target" x="0" y="-1"/>
+        </transition-display>
+      </simple-transition>
+      <node>
+        <pipelet-node pipelet-name="SendMail" pipelet-set-identifier="bc_api">
+          <key-binding alias="dw.system.Site.current.preferences.custom.fiftyone_fromEmail" key="MailFrom"/>
+          <key-binding alias="&quot;custom/email/ftpError_email&quot;" key="MailTemplate"/>
+          <key-binding alias="dw.system.Site.current.preferences.custom.fiftyone_administratorEmail" key="MailTo"/>
+          <key-binding alias="&quot;Export Errors Detected on Fifty One FTP&quot;" key="MailSubject"/>
+          <key-binding alias="null" key="LocaleID"/>
+          <key-binding alias="null" key="MailCC"/>
+          <key-binding alias="null" key="MailBCC"/>
+        </pipelet-node>
+        <node-display x="1" y="1"/>
+      </node>
+      <simple-transition>
+        <transition-display>
+          <bend-point relative-to="source" x="0" y="1"/>
+        </transition-display>
+      </simple-transition>
+      <node>
+        <end-node name="ErrorsFound"/>
+        <node-display x="0" y="1"/>
+      </node>
+    </segment>
+  </branch>
+</pipeline>

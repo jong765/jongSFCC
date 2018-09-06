@@ -1,0 +1,43 @@
+<isset name="cpList" value="${pdict.DollarOffPromotionList}"
+	scope="page" />
+<div class="reportheader">
+	<p
+		style="color: blue; font-family: Arial; font-size: 14pt; font-style: italic; font-weight: bold;">
+		<u>Dollar Off Promotion Notification</u>
+	</p>
+	<p style="font-family: Arial; font-size: 10pt;">The following dollar off promotions are effective as of now or soon will be effective. Please review the list below carefully.</p>
+	</br>
+	<h3 style="font-family: Arial">Demandware Dollar Off Promotion
+		List</h3>
+</div>
+<div class="reportrow">
+	<table border="0"
+		style="margin: auto; 640 px; padding: 5px; font-family: Arial; font-size: 10pt">
+		<tr bgcolor="#B0C4DE">
+			<td>Campaign Id</td>
+			<td>Description</td>
+			<td>Start Date</td>
+			<td>End Date</td>
+			<td>Customer Group</td>
+			<td>Promotion Id</td>
+			<td>Name</td>
+			<td>Type</td>
+			<td>Threshold</td>
+			<td>Amount</td>
+		</tr>
+		<isloop items="${cpList}" var="cp">
+		<tr>
+			<td><isprint value="${cp.campaign.campaignId}" /></td>
+			<td><isprint value="${cp.campaign.description}" /></td>
+			<td><isprint value="${cp.campaign.start_date}" /></td>
+			<td><isprint value="${cp.campaign.end_date}" /></td>
+			<td><isprint value="${cp.campaign.customerGroup}" /></td>
+			<td><isprint value="${cp.promotion.promotionId}" /></td>
+			<td><isprint value="${cp.promotion.name}" /></td>
+			<td><isprint value="${cp.promotion.type}" /></td>
+			<td><isprint value="${cp.promotion.threshold}" /></td>
+			<td><isprint value="${cp.promotion.amount}" /></td>
+		</tr>
+		</isloop>
+	</table>
+</div>

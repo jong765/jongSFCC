@@ -1,0 +1,137 @@
+/**
+*  Returns an object that encapsulates product validation   
+*	
+*/
+
+importPackage( dw.system );
+importPackage( dw.util );
+importPackage( dw.io );
+
+importScript( "common/fiftyone_site.ds" );
+importScript( "common/fiftyone_xmlFeed.ds" );
+
+function ProductValidator(exportFolder, batchId, categoryHash)
+{
+	return {
+		errorsFound:false,
+		categoryHash : categoryHash,
+		validationWriters : {fileWriter:null, xmlWriter:null},
+		exportFolder : exportFolder,
+		batchId : batchId,
+		
+		errorLogActive:function()
+		{
+			return !empty(this.batchId);
+		},
+		
+		mapProductObject : function (dwProduct : dw.catalog.Product)
+		{
+			var productObj = {};
+			try
+			{
+				//get FiftyOne category ID for non-variants
+				if(!dwProduct.isVariant())
+				{
+					var categoryId = null;
+					if(dwProduct.primaryCategory)
+						categoryId = dwProduct.primaryCategory.ID;	
+					else
+						categoryId = dwProduct.categories[0].ID;
+					
+					if(!categoryHash.containsKey(categoryId))
+						throw new Error(StringUtils.format("Product parent category Id could not be resolved. Category Id:{0}",categoryId));
+					
+					productObj.categoryId = getValidValue('categoryId', categoryHash.get(categoryId), 20, true);
+				}
+				
+				productObj.id = getValidValue("id",dwProduct.getID(),50, true);
+				productObj.active = getValidValue("isActive",dwProduct.isOnline());
+				productObj.name = getValidValue("name",dwProduct.name,255);
+				
+				if(!dwProduct.variants.isEmpty() && dwProduct.variationModel && dwProduct.variationModel.defaultVariant)
+					productObj.primarySku = getValidValue("primarySku",dwProduct.variationModel.defaultVariant.getID(),50, true, true);
+				else
+					productObj.primarySku = getValidValue("primarySku",dwProduct.getID(),50, true, true);
+				
+				//description is not required for variants
+				productObj.description = getValidValue("description",getProductDescription(dwProduct),1024,false,dwProduct.isVariant());
+				productObj.url = getValidValue("url",getProductUrl(dwProduct),1024,true);
+				
+				if(!dwProduct.isMaster())
+					productObj.price = getValidValue("dutiablePrice",dwProduct.priceModel.price.getValueOrNull(),null,false);
+				
+				//check that primary image exists
+				var primaryImage = getPrimaryProductImage(dwProduct);
+				productObj.primaryImage = getValidValue('primary image',primaryImage,1024,true);
+				
+				productObj.shortDescription = getValidValue("shortDescription",dwProduct.shortDescription,128, false, true);
+				productObj.keywords=getValidValue("keywords",dwProduct.pageKeywords,1024, false, true);
+				productObj.manufacturer=getValidValue("manufacturer",dwProduct.manufacturerName,256, false, true);
+				productObj.brand=getValidValue("brand",dwProduct.brand,256, false, true);
+				
+				return productObj;
+			}
+			catch(ex)
+			{
+				if(this.errorLogActive())
+					this.writeValidationError(ex, dwProduct.getID(), "Product");
+				this.errorsFound = true;
+				return null;
+			}
+		},
+		
+		mapKitObject : function(dwBundle : dw.catalog.Product)
+		{
+			try
+			{
+				var bundleObj = this.mapProductObject(dwBundle);
+				if(bundleObj==null)
+					return null;
+				var kitObj = {};
+				kitObj.items = [];
+				kitObj.sku=bundleObj.id;
+				
+				var bundledItems = dwBundle.getBundledProducts(); 
+				for(var i=0;i<bundledItems.length;i++)
+				{
+					var bundleItemObj = this.mapProductObject(bundledItems[i]);
+					if(bundleItemObj==null)
+						return null;
+					var kitItem = {};
+					kitItem.sku=bundleItemObj.id;
+					kitItem.quantity=dwBundle.getBundledProductQuantity(bundledItems[i]).value;
+					kitObj.items.push(kitItem);
+				}
+				return kitObj;
+			}
+			catch(ex)
+			{
+				if(this.errorLogActive())
+					this.writeValidationError(ex, dwBundle.getID(), "Kit");
+				this.errorsFound = true;
+				return null;
+			}
+		},
+		
+		writeValidationError : function(ex, id, objectType)
+		{
+			if(this.validationWriters.fileWriter==null)
+				this.errorFile = createWriter(this.exportFolder, this.batchId, 'errors', this.validationWriters, "exportCatalogErrorLog","log");
+				
+			var errorMessage = StringUtils.format('Invalid export data found on {0}. Id: {1} - Error:{2}',objectType,id,ex);
+			writeElement(this.validationWriters.xmlWriter,objectType,errorMessage,null,false,false);
+		},
+		
+		close : function()
+		{
+			if(this.errorLogActive() && this.errorsFound)
+				endXml(this.validationWriters);
+				
+			if(this.validationWriters.xmlWriter) 
+				this.validationWriters.xmlWriter.close();
+				
+			if(this.validationWriters.fileWriter) 
+				this.validationWriters.fileWriter.close();
+		}   
+	};
+}  

@@ -1,0 +1,26 @@
+/**
+*	@output ApiResponse:Object A simple object build off of JSON.parse contains the response from the webservice
+*/
+importPackage( dw.system );
+importPackage( dw.object );
+importPackage( dw.catalog );
+importPackage( dw.util );
+importPackage( dw.net );
+importPackage( dw.rpc );
+importPackage( dw.web );
+
+function execute( args : PipelineDictionary ) : Number
+{
+		var message : String;
+
+		message = "{   \"order_shipments\": [     {       \"order_ship_to\": [         {           \"orderShipStatus\": \"Shipped\",           \"orderShipDate\": \"Oct 2, 2013 12:00:00 AM\",           \"orderShipNumber\": 4073481,           \"orderShipNumberReference\": 44003256,           \"orderShipToName\": \"DMTEST ACCEPT                 \",           \"orderShipToAddress1\": \"1111 DOUBLE O SEVEN SHIPPING D\",           \"orderShipToAddress2\": \"                              \",           \"orderShipToCity\": \"LA PALMA            \",           \"orderShipToState\": \"CA\",           \"orderShipToZip\": \"90505     \",           \"orderShipToCountry\": \"US\",           \"orderShipToPhone\": \"7145230007\",           \"orderShipCarrier\": \"Fedex SmartPost               \",           \"orderShipAmount\": 7.0,           \"order_billTo\": {             \"orderBillToName\": \"DMTEST ACCEPT\",             \"orderBillToAddress1\": \"DOUBLE O SEVEN BILLING DR.\",             \"orderBillToAddress2\": \"\",             \"orderBillToCity\": \"LA PALMA\",             \"orderBillToState\": \"CA\",             \"orderBillToZip\": \"US\",             \"orderBillToCountry\": \"90623\",             \"orderBillToPhone\": \"7145230077\",             \"orderBillToEmail\": \"jkimbilling@yahoo.com\"           },           \"order_details\": [             {               \"orderDetailStatus\": \"Shipped\",               \"orderDetailNumber\": 4073481,               \"orderDetailReferenceNumber\": 44003256,               \"orderDetailLineNumber\": 1,               \"orderDetailShiptoCustomer\": 300209988,               \"orderDetailItemNumber\": \"9950411        \",               \"orderDetailItemDescription\": \"0131 SKINNIEST BLACK      26W X 28L     \",               \"orderDetailQuantity\": 1.0,               \"orderDetailSellPrice\": 49.95,               \"orderDetailAmount\": 49.95,               \"orderDetailDiscount\": 0.0,               \"orderDetailTax\": 3.75,               \"orderDetailShipping\": 7.0             }           ],           \"order_payments\": [             {               \"paymentType\": \"MASTER CHARGE                 \",               \"paymentAmount\": 60.7             }           ]         }       ]     }   ] }";
+
+if ( !empty( message) ) {
+			var objJSON = JSON.parse( message );
+			if ( !empty( objJSON ) ) args.ApiResponse = objJSON;
+			else args.ApiResponse = null;
+		}
+
+		
+	return PIPELET_NEXT;
+}

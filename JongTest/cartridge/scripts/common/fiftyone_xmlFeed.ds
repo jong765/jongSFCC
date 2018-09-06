@@ -1,0 +1,236 @@
+/**
+*  
+* 	Reusable utility methods for exporting catalog XML feeds
+*
+*/
+
+importPackage( dw.system );
+importPackage( dw.util );
+importPackage( dw.io );
+
+importScript( "common/fiftyone_site.ds" );
+
+function findNextNode(xmlStreamReader : XMLStreamReader, nodeName : String)
+{
+	while (xmlStreamReader.hasNext())
+	{
+		if (xmlStreamReader.next() == XMLStreamConstants.START_ELEMENT)
+	 	{
+	 		var localElementName : String = xmlStreamReader.getLocalName();
+		 	if (localElementName == nodeName)
+		 		return xmlStreamReader;
+	 	}
+	}
+	return null;
+}
+
+function createWriter(exportFolder, batchNumber, requestId, writers, rootName,collectionName)
+{
+	var exportFile = initExportFile(exportFolder,collectionName,requestId);
+	writers.fileWriter = new FileWriter(exportFile, "UTF-8");
+	writers.xmlWriter = new XMLIndentingStreamWriter(writers.fileWriter);
+	startXml(writers.xmlWriter,requestId, batchNumber.toString(),rootName,collectionName);
+	return exportFile;
+}
+
+function createWriterNew(exportFolder, batchNumber, requestId, writers, rootName,collectionName)
+{
+	var exportFile = initExportFile(exportFolder,collectionName,requestId);
+	writers.fileWriter = new FileWriter(exportFile, "UTF-8");
+	writers.xmlWriter = new XMLIndentingStreamWriter(writers.fileWriter);
+	startXmlNew(writers.xmlWriter,requestId, batchNumber.toString(),rootName,collectionName);
+	return exportFile;
+}
+
+function getWriter(exportFolder, batchNumber, requestId, writers, rootName,collectionName) : dw.io.File {
+	var exportFile = getExportFile(exportFolder, collectionName, requestId);
+	writers.fileWriter = new FileWriter(exportFile, "UTF-8", true);
+	writers.xmlWriter = new XMLIndentingStreamWriter(writers.fileWriter);
+	return exportFile;
+}
+
+function initExportFile(exportFolder : File ,exportType : String, requestId:Number)
+{
+	var exportFile : dw.io.File = getExportFile(exportFolder, exportType, requestId);
+	exportFile.createNewFile();
+	return exportFile;
+}
+
+function getExportFile(exportFolder : File, exportType : String, requestId : Number) : dw.io.File {
+	return new dw.io.File(exportFolder,StringUtils.format('{0}_{1}.xml',exportType, padLeft(requestId,5)));
+}
+
+function startXml(xmlWriter, requestId, batchId, rootName,collectionName)
+{
+	xmlWriter.writeStartDocument();
+	xmlWriter.writeStartElement(rootName);
+	xmlWriter.writeAttribute("id", requestId);
+	xmlWriter.writeAttribute("batchId", batchId);
+	xmlWriter.writeStartElement(collectionName);
+	
+	return xmlWriter;
+}
+
+function startXmlNew(xmlWriter, requestId, batchId, rootName,collectionName) {
+	xmlWriter.writeRaw("<?xml version='1.0' ?>\n");
+	xmlWriter.writeRaw("<" + rootName + " id='" + requestId + "' batchId='" + batchId + "'>\n");
+	xmlWriter.writeRaw("<" + collectionName + ">\n");
+	
+	return xmlWriter;
+}
+
+function endXmlNew(writers,rootName,collectionName) {
+	
+	writers.xmlWriter.writeRaw("</" + collectionName + ">\n");
+	writers.xmlWriter.writeRaw("</" + rootName + ">\n");
+	
+	writers.xmlWriter.close();
+	writers.fileWriter.close();
+	writers.xmlWriter = null;
+	writers.fileWriter = null;
+	
+	return writers;
+}
+
+function endXml(writers)
+{
+	writers.xmlWriter.writeEndElement();//end collection
+	writers.xmlWriter.writeEndElement();//submitCategoryRequest
+	writers.xmlWriter.writeEndDocument(); //end root
+	
+	writers.xmlWriter.close();
+	writers.fileWriter.close();
+	writers.xmlWriter = null;
+	writers.fileWriter = null;
+	
+	return writers;
+}
+
+function writeElement(xmlWriter,name,value,maxLength,enforceLength, optional)
+{
+	var strValue = getValidValue(name,value,maxLength,enforceLength,optional);
+	xmlWriter.writeStartElement(name);
+	xmlWriter.writeCharacters(strValue);
+	xmlWriter.writeEndElement();//name
+}
+
+function writeAttribute(xmlWriter,name,value,maxLength,enforceLength,optional)
+{
+	var strValue = getValidValue(name,value,maxLength,enforceLength,optional);
+	xmlWriter.writeAttribute(name,strValue);
+}
+
+function getValidValue(name,value,maxLength,enforceLength,optional)
+{
+	if(value==null) value = '';
+	var strValue : String = value.toString();
+	
+	if(!optional && empty(strValue))
+		throw new Error(dw.util.StringUtils.format("Required Value:{0} was empty",name));
+		
+	if(maxLength && strValue.length > maxLength)
+	{
+		if(enforceLength)
+			throw new Error(dw.util.StringUtils.format("Value:{0} exceeded length restriction. Limit: {1}. Actual:{2}",name,maxLength,strValue.length));
+		else
+			strValue = strValue.substr(0, maxLength);
+	}
+	return strValue;
+}
+
+function mapCategoryObject(xmlStreamReader, merchantId)
+{
+	default xml namespace = "http://www.demandware.com/xml/impex/catalog/2006-10-31";
+	var categoryObj = {};
+	var categoryNode : XML = xmlStreamReader.getXMLObject();
+	
+	categoryObj.categoryId = categoryNode.@["category-id"].toString();
+	categoryObj.merchantId = merchantId;
+	categoryObj.name = categoryNode['display-name'];
+	categoryObj.online = categoryNode['online-flag'];
+	categoryObj.parentId = categoryNode.parent.toString();
+	categoryObj.description = categoryNode["page-attributes"]["page-description"];
+	categoryObj.url = categoryNode["page-attributes"]["page-url"].toString();
+	categoryObj.fiftyOneId = categoryNode["custom-attributes"]["custom-attribute"].(@["attribute-id"] == 'fiftyone_categoryId');
+	var restrictions = categoryNode["custom-attributes"]["custom-attribute"].(@["attribute-id"] == 'fiftyone_restrictions');
+	if(restrictions.length)
+	{
+		categoryObj.restrictions = [];
+		for each (var value in restrictions.value) 
+		{    
+			categoryObj.restrictions[categoryObj.restrictions.length] = value;
+		}
+	}
+	return categoryObj;
+}
+
+function getCategoryUrl(categoryObj)
+{
+	return dw.web.URLUtils.http('Search-Show','cgid',categoryObj.categoryId);
+}
+
+function getProductUrl(productObj)
+{
+	return dw.web.URLUtils.http('Product-Show','pid',productObj.getID());
+}
+
+function getProductDescription(productObj)
+{
+	var description = productObj.getLongDescription();
+	if(empty(description))
+		description = productObj.getShortDescription();
+	return description;
+}
+
+function getAllProductImages(productObj) : List
+{
+	return getProductImages(productObj, false);
+}
+
+function getPrimaryProductImage(productObj, forceHttps) : dw.content.MediaFile
+{
+	var imageryUtil = require('int_dis/cartridge/scripts/utils/ImageryUtil.ds');
+	//Need different info if this is a master product
+	if (productObj.variant) {
+		var productImage = getProductImages(productObj, true);
+		if(empty(productImage))
+			return '';
+		
+		if(forceHttps)
+			return productImage.url;  
+		 
+		return productImage.url; 
+	} else {
+		var imageUrl = '';
+		var defaultViewType = dw.system.Site.getCurrent().preferences.custom.dis_view_type;
+		if(imageryUtil.getImagery(productObj).getImage(defaultViewType,0)) {
+			var index = imageryUtil.getImagery(productObj).getImage(defaultViewType,0).url.toString().indexOf("?");;
+			if (index == -1)
+				index = imageryUtil.getImagery(productObj).getImage(defaultViewType,0).url.toString().length;
+			imageUrl = imageryUtil.getImagery(productObj).getImage(defaultViewType,0).url.toString().substring(0,index);
+		}
+		return imageUrl;
+
+	}
+}
+
+function getProductImages(productObj, primaryOnly)
+{
+	var imageryUtil = require('int_dis/cartridge/scripts/utils/ImageryUtil.ds');
+	var imageTypes = ['product-thumb','product-detail','product-list','swatches'];
+	var imageList : dw.util.ArrayList = new ArrayList();
+	for(var i=0;i<imageTypes.length;i++)
+	{
+		var images = imageryUtil.getImagery(productObj).getImages(imageTypes[i]);
+		if(images==null || images.length==0)
+			continue;
+		if(primaryOnly)
+			return images[0];
+		imageList.addAll(images);
+	}
+	
+	if(primaryOnly)
+		return null; //no image found
+		
+	return imageList;
+}

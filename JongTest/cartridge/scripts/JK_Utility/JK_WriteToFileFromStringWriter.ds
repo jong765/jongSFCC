@@ -1,0 +1,27 @@
+importPackage( dw.system );
+importPackage( dw.io );
+importPackage( dw.net );
+importPackage( dw.catalog );
+importPackage( dw.util );
+importPackage( dw.web );
+
+function writeToFileFromStringWriter(fileName:String, stringWriter: StringWriter) {
+
+	var folderPath:String = File.IMPEX + File.SEPARATOR + "src" + File.SEPARATOR + "gpshopper";
+
+	var folder:File = new File(folderPath);
+	if ( !folder.exists() ){ // if folder doesn't exist - create folder	
+		var result : boolean = folder.mkdirs();
+		if ( !result ) {
+			Logger.error( "GenerateExportFilename: Error creating temp folder " + folder.fullPath );
+		}
+	}
+
+	var file:File = new File(folder, fileName);
+	var out:FileWriter = new FileWriter(file, true);
+
+	out.write(stringWriter.toString());	
+	out.flush();
+	out.close();
+
+}

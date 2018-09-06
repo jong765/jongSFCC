@@ -1,0 +1,77 @@
+//This object is used for the Siebel PersonalAddress
+
+function PersonalAddress_Object() {
+
+	this.city = "";
+	this.setCity = setCity;
+	this.getCity = getCity;
+	
+	this.state = "";
+	this.setState = setState;
+	this.getState = getState;
+	
+	this.streetAddress = "";
+	this.setStreetAddress = setStreetAddress;
+	this.getStreetAddress = getStreetAddress;
+	
+	this.streetAddress2 = "";
+	this.setStreetAddress2 = setStreetAddress2;
+	this.getStreetAddress2 = getStreetAddress2;
+	
+	this.zipCode = "";
+	this.setZipCode = setZipCode;
+	this.getZipCode = getZipCode;
+	
+	this.country = "";
+	this.setCountry = setCountry;
+	this.getCountry = getCountry;
+	
+	this.phoneNumber = "";
+	this.setPhoneNumber = setPhoneNumber;
+	this.getPhoneNumber = getPhoneNumber;
+	
+}
+
+function setCity(value){
+	this.city = value;
+}
+function getCity(){
+	return this.city;
+}
+function setState(value){
+	this.state = value;
+}
+function getState(){
+	return this.state;
+}
+function setStreetAddress(value){
+	this.streetAddress = value;
+}
+function getStreetAddress(){
+	return this.streetAddress;
+}
+function setStreetAddress2(value){
+	this.streetAddress2 = value;
+}
+function getStreetAddress2(){
+	return this.streetAddress2;
+}
+function setZipCode(value){
+	this.zipCode = value;
+}
+function getZipCode(){
+	return this.zipCode;
+}
+function setCountry(value){
+	this.country = value;
+}
+function getCountry(){
+	return this.country;
+}	
+function setPhoneNumber(value){
+	this.phoneNumber = value;
+}
+function getPhoneNumber(){
+	return this.phoneNumber;
+}										
+																																		

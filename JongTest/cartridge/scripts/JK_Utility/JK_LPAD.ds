@@ -1,0 +1,6 @@
+importPackage( dw.util );
+
+function LPAD(num:Number, size:Number):String {
+    var s:String = "0000000" + num;
+    return s.substr(s.length-size);
+}

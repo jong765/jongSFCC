@@ -1,0 +1,77 @@
+/**
+*  
+* 	Reusable utility methods for the cartridge
+*/
+
+importPackage( dw.system );
+importPackage( dw.util );
+importPackage( dw.io );
+
+function getHttpImagePath() : String {
+	return "http://images4.pacsun.com/is/image/pacsunproducts/"
+}
+
+function getHttpsImagePath() : String {
+	return "https://images4.pacsun.com/is/image/pacsunproducts/"
+}
+
+function padLeft(value, totalSize, padChar)
+{
+	var stringValue = value.toString();
+	var diff = totalSize - stringValue.length;
+	
+	if(diff>0)
+	{
+		if(padChar==null)
+			padChar='0';
+		for(var i=0;i<diff;i++)
+			stringValue = padChar+stringValue;
+	}
+	return stringValue;
+}
+
+function getDateString()
+{
+	var date = new Calendar();
+	var dateString = StringUtils.formatCalendar(date,'yyyyMMdd_HHmm');
+	return dateString;
+}
+
+function getFileExtension(fileName : String)
+{
+	var extension : String = '';
+	var extIndex = fileName.lastIndexOf(".")+1;
+	if(extIndex>0)
+		extension = fileName.substring(extIndex);
+	return extension;
+}
+
+function encodeXml(stringValue)
+{
+	if(empty(stringValue))
+		return "";
+		
+	var regex : RegExp = new RegExp("[\u00A0-\u2666<>\&]","g");
+	return stringValue.toString().replace(regex, escapeToDecimalEntity);
+	
+	function escapeToDecimalEntity(specialChar)
+	{
+		return StringUtils.format("&#{0};",specialChar.charCodeAt(0).toString());
+	}
+}
+
+
+function moneyStr(value : Number)
+{
+	var dec : dw.util.Decimal = new Decimal(value);
+	return dec.round(2);
+}
+
+function logError(ex)
+{
+	var err = ex;
+	Logger.error(err);
+}
+  
+
+

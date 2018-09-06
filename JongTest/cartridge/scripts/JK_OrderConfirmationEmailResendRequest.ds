@@ -1,0 +1,31 @@
+/**
+*	Logs order confirmation email errors for resend later
+*   
+*   @input Order : Object
+*	@input PointsTotal : Number
+*   @input TargetEmailAddressType : String
+*   
+*
+*/
+importPackage( dw.system );
+importPackage( dw.object );
+importPackage( dw.util );
+
+function execute( args : PipelineDictionary ) : Number
+{
+
+	   var order = args.Order;
+	   
+	   var loyaltyDiscountAmt = null;
+	   var pointsTotal = null;
+
+	   //misc order items besides order number we need to resend the order conf email
+	   var miscOrderMap={PointsTotal: pointsTotal};
+ 
+ 	   var customObjectName : String = args.TargetEmailAddressType != null && args.TargetEmailAddressType.equalsIgnoreCase("Linc") ? "OrderConfResendLinc" : "OrderConfResend";
+	   var co : CustomObject = CustomObjectMgr.createCustomObject(customObjectName, order.getOrderNo());
+	   co.custom.OrderNumber = order.getOrderNo();	   
+	   co.custom.MiscOrderInfo =  JSON.stringify(miscOrderMap);	   	   
+
+	   return PIPELET_NEXT;
+}

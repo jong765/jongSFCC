@@ -1,0 +1,63 @@
+/**
+*  testHTTPFormClient.ds
+*
+*   @input formData : String
+*	@input numCalls : String
+*   @output httpResult : dw.svc.Result
+*	@output svcConfig : dw.svc.Service
+*
+*/
+importPackage( dw.svc );
+
+function execute( args : PipelineDictionary ) : Number
+{	
+   var service:Service;
+   var result:Result;
+   var counter = args.numCalls;
+   var mockCall = false;
+   var pipelineError = false;
+   var requestData = "";
+   
+   var paramKey : String = "sales_assoc";
+   var paramValue : Object = {};
+   paramValue.ws_user = "DWUser";
+   paramValue.ws_password = "DinhA2012";
+   paramValue.sales_assoc_store = "0197";
+   paramValue.sales_assoc_id = "119257";
+   paramValue.sales_assoc_pass = "1192574003";
+	
+    // Execute the request on the service configuration
+   function makeCall(svcConfig:Service, params:Object) {
+ 
+      if ( counter == null ){
+     	counter = 1;
+      }
+   
+      while ( counter != 0 ){
+      	if ( mockCall ) {
+     	  result = service.setMock().call(params);
+      	} else if ( pipelineError ) {
+      	  result = service.setThrowOnError().call(params);	
+      	} else {
+      	  result = service.call(params);
+      	}
+     	counter--;
+      }
+      
+      // Set pdict out values
+      args.svcConfig = svcConfig;
+      args.httpResult = result;
+   }
+   
+   service = ServiceRegistry.get("test.httpform.post");
+   service.addHeader('Content-Type', 'application/x-www-form-urlencoded');
+   service.addParam(paramKey, JSON.stringify(paramValue));
+   
+   makeCall(service, requestData);  
+    
+   if ( result == null || service == null ){
+   	 return PIPELET_ERROR;
+   }
+   
+   return PIPELET_NEXT;
+}

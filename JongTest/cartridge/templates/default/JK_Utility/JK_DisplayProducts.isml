@@ -1,0 +1,5 @@
+<!--- TEMPLATENAME: TestTemplate.isml --->
+Product List <br>
+<isloop items="${pdict.ProductSearchModel.products}" var="product" status="loopstate">
+	Product ID: ${product.ID} <br>
+</isloop>

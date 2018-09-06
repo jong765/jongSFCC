@@ -1,0 +1,37 @@
+/**
+* Demandware Script File
+* To define input and output parameters, create entries of the form:
+*
+* @<paramUsageType> <paramName> : <paramDataType> [<paramComment>]
+*
+* where
+*   <paramUsageType> can be either 'input' or 'output'
+*   <paramName> can be any valid parameter name
+*   <paramDataType> identifies the type of the parameter
+*   <paramComment> is an optional comment
+*
+* For example:
+*
+*    @input  FilePrefix:String	File prefix.
+*    @output FileName:String	Output file name.
+*
+*/
+importPackage( dw.system );
+importPackage( dw.util );
+
+function execute( pdict : PipelineDictionary ) : Number
+{
+	var filePrefix:String = pdict.FilePrefix;
+    var today:Date = new Date();
+    var fileName:String = filePrefix + today.getFullYear() + LPAD((today.getMonth()+1),2) + LPAD(today.getDate()-2,2) +
+                          LPAD(today.getHours(),2) + LPAD(today.getMinutes(),2) + LPAD(today.getSeconds(),2) + ".txt";
+    
+    pdict.FileName = fileName;
+
+   return PIPELET_NEXT;
+}
+
+function LPAD(num:Number, size:Number):String {
+    var s:String = "0000000" + num;
+    return s.substr(s.length-size);
+}

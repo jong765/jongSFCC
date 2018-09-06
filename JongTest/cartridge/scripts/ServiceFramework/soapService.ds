@@ -1,0 +1,59 @@
+/**
+*  testSOAPClient.ds
+*
+*   @input numCalls : String
+*   @output soapResult : dw.svc.Result
+*	@output svcConfig : dw.svc.Service
+*
+*/
+importPackage( dw.svc );
+importPackage( dw.util );
+importPackage( dw.ws );
+
+function execute( args : PipelineDictionary ) : Number
+{
+   var service:Service;
+   var result:Result;
+   var mockCall = false;
+   var pipelineError = false;
+   
+   var counter = args.numCalls;
+   var endpointParam;
+   
+   // Execute the request on the service configuration
+   function makeCall(svcConfig:Service, params:Object) {
+ 
+      if ( counter == null ){
+     	counter = 1;
+      }
+   
+      while ( counter != 0 ){
+      	if ( mockCall ) {
+     	  result = service.setMock().call(params);
+      	} else if ( pipelineError ) {
+      	  result = service.setThrowOnError().call(params);	
+      	} else {
+      	  result = service.call(params);
+      	}
+     	counter--;
+      }
+      
+      // Set pdict out values
+      args.svcConfig = svcConfig;
+      args.soapResult = result;
+   }
+
+	service = ServiceRegistry.get("relate.searchCustomer");
+	endpointParam = {};   
+  
+	makeCall(service, endpointParam);
+	  
+	if ( result == null || service == null ){
+		return PIPELET_ERROR;
+	}
+  
+  	var customerID = result.object._return.customer[0].customerID;
+	var customAttr = result.object._return.customer[0].customAttribute;
+   
+  return PIPELET_NEXT;
+}

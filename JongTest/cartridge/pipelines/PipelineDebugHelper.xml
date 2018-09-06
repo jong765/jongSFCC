@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<?demandware-pipeline version="2.0"?>
+
+<pipeline type="view">
+  <branch basename="Start">
+    <segment>
+      <node>
+        <start-node call-mode="private" name="Start" secure="false"/>
+        <node-display x="1" y="1"/>
+      </node>
+      <simple-transition>
+        <transition-display>
+          <bend-point relative-to="source" x="0" y="1"/>
+        </transition-display>
+      </simple-transition>
+      <node>
+        <pipelet-node pipelet-name="Script" pipelet-set-identifier="bc_api">
+          <config-property key="Transactional" value="false"/>
+          <config-property key="OnError" value="PIPELET_ERROR"/>
+          <config-property key="ScriptFile" value="JK_Utility/pipelineDebugHelper.ds"/>
+          <key-binding alias="null" key="ScriptLog"/>
+          <key-binding alias="CurrentCustomer.addressBook.preferredAddress.getID()" key="Field1"/>
+          <key-binding alias="CurrentCustomer.addressBook.preferredAddress.address1" key="Field2"/>
+          <key-binding alias="CurrentCustomer.addressBook.preferredAddress.address2" key="Field3"/>
+          <key-binding alias="CurrentCustomer.addressBook.preferredAddress.city" key="Field4"/>
+          <key-binding alias="CurrentCustomer.addressBook.preferredAddress.stateCode" key="Field5"/>
+          <key-binding alias="PointCut" key="PointCut"/>
+        </pipelet-node>
+        <node-display x="0" y="1"/>
+      </node>
+      <simple-transition>
+        <transition-display>
+          <bend-point relative-to="source" x="0" y="1"/>
+        </transition-display>
+      </simple-transition>
+      <node>
+        <end-node/>
+        <node-display x="0" y="1"/>
+      </node>
+    </segment>
+  </branch>
+</pipeline>

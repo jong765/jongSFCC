@@ -1,0 +1,24 @@
+/**
+* logBloomReachError.ds
+*
+* This script attempts to log to a custom log "BloomReach".  If it fails, it logs to a generic logger.
+*/
+importPackage( dw.system );
+
+function logFailure(msg : String, args : Object)
+{
+	var log : Log = null;
+	
+	try
+	{
+		/*Try to get a logger object with a the file name prefix of "BloomReach".  This fails on a daily limit of custom log file names*/
+		log=Logger.getLogger("BloomReach","BloomReach");
+	}
+	catch(e)
+	{
+		/*In event that daily limit is exceded, log to the generic custom log*/
+		log = Logger.getLogger("BloomReach");
+	}
+	
+	log.error(msg);
+}
