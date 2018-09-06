@@ -16,8 +16,9 @@
 */
 
 /* Script Modules */
-var app = require('pacsun_storefront_pipelines/cartridge/scripts/app');
-var guard = require('pacsun_storefront_pipelines/cartridge/scripts/guard');
+var app = require('sitegenesis_controllers/cartridge/scripts/app');
+var guard = require('sitegenesis_controllers/cartridge/scripts/guard');
+var ExtendJS = require('JongTest/cartridge/scripts/JK_ExtendJS');
 
 function show()	{
 	
