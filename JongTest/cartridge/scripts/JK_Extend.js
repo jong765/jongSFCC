@@ -19,17 +19,22 @@
 
 var Class = require('sitegenesis_controllers/cartridge/scripts/util/Class').Class;
 
-var MyClass = Class.extend(function(){
+var MyClass = Class.extend({
 	
-	//This is a private variable.
-    var privateVariable = null;
-  
-    //this is a public variable.
-    this.publicVariable = null;
+	variable1 : null,
+	variable2 : null,
       
-    //constructor
-    this.constructor = function(){
-        privateVariable = "private";
-        publicVariable = "public";
-    };
+    addVariable : function() {
+    	return this.variable1 + this.variable2;
+    },
+
+	setVariable1 : function(variable1) {
+		this.variable1 = variable1;
+	},
+
+	setVariable2 : function(variable2) {
+		this.variable2 = variable2;
+	}
 });
+
+module.exports = MyClass;
