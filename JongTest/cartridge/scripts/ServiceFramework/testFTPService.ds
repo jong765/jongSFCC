@@ -1,0 +1,73 @@
+/**
+*  testFTPClient.ds
+*
+*	@input testType : String
+*   @input numCalls : String
+*	@output svcConfig : dw.svc.Service
+*   @output ftpResult : dw.svc.Result
+*
+*/
+importPackage( dw.util );
+importPackage( dw.svc );
+importPackage( dw.net );
+importPackage( dw.io );
+
+function execute( args : PipelineDictionary ) : Number
+{	
+	
+   var service:Service;
+   var result:Result;
+   var counter = args.numCalls;
+   var mockCall = false;
+   var pipelineError = false;
+    
+   // Execute the request on the service configuration
+   function makeCall(svcConfig:Service, params:Object) {
+ 
+      if ( counter == null ){
+     	counter = 1;
+      }
+   
+      while ( counter != 0 ){
+      	if ( mockCall ) {
+     	  result = service.setMock().call(params);
+      	} else if ( pipelineError ) {
+      	  result = service.setThrowOnError().call(params);	
+      	} else {
+      	  result = service.call(params);
+      	}
+     	counter--;
+      }
+      
+      // Set pdict out values
+      args.svcConfig = service;
+      args.ftpResult = result;
+    }
+	
+	switch ( args.testType ) {   	
+   	  case "LIST":
+   	    service = ServiceRegistry.get("test.ftp");
+        service.setOperation("list");
+        break;
+      case "CD":
+   	    service = ServiceRegistry.get("test.ftp");
+        service.setOperation("cd", "/");
+        break;
+      case "MKDIR":
+   	    service = ServiceRegistry.get("test.ftp");
+        service.setOperation("mkdir", "test");
+        break;
+      case "DELETE":
+   	    service = ServiceRegistry.get("test.ftp");
+        service.setOperation("del", "test");
+        break;
+	}
+	
+	makeCall(service);
+	
+	if ( result == null || service == null ){
+   	  return PIPELET_ERROR;
+    }
+    
+    return PIPELET_NEXT;  
+}
