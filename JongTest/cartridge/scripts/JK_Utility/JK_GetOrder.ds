@@ -1,0 +1,60 @@
+/**
+* Script file for use in the Script pipelet node.
+* To define input and output parameters, create entries of the form:
+*
+* @<paramUsageType> <paramName> : <paramDataType> [<paramComment>]
+*
+* where
+*   <paramUsageType> can be either 'input' or 'output'
+*   <paramName> can be any valid parameter name
+*   <paramDataType> identifies the type of the parameter
+*   <paramComment> is an optional comment
+*
+* For example:
+*
+*-   @input ExampleIn : String This is a sample comment.
+*-   @output ExampleOut : Number
+*
+*/
+
+ var Order = require('dw/order/Order');
+ var OrderMgr = require('dw/order/OrderMgr');
+ var HashMap = require('dw/util/HashMap');
+ var Calendar = require('dw/util/Calendar');
+ var StringUtils = require('dw/util/StringUtils');
+
+function execute( args : PipelineDictionary ) : Number
+{
+	var query : String = "exportStatus =" + Order.EXPORT_STATUS_NOTEXPORTED + "d";
+   	query += " and status !=" + Order.ORDER_STATUS_CANCELLED + "d";
+   	query += " and status !=" + Order.ORDER_STATUS_FAILED + "d";
+   	query += " and status !=" + Order.ORDER_STATUS_CREATED + "d";
+
+   	var orderIterator = OrderMgr.queryOrders(query, "orderNo asc", null);
+	var orderHashMap = new HashMap();
+	var previousDate = new Calendar();
+	previousDate.add(Calendar.HOUR, -24);
+	previousDate = getDateInEST(previousDate);
+	var orderCount = 0;
+
+	if (!empty(orderIterator))
+	{
+		while (orderIterator.hasNext())
+		{
+			var order = orderIterator.next();
+	        var creationDate = getDateInEST(new Calendar(order.creationDate));
+	        var exportStatus = order.exportStatus.displayValue;
+	        var status = order.status.displayValue;
+           if (creationDate == previousDate)
+               orderCount++;
+		}
+	}
+
+   return PIPELET_NEXT;
+}
+
+function getDateInEST(dateParm) {
+	dateParm.add(Calendar.HOUR, -4);
+	var returnDate = StringUtils.formatCalendar(dateParm, "yyyy-MM-dd");
+	return returnDate;
+}

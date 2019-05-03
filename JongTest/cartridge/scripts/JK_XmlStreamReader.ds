@@ -12,7 +12,7 @@
 *
 * For example:
 *
-*	@input	MasterCatalogFilePath :	String	
+*	@input	InventoryFilePath :	String	
 *
 */
 
@@ -26,20 +26,17 @@ importPackage( dw.web );
 
 function execute( pdict : PipelineDictionary ) : Number
 {
-	var masterCatalogFilePath : String = pdict.MasterCatalogFilePath;
+	var inventoryFilePath : String = pdict.InventoryFilePath;
 	
 	var xmlStream : XMLStreamReader = null;
+	var zeroInventoryCount = 0;
 	
 	try {
-		xmlStream = new XMLStreamReader(new FileReader(new File(File.IMPEX + masterCatalogFilePath)));
+		xmlStream = new XMLStreamReader(new FileReader(new File(File.IMPEX + inventoryFilePath)));
 		
 		while (xmlStream.hasNext()) {
 			if (xmlStream.next() == XMLStreamConstants.START_ELEMENT) {
-				if (xmlStream.getLocalName() == "header") {
-					var xmlObj : XML = xmlStream.getXMLObject();
-					var test = xmlObj.toXMLString();
-					var test2 = 1;
-				} else if (xmlStream.getLocalName() == "product") {
+				if (xmlStream.getLocalName() == "allocation") {
 					var xmlObj : XML = xmlStream.getXMLObject();
 					var test = xmlObj.toXMLString();
 					var test2 = 1;
@@ -64,27 +61,4 @@ function logError(e : Error) {
 	errmsg += ", " + e.stack.trim();
 		
 	Logger.error(errmsg);
-}
-
-function writeToFile(content : String, isAppend : Boolean, path : String) : Boolean {
-	try {		
-		var file : File = new File(File.IMPEX + path);
-		
-		if(!file.exists()) {
-			if(!file.createNewFile()) {
-				Logger.error("File "+file.name+" could not be created!");
-				return false;
-			}
-		} 
-		
-		var out : FileWriter = new FileWriter(file, isAppend);
-		out.write(content);
-		out.flush();
-		out.close();
-	}
-	catch(e) {
-			Logger.error("An error occured while exporting channel advisor XML products {0}.", e);
-			return false;
-	}
-	return true;
 }

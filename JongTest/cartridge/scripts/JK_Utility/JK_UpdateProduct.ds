@@ -12,23 +12,22 @@
 *
 * For example:
 *
-*-   @input ExampleIn : String This is a sample comment.
-*-   @output ExampleOut : Number
 *
 */
 importPackage( dw.system );
+importPackage( dw.catalog );
 
 function execute( pdict : PipelineDictionary ) : Number
 {
 
-    // read pipeline dictionary input parameter
-    // ... = args.ExampleIn;
-
-    // insert business logic here
-
-    // write pipeline dictionary output parameter
-
-    // args.ExampleOut = ...
+	var productId : String = "0716445740002";
+	
+	var transaction = require('dw/system/Transaction');
+	transaction.wrap(function() {
+        var product:Product = ProductMgr.getProduct(productId);
+		product.custom.consignmentCode = "test code";
+    });
+	
 
    return PIPELET_NEXT;
 }

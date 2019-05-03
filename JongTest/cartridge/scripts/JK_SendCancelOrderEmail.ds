@@ -1,0 +1,91 @@
+/**
+* Script file for use in the Script pipelet node.
+* To define input and output parameters, create entries of the form:
+*
+* @<paramUsageType> <paramName> : <paramDataType> [<paramComment>]
+*
+* where
+*   <paramUsageType> can be either 'input' or 'output'
+*   <paramName> can be any valid parameter name
+*   <paramDataType> identifies the type of the parameter
+*   <paramComment> is an optional comment
+*
+* For example:
+*
+*-   @input ExampleIn : String This is a sample comment.
+*-   @output ExampleOut : Number
+*
+*/
+ importPackage( dw.object );
+ importPackage( dw.order );
+ importPackage( dw.system );
+ importPackage( dw.io );
+
+function execute( pdict : PipelineDictionary ) : Number
+{
+    var orderNumber = null;
+    var exportFile : File = new File(File.IMPEX + "/src/order-cancel-email/" + "order_cancel_email_export.csv");
+    try {
+        if (!exportFile.exists()) {
+            var fileWriter : FileWriter = new FileWriter(exportFile);
+	        var csvWriter : CSVStreamWriter = new CSVStreamWriter(fileWriter, "|");
+            var coIT : Iterator = CustomObjectMgr.getAllCustomObjects("OrderCancelEmailQueue");
+            while(coIT.hasNext()) {
+                var co = coIT.next();
+                var order = OrderMgr.getOrder(co.custom.orderNumber);
+                orderNumber = order.orderNo;
+                writeCSVFile(order, csvWriter);
+                //CustomObjectMgr.remove(co);
+            }
+            sendFile();
+        }
+    } catch (e) {
+    	//CustomObjectMgr.remove(co);
+        var exception = e;
+        var errMessage = "Error in sending cancel order email. " + exception.message + "\n" + exception.stack;
+        Logger.error(errMessage);
+		return PIPELET_ERROR;
+	} finally {
+        if (fileWriter) fileWriter.close();
+    }
+
+   return PIPELET_NEXT;
+}
+
+function writeCSVFile(order : Order, csvWriter : CSVStreamWriter) {
+    var modType = "";
+    var billingAddress = order.billingAddress;
+    var firstName = billingAddress.firstName;
+    var lastName = billingAddress.lastName;
+    var customerFirstName = billingAddress.firstName;
+    var orderId = order.orderNo;
+    var email = "";
+    var state = billingAddress.stateCode;
+    var postalCode = billingAddress.postalCode;
+    var address1 = billingAddress.address1;
+    var city = billingAddress.city;
+    var itemStyle = "";
+    var alternateOrderId = returnableQuantity = refundPrice = "";
+    var totalTaxes = totalCharges = returnLineCount = isPriceOverridden = isReturn = "";
+    var originalItemPrice = refundDetail = totalDiscountOnItem = unitPrice = relatedChargeType = "";
+    
+    for each(var pli : ProductLineItem in order.getProductLineItems()) {
+        var product : Product = pli.product;
+        var itemColorDescription = product.custom.color;
+        var itemSize = product.custom.size;
+        var itemStyle = product.custom.styleName;
+        var classCode = product.custom.classCode;
+        var itemId = product.ID;
+        var quantity = pli.quantity.value;
+        var itemDescription = "";
+        var upcNumber = product.UPC;
+        csvWriter.writeNext([modType, firstName, lastName, customerFirstName, orderId, alternateOrderId, email, state, postalCode,
+                         address1, city, itemId, itemStyle, itemColorDescription, itemSize, returnableQuantity, quantity,
+                         refundPrice, totalTaxes, totalCharges, returnLineCount, isPriceOverridden, isReturn,itemDescription,
+                         originalItemPrice, refundDetail, totalDiscountOnItem, unitPrice, relatedChargeType, upcNumber]);
+    }
+}
+
+function sendFile() {
+    
+}
