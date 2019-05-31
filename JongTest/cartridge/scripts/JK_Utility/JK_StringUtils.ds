@@ -25,7 +25,13 @@ function execute( pdict : PipelineDictionary ) : Number
     var substring:String = "oo";
 	
 	var found:Number = string.indexOf(substring);
-    
+
+    // Sort list
+    var strList : List = new ArrayList();
+    strList.add1("strawberry");
+    strList.add1("apple");
+    strList.add1("banana");
+    strList.sort();
     
    return PIPELET_NEXT;
 }

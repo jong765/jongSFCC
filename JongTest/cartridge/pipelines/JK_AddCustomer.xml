@@ -2,11 +2,11 @@
 <?demandware-pipeline version="2.0"?>
 
 <pipeline type="view">
-  <branch basename="LookupCustomer">
+  <branch basename="Start">
     <segment>
       <node>
-        <start-node name="LookupCustomer" secure="false"/>
-        <node-display x="1" y="1"/>
+        <start-node name="Start" secure="false"/>
+        <node-display x="1" y="0"/>
       </node>
       <simple-transition>
         <transition-display>
@@ -16,8 +16,8 @@
       <node>
         <pipelet-node pipelet-name="Assign" pipelet-set-identifier="bc_api">
           <config-property key="Transactional" value="false"/>
-          <key-binding alias="&quot;jksb31@pacsun.com&quot;" key="From_0"/>
-          <key-binding alias="ContactEmailAddress" key="To_0"/>
+          <key-binding alias="null" key="From_0"/>
+          <key-binding alias="null" key="To_0"/>
           <key-binding alias="null" key="From_1"/>
           <key-binding alias="null" key="To_1"/>
           <key-binding alias="null" key="From_2"/>
@@ -45,7 +45,22 @@
         </transition-display>
       </simple-transition>
       <node>
-        <call-node start-name-ref="CustomerRequest-LookupCustomer"/>
+        <pipelet-node pipelet-name="Script" pipelet-set-identifier="bc_api">
+          <config-property key="Transactional" value="false"/>
+          <config-property key="OnError" value="PIPELET_ERROR"/>
+          <config-property key="ScriptFile" value="int_relate:scripts/CustomerRequests/AddCustomer.ds"/>
+          <key-binding alias="null" key="ScriptLog"/>
+          <key-binding alias="&quot;3450 E Miraloma Ave&quot;" key="address"/>
+          <key-binding alias="new Date()" key="birthdate"/>
+          <key-binding alias="&quot;Anaheim&quot;" key="city"/>
+          <key-binding alias="&quot;jksb51@pacsun.com&quot;" key="emailAddress"/>
+          <key-binding alias="&quot;DMTEST&quot;" key="firstName"/>
+          <key-binding alias="&quot;M&quot;" key="gender"/>
+          <key-binding alias="false" key="isMobileApp"/>
+          <key-binding alias="&quot;ACCEPT&quot;" key="lastName"/>
+          <key-binding alias="null" key="phone"/>
+          <key-binding alias="&quot;92806&quot;" key="zip"/>
+        </pipelet-node>
         <node-display x="0" y="1"/>
       </node>
       <simple-transition>

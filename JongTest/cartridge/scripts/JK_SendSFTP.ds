@@ -39,14 +39,14 @@ function execute( pdict : PipelineDictionary ) : Number
 }
 
 function SFTPFile() : Boolean {
-	var sftp : SFTPClient = new SFTPClient(); 
+	var sftp : SFTPClient = new SFTPClient();
 	sftp.setTimeout(0);
 	
 	try {
-		var hostName : String = "sftp.shopspring.com";
-		var userName : String = "pacsun";
-		var passWord : String = "v9w1ymF7K3";
-		var filePath : String = "catalog_feed";
+		var hostName : String = "exttransfer.pacsun.com";
+		var userName : String = "dw-psun-cat";
+		var passWord : String = "3KPdJVeV";
+		var filePath : String = "ShopSpringA/outbound";
 		
 		if(sftp.connect(hostName, userName, passWord)) {
 			Logger.info('Connected to SFTP');
