@@ -1,5 +1,6 @@
 {
-    "init": ["./cartridge/scripts/ServiceFramework/init/httpServiceInit.ds", 
+    "init": ["./cartridge/scripts/ServiceFramework/init/httpServiceInit.ds",
+             "./cartridge/scripts/LoyaltyPlus/init/LoyaltyPlusServiceInit.js",
     	     "./cartridge/scripts/ServiceFramework/init/httpFormServiceInit.ds",
     	     "./cartridge/scripts/ServiceFramework/init/soapServiceInit.ds",
     	     "./cartridge/scripts/ServiceFramework/init/ftpServiceInit.ds"]
