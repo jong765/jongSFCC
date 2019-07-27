@@ -6,13 +6,34 @@ const Site = require('dw/system/Site');
 const ApiRequest = require('../request/ApiRequest');
 const Util = require('../util/Util');
 const UrlPath = require('../util/LoyaltyPlusConstants').UrlPath;
-const HTTPRequestPart = require('dw/net/HTTPRequestPart');
 
-exports.enroll = function (email, customerId, firstName, lastName, address1, city) {
+exports.enroll = function (accountId, email, customerId, firstName, lastName, address) {
     let data = {
         urlPath       : UrlPath.ENROLL,
         requestMethod : 'POST',
-        request       : ApiRequest.getEnrollRequest(email, customerId, firstName, lastName, address1, city)
+        request       : ApiRequest.getEnrollRequest(accountId, email, customerId, firstName, lastName, address)
+    };
+
+    let result = Util.callService(data);
+    return result;
+};
+
+exports.rewardRedeem = function (accountId, email, rewardId) {
+    let data = {
+        urlPath       : UrlPath.REWARD_REDEEM,
+        requestMethod : 'POST',
+        request       : ApiRequest.getRewardRedeemRequest(accountId, email, rewardId)
+    };
+
+    let result = Util.callService(data);
+    return result;
+};
+
+exports.setSubscriptionType = function (accountId, email, customerId, subscriptionType) {
+    let data = {
+        urlPath       : UrlPath.SET_SUBSCRIPTION_TYPE,
+        requestMethod : 'POST',
+        request       : ApiRequest.getSetSubscriptionTypeRequest(accountId, email, customerId, subscriptionType)
     };
 
     let result = Util.callService(data);

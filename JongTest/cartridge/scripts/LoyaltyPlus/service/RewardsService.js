@@ -6,7 +6,6 @@ const Site = require('dw/system/Site');
 const RewardsRequest = require('../request/RewardsRequest');
 const Util = require('../util/Util');
 const UrlPath = require('../util/LoyaltyPlusConstants').UrlPath;
-const HTTPRequestPart = require('dw/net/HTTPRequestPart');
 
 exports.rewards = function (accountId) {
     let data = {

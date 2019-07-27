@@ -16,24 +16,23 @@
 *-   @output ExampleOut : Number
 *
 */
-var Mac = require('dw/crypto/Mac'),
-    MessageDigest = require('dw/crypto/MessageDigest'),
-    Encoding = require('dw/crypto/Encoding');
+let MessageDigest = require('dw/crypto/MessageDigest');
+let Encoding = require('dw/crypto/Encoding');
+let Bytes = require('dw/util/Bytes');
 
 function execute( pdict : PipelineDictionary ) : Number
 {
-    var secretKey = "mRz2DOoknIiXqodxijyBTKn7fwIHUFcS";
-    var signature = "",
-        mac = new Mac(Mac.HMAC_MD5);
+    var secretKey = "12345678901234567890123456789012";
+    var signature = "";
 
-    var params = { uuid: "Ok7fIz9V0jLqER7", email: "enroll_email@yoursite.com" };
+    var params = { uuid: "ABCDEFGHIJKLMNO", email: "test@500friends.com" };
 
     var keys = [];
-        for (var key in params) { 
-            if (params.hasOwnProperty(key)) { 
-                keys.push(key); 
-            }
-        };
+    for (var key in params) { 
+        if (params.hasOwnProperty(key)) { 
+            keys.push(key); 
+        }
+    };
     keys.sort();
 
     var dataToSign = secretKey;
@@ -42,27 +41,8 @@ function execute( pdict : PipelineDictionary ) : Number
         dataToSign += keys[i]+params[keys[i]];
     }
 
-    var dataToSignBytes = new dw.util.Bytes(dataToSign, "UTF-8");
-    var secretKeyBytes = Encoding.fromBase64(secretKey);
-
-    //var encryptor : MessageDigest = new MessageDigest("MD5").digest(dataToSign);
-
     var encryptor : MessageDigest = new MessageDigest('MD5');
-
-    var hash = dw.crypto.Encoding.toHex(encryptor.digestBytes(new dw.util.Bytes(dataToSign)));
-
-    //dataToSign: mRz2DOoknIiXqodxijyBTKn7fwIHUFcSemailenroll_email@yoursite.comuuidOk7fIz9V0jLqER7
-    //            mRz2DOoknIiXqodxijyBTKn7fwIHUFcSemailenroll_email@yoursite.comuuidOk7fIz9V0jLqER7
-
-    //var hash = dw.crypto.Encoding.toHex(encryptor.digestBytes(new dw.util.Bytes(lineToHash)));
-
-    if(!empty(dataToSign) && !empty(secretKey)){ 
-        hmcaMD5Hash = mac.digest(dataToSignBytes, secretKeyBytes);
-        //Generate a Base64-encoded signature
-        signature = Encoding.toHex(hmcaMD5Hash);
-    }
-    //params.sig = crypto.createHash('md5').update(string_to_hash).digest("hex");
-    //params.sig = crypto.createHash('md5').update(string_to_hash).digest("hex");
+    var hash = Encoding.toHex(encryptor.digestBytes(new Bytes(dataToSign)));
 
    return PIPELET_NEXT;
 }

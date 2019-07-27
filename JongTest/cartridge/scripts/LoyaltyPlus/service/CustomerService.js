@@ -6,7 +6,6 @@ const Site = require('dw/system/Site');
 const CustomerRequest = require('../request/CustomerRequest');
 const Util = require('../util/Util');
 const UrlPath = require('../util/LoyaltyPlusConstants').UrlPath;
-const HTTPRequestPart = require('dw/net/HTTPRequestPart');
 
 exports.updateCustomerInfo = function () {
 	let data = {
@@ -35,6 +34,17 @@ exports.updateAttributes = function (customerId, email, operation, path, value) 
         urlPath       : UrlPath.UPDATE_ATTRIBUTES,
         requestMethod : 'POST',
         request       : CustomerRequest.getUpdateAttributesRequest(customerId, email, operation, path, value)
+    };
+
+    let result = Util.callService(data);
+    return result;
+};
+
+exports.customerRewards = function (accountId, customerId, loyaltyPlusCustomerId, email) {
+    let data = {
+        urlPath       : UrlPath.CUSTOMER_REWARDS,
+        requestMethod : 'GET',
+        request       : CustomerRequest.getCustomerRewardsRequest(accountId, customerId, loyaltyPlusCustomerId, email)
     };
 
     let result = Util.callService(data);

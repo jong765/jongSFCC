@@ -46,6 +46,20 @@ exports.getUpdateAttributesRequest = function (customerId, email, operation, pat
     return updateAttributesRequest;
 }
 
+exports.getCustomerRewardsRequest = function (accountId, customerId, loyaltyPlusCustomerId, email) {
+    let customerRewardsRequest = {
+    	uuid 					: 	accountId,
+    	external_customer_id	:	customerId,
+    	customer_id				:	loyaltyPlusCustomerId,
+    	email					:	email
+    };
+    
+    customerRewardsRequest.sig = Util.getSignature(customerRewardsRequest);
+    
+    return customerRewardsRequest;
+}
+
+
 exports.getCustomerShowRequest = function (customerId, loyaltyPlusCustomerId, email) {
     let customerShowRequest = {
     	external_customer_id	:	customerId,
