@@ -9,15 +9,6 @@ const Calendar = require('dw/util/Calendar');
 const Util = require('~/cartridge/scripts/utils/Util');
 const CustomerMgr = require('dw/customer/CustomerMgr');
 
-/**
- * Get Delivery Date Estimation Object
- *
- * @param {String} zip
- * @param {String} country
- * @param {String} narvarCategory
- * @param {String} carrierCode
- * @returns {Object}
- */
 exports.getEnrollRequest = function (email, customerId, firstName, lastName, address1, city) {
     let enrollRequest = {};
     
