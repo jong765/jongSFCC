@@ -1,41 +1,40 @@
 'use strict';
 
-/**
- * Require dependencies
- */
-const StringUtils = require('dw/util/StringUtils');
-const URLUtils = require('dw/web/URLUtils');
-const Calendar = require('dw/util/Calendar');
-const Util = require('~/cartridge/scripts/utils/Util');
-const CustomerMgr = require('dw/customer/CustomerMgr');
-
-/**
- * Get Delivery Date Estimation Object
- *
- * @param {String} zip
- * @param {String} country
- * @param {String} narvarCategory
- * @param {String} carrierCode
- * @returns {Object}
- */
 exports.getEnrollRequest = function (email, customerId, firstName, lastName, address1, city) {
-    let enrollRequest = {};
-    
-    enrollRequest.email = email;
-    enrollRequest.external_customer_id = customerId;
-    enrollRequest.first_name = firstName;
-    enrollRequest.last_name = lastName;
-    enrollRequest.address_line_1 = address1;
-    enrollRequest.city = city;
+    let enrollRequest = {
+    	email					:	email,
+    	external_customer_id	:	customerId,
+    	first_name				:	firstName,
+    	last_name				:	lastName,
+    	address_line_1			:	address1,
+    	city					:	city
+    };
     
     return enrollRequest;
 }
 
+exports.getUpdateCustomerInfoRequest = function (customerId, email, firstName, lastName, addressLine1, addressLine2, city, state, postalCode) {
+	let updateCustomerInfoRequest = {
+		external_customer_id	:	customerId,
+		email					:	email,
+		first_name				: 	firstName,
+		last_name				:	lastName,
+		address_line_1			:	addressLine1,
+		address_line_2			:	addressLine2,
+		city					:	city,
+		state					:	state,
+		postal_code				:	postalCode
+	};
+	
+	return updateCustomerInfoRequest;
+}
+
 exports.getUpdateEmailRequest = function (customerId, fromEmail, toEmail) {
-    let updateEmailRequest = {};
-    updateEmailRequest.external_customer_id = customerId;
-    updateEmailRequest.from_email = fromEmail;
-    updateEmailRequest.to_email = toEmail;
+    let updateEmailRequest = {
+    	external_customer_id	:	customerId,
+    	from_email				:	fromEmail,
+    	to_email				: 	toEmail
+    };
 
     return updateEmailRequest;
 }
