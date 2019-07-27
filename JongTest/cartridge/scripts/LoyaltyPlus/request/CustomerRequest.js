@@ -1,17 +1,6 @@
 'use strict';
 
-exports.getEnrollRequest = function (email, customerId, firstName, lastName, address1, city) {
-    let enrollRequest = {
-    	email					:	email,
-    	external_customer_id	:	customerId,
-    	first_name				:	firstName,
-    	last_name				:	lastName,
-    	address_line_1			:	address1,
-    	city					:	city
-    };
-    
-    return enrollRequest;
-}
+const Util = require('../util/Util');
 
 exports.getUpdateCustomerInfoRequest = function (customerId, email, firstName, lastName, addressLine1, addressLine2, city, state, postalCode) {
 	let updateCustomerInfoRequest = {
@@ -26,6 +15,8 @@ exports.getUpdateCustomerInfoRequest = function (customerId, email, firstName, l
 		postal_code				:	postalCode
 	};
 	
+	updateCustomerInfoRequest.sig = Util.getSignature(updateCustomerInfoRequest);
+	
 	return updateCustomerInfoRequest;
 }
 
@@ -35,6 +26,34 @@ exports.getUpdateEmailRequest = function (customerId, fromEmail, toEmail) {
     	from_email				:	fromEmail,
     	to_email				: 	toEmail
     };
-
+    
+    updateEmailRequest.sig = Util.getSignature(updateEmailRequest);
+    
     return updateEmailRequest;
+}
+
+exports.getUpdateAttributesRequest = function (customerId, email, operation, path, value) {
+    let updateAttributesRequest = {
+    	external_customer_id	:	customerId,
+    	email					:	email,
+    	op						: 	operation,
+    	path					:	path,
+    	value					:	value
+    };
+    
+    updateAttributesRequest.sig = Util.getSignature(updateAttributesRequest);
+    
+    return updateAttributesRequest;
+}
+
+exports.getCustomerShowRequest = function (customerId, loyaltyPlusCustomerId, email) {
+    let customerShowRequest = {
+    	external_customer_id	:	customerId,
+    	customer_id				:	loyaltyPlusCustomerId,
+    	email					:	email
+    };
+    
+    customerShowRequest.sig = Util.getSignature(customerShowRequest);
+    
+    return customerShowRequest;
 }

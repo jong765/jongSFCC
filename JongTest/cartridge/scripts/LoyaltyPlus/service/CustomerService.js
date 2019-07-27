@@ -4,40 +4,50 @@ const ServiceRegistry = require('dw/svc/ServiceRegistry');
 const Status = require('dw/system/Status');
 const Site = require('dw/system/Site');
 const CustomerRequest = require('../request/CustomerRequest');
+const Util = require('../util/Util');
+const UrlPath = require('../util/LoyaltyPlusConstants').UrlPath;
 const HTTPRequestPart = require('dw/net/HTTPRequestPart');
-
-exports.enroll = function (email, customerId, firstName, lastName, address1, city) {
-    let data = {
-        urlPath       : '/api/enroll.json',
-        requestMethod : 'POST',
-        request       : CustomerRequest.getEnrollRequest(email, customerId, firstName, lastName, address1, city)
-    };
-
-    let result = callService(data);
-    return result;
-};
 
 exports.updateCustomerInfo = function () {
 	let data = {
-		urlPath       : '/data/customer/update_customer_info',
+		urlPath       : UrlPath.UPDATE_CUSTOMER_INFO,
 	    requestMethod : 'POST',
 	    request       : CustomerRequest.getUpdateCustomerInfoRequest(customerId, email, firstName, lastName, addressLine1, addressLine2, city, state, postalCode)
 	};
+	
+    let result = Util.callService(data);
+    return result;
 }
 
 exports.updateEmail = function (customerId, fromEmail, toEmail) {
     let data = {
-        urlPath       : '/data/customer/update_email',
+        urlPath       : UrlPath.UPDATE_EMAIL,
         requestMethod : 'POST',
         request       : CustomerRequest.getUpdateEmailRequest(customerId, fromEmail, toEmail)
     };
 
-    let result = callService(data);
+    let result = Util.callService(data);
     return result;
 };
 
-function callService(data) {
-	let loyaltyPlusServiceInit = require('~/cartridge/scripts/LoyaltyPlus/init/LoyaltyPlusServiceInit');
-    let response = loyaltyPlusServiceInit.LoyaltyPlusService('loyaltyplus.http.default').call(data);
-    return response;
-}
+exports.updateAttributes = function (customerId, email, operation, path, value) {
+    let data = {
+        urlPath       : UrlPath.UPDATE_ATTRIBUTES,
+        requestMethod : 'POST',
+        request       : CustomerRequest.getUpdateAttributesRequest(customerId, email, operation, path, value)
+    };
+
+    let result = Util.callService(data);
+    return result;
+};
+
+exports.customerShow = function (customerId, loyaltyPlusCustomerId, email) {
+    let data = {
+        urlPath       : UrlPath.CUSTOMER_SHOW,
+        requestMethod : 'GET',
+        request       : CustomerRequest.getCustomerShowRequest(customerId, loyaltyPlusCustomerId, email)
+    };
+
+    let result = Util.callService(data);
+    return result;
+};
