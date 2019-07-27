@@ -7,11 +7,11 @@ const ApiRequest = require('../request/ApiRequest');
 const Util = require('../util/Util');
 const UrlPath = require('../util/LoyaltyPlusConstants').UrlPath;
 
-exports.enroll = function (accountId, email, customerId, firstName, lastName, address) {
+exports.enroll = function (accountId, email, customerId, firstName, lastName, address, birthDate) {
     let data = {
         urlPath       : UrlPath.ENROLL,
         requestMethod : 'POST',
-        request       : ApiRequest.getEnrollRequest(accountId, email, customerId, firstName, lastName, address)
+        request       : ApiRequest.getEnrollRequest(accountId, email, customerId, firstName, lastName, address, birthDate)
     };
 
     let result = Util.callService(data);

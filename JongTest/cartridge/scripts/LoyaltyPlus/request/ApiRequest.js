@@ -2,7 +2,7 @@
 
 const Util = require('../util/Util');
 
-exports.getEnrollRequest = function (accountId, email, customerId, address) {
+exports.getEnrollRequest = function (accountId, email, customerId, address, birthDate) {
     let enrollRequest = {
     	uuid					:   accountId,
     	email					:	email,
@@ -17,7 +17,8 @@ exports.getEnrollRequest = function (accountId, email, customerId, address) {
     	country					:	address.country,
     	home_phone				:	address.homePhone,
     	work_phone				:	address.workPhone,
-    	mobile_phone			:	address.mobilePhone
+    	mobile_phone			:	address.mobilePhone,
+    	birthdate				:	birthDate
     };
     
     enrollRequest.sig = Util.getSignature(enrollRequest);
