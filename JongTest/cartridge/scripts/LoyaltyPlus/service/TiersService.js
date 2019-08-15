@@ -1,6 +1,6 @@
 'use strict';
 
-const TiersRequest = require('../request/TiersRequest');
+const TiersRequest = require('../service/request/TiersRequest');
 const Util = require('../util/Util');
 const UrlPath = require('../util/LoyaltyPlusConstants').UrlPath;
 

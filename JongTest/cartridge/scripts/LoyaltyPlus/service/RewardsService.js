@@ -3,7 +3,7 @@
 const ServiceRegistry = require('dw/svc/ServiceRegistry');
 const Status = require('dw/system/Status');
 const Site = require('dw/system/Site');
-const RewardsRequest = require('../request/RewardsRequest');
+const RewardsRequest = require('../service/request/RewardsRequest');
 const Util = require('../util/Util');
 const UrlPath = require('../util/LoyaltyPlusConstants').UrlPath;
 
