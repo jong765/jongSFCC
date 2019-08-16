@@ -3,6 +3,7 @@
 const MessageDigest = require('dw/crypto/MessageDigest');
 const Encoding = require('dw/crypto/Encoding');
 const Bytes = require('dw/util/Bytes');
+const CustomPreference = require('../util/LoyaltyPlusConstants').CustomPreference;
 
 exports.callService = function (data) {
 	let loyaltyPlusServiceInit = require('~/cartridge/scripts/LoyaltyPlus/init/LoyaltyPlusServiceInit');
@@ -11,10 +12,10 @@ exports.callService = function (data) {
 }
 
 exports.getSignature = function (params) {
-    let secretKey = "12345678901234567890123456789012";
+    let secretKey = CustomPreference.SECRET_KEY;
 
     let keys = [];
-    for (var key in params) { 
+    for (var key in params) {
         if (params.hasOwnProperty(key)) { 
             keys.push(key); 
         }

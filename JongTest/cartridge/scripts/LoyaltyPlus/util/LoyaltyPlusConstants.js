@@ -1,3 +1,5 @@
+var Site = require('dw/system/Site');
+
 var UrlPath = {
 	ENROLL 					: "/api/enroll.json",
 	REWARD_REDEEM 			: "/api/reward_redeem.json",
@@ -11,4 +13,9 @@ var UrlPath = {
 	TIERS 					: "/data/tiers"
 }
 
+var CustomPreference = {
+	SECRET_KEY				: Site.current.preferences.custom.lpSecretKey;	
+}
+
 module.exports.UrlPath = UrlPath;
+module.exports.CustomPreference = CustomPreference;
