@@ -7,6 +7,21 @@ const ApiRequest = require('../service/request/ApiRequest');
 const Util = require('../util/Util');
 const UrlPath = require('../util/LoyaltyPlusConstants').UrlPath;
 
+/**
+ * Ping the LoyaltyPlus API server.
+ *
+ * @returns {Object}
+ */
+exports.ping = function () {
+    let data = {
+            urlPath       : UrlPath.PING,
+            requestMethod : 'POST',
+            request       : ApiRequest.getEnrollRequest(accountId, email, customerId, firstName, lastName, address, birthDate)
+        };
+
+    let result = Util.callService(data);
+    return result;
+};
 
 /**
  * Enroll a customer in the program.
