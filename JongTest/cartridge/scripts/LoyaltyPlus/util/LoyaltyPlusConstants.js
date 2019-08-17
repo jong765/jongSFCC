@@ -1,3 +1,5 @@
+var Site = require('dw/system/Site');
+
 var UrlPath = {
 	CUSTOMER_REWARDS 		: "/data/customer/rewards",
 	CUSTOMER_SHOW 			: "/data/customer/show",
@@ -12,4 +14,9 @@ var UrlPath = {
 	TIERS 					: "/data/tiers"
 }
 
+var CustomPreference = {
+	SECRET_KEY				: Site.current.preferences.custom.lpSecretKey;	
+}
+
 module.exports.UrlPath = UrlPath;
+module.exports.CustomPreference = CustomPreference;

@@ -5,7 +5,7 @@
   <branch basename="Start">
     <segment>
       <node>
-        <start-node call-mode="public" name="Start" secure="false"/>
+        <start-node call-mode="private" name="Start" secure="false"/>
         <node-display x="1" y="1"/>
       </node>
       <simple-transition>
@@ -17,7 +17,7 @@
         <pipelet-node pipelet-name="Script" pipelet-set-identifier="bc_api">
           <config-property key="Transactional" value="false"/>
           <config-property key="OnError" value="PIPELET_ERROR"/>
-          <config-property key="ScriptFile" value="JK_Test.ds"/>
+          <config-property key="ScriptFile" value="Test.js"/>
           <key-binding alias="null" key="ScriptLog"/>
         </pipelet-node>
         <node-display x="0" y="1"/>
