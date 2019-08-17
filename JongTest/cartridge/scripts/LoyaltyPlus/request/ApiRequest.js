@@ -1,6 +1,6 @@
 'use strict';
 
-const Util = require('../util/Util');
+var Util = require('../util/Util');
 
 exports.getPingRequest = function () {
     let pingRequest = {};

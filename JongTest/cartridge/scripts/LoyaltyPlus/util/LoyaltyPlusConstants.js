@@ -14,11 +14,11 @@ var UrlPath = {
 	UPDATE_EMAIL 			: "/data/customer/update_email",
 	UPDATE_ATTRIBUTES 		: "/data/customer/update_attributes",
 	TIERS 					: "/data/tiers"
-}
+};
 
 var CustomPreference = {
-	SECRET_KEY				: Site.current.preferences.custom.lpSecretKey;	
-}
+	SECRET_KEY				: Site.current.preferences.custom.lpSecretKey
+};
 
 module.exports.UrlPath = UrlPath;
 module.exports.CustomPreference = CustomPreference;
