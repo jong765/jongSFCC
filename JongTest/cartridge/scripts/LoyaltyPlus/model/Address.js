@@ -1,4 +1,5 @@
 'use strict';
+
 var Class = require('../util/Class').Class;
 
 var Address = Class.extend({

@@ -2,6 +2,12 @@
 
 const Util = require('../util/Util');
 
+exports.getPingRequest = function () {
+    let pingRequest = {};
+    
+    return pingRequest;
+}
+
 exports.getEnrollRequest = function (accountId, email, customerId, address, birthDate) {
     let enrollRequest = {
     	uuid					:   accountId,

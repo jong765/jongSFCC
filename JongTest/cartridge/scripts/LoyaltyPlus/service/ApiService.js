@@ -15,8 +15,8 @@ const UrlPath = require('../util/LoyaltyPlusConstants').UrlPath;
 exports.ping = function () {
     let data = {
             urlPath       : UrlPath.PING,
-            requestMethod : 'POST',
-            request       : ApiRequest.getEnrollRequest(accountId, email, customerId, firstName, lastName, address, birthDate)
+            requestMethod : 'GET',
+            request       : ApiRequest.getPingRequest()
         };
 
     let result = Util.callService(data);
