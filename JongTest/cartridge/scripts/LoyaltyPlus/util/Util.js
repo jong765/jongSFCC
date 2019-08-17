@@ -5,13 +5,15 @@ const Encoding = require('dw/crypto/Encoding');
 const Bytes = require('dw/util/Bytes');
 const CustomPreference = require('../util/LoyaltyPlusConstants').CustomPreference;
 
-exports.callService = function (data) {
+var Util = {};
+
+Util.callService = function (data) {
 	let loyaltyPlusServiceInit = require('~/cartridge/scripts/LoyaltyPlus/init/LoyaltyPlusServiceInit');
     let response = loyaltyPlusServiceInit.LoyaltyPlusService('loyaltyplus.http.default').call(data);
     return response;
 }
 
-exports.getSignature = function (params) {
+Util.getSignature = function (params) {
     let secretKey = CustomPreference.SECRET_KEY;
 
     let keys = [];
@@ -32,3 +34,5 @@ exports.getSignature = function (params) {
     let signature = Encoding.toHex(encryptor.digestBytes(new Bytes(dataToSign)));
     return signature;
 }
+
+module.exports = Util;

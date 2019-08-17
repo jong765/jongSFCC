@@ -17,7 +17,7 @@ exports.ping = function () {
             urlPath       : UrlPath.PING,
             requestMethod : 'GET',
             request       : ApiRequest.getPingRequest()
-        };
+    };
 
     let result = Util.callService(data);
     return result;
