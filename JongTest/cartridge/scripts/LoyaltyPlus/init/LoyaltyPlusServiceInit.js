@@ -1,6 +1,8 @@
 'use strict';
 
 const LocalServiceRegistry = require('dw/svc/LocalServiceRegistry');
+var Logger = require('dw/system/Logger');
+var logger = Logger.getLogger("loyaltyplus-error", "LoyaltyPlusServiceInit.js");
 
 exports.LoyaltyPlusService = function (serviceId) {
 	return LocalServiceRegistry.createService(serviceId, {
@@ -8,6 +10,7 @@ exports.LoyaltyPlusService = function (serviceId) {
 	    createRequest: function(svc, args) {
 	        var url                 = svc.configuration.credential.URL + args.urlPath;
 	        var requestMethod       = args.requestMethod;
+	        var request 			= args.request;
 	        
 	        svc.addHeader('Content-Type', 'application/json');
 	        svc.setRequestMethod(requestMethod);

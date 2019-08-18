@@ -9,7 +9,10 @@ var Util = {};
 
 Util.callService = function (data) {
 	let loyaltyPlusServiceInit = require('~/cartridge/scripts/LoyaltyPlus/init/LoyaltyPlusServiceInit');
-    let response = loyaltyPlusServiceInit.LoyaltyPlusService('loyaltyplus.http.default').call(data);
+    let service = loyaltyPlusServiceInit.LoyaltyPlusService('loyaltyplus.http.default');
+    service.addParam("uuid", data.uuid);
+    service.addParam("sig", data.sig);
+    let response = service.call(data);
     return response;
 }
 
