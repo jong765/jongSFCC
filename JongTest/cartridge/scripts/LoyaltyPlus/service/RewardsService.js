@@ -7,11 +7,11 @@ const RewardsRequest = require('../serviceRequest/RewardsRequest');
 const Util = require('../util/Util');
 const UrlPath = require('../util/LoyaltyPlusConstants').UrlPath;
 
-exports.rewards = function (accountId) {
+exports.rewards = function () {
     let data = {
         urlPath       : UrlPath.REWARDS,
         requestMethod : 'GET',
-        request       : RewardsRequest.getRewardsRequest(accountId)
+        request       : RewardsRequest.getRewardsRequest()
     };
 
     let result = Util.callService(data);

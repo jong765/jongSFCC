@@ -17,8 +17,9 @@
         <pipelet-node pipelet-name="Script" pipelet-set-identifier="bc_api">
           <config-property key="Transactional" value="false"/>
           <config-property key="OnError" value="PIPELET_ERROR"/>
-          <config-property key="ScriptFile" value="LoyaltyPlus/test/test.js"/>
+          <config-property key="ScriptFile" value="LoyaltyPlus/reward/GetRewards.js"/>
           <key-binding alias="null" key="ScriptLog"/>
+          <key-binding alias="rewards" key="rewards"/>
         </pipelet-node>
         <node-display x="0" y="1"/>
       </node>

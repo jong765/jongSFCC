@@ -1,7 +1,7 @@
 'use strict';
 
-var Util = require('../util/Util');
-var CustomPreference = require('../util/LoyaltyPlusConstants').CustomPreference;
+const Util = require('../util/Util');
+const CustomPreference = require('../util/LoyaltyPlusConstants').CustomPreference;
 
 exports.getPingRequest = function () {
     let pingRequest = {};

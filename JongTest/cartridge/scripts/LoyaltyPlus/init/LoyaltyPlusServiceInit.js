@@ -6,16 +6,15 @@ exports.LoyaltyPlusService = function (serviceId) {
 	return LocalServiceRegistry.createService(serviceId, {
 
 	    createRequest: function(svc, args) {
-	        var url                 = svc.configuration.credential.URL + args.urlPath,
-	            requestMethod       = args.requestMethod,
-	            requiredBodyMethods = ['POST', 'PUT'];
-	
+	        var url                 = svc.configuration.credential.URL + args.urlPath;
+	        var requestMethod       = args.requestMethod;
+	        
 	        svc.addHeader('Content-Type', 'application/json');
 	        svc.setRequestMethod(requestMethod);
 	        svc.setURL(url);
 	
-	        if (requiredBodyMethods.indexOf(requestMethod) >= 0) {
-	            return JSON.stringify(args.request);
+	        if (requestMethod === "POST") {
+	        	return JSON.stringify(args.request);
 	        }
 	    },
 	
