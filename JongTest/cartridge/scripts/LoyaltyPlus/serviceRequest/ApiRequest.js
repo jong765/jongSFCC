@@ -1,16 +1,16 @@
 'use strict';
 
-const Util = require('../util/Util');
-const CustomPreference = require('../util/LoyaltyPlusConstants').CustomPreference;
+var Util = require('../util/Util');
+var CustomPreference = require('../util/LoyaltyPlusConstants').CustomPreference;
 
 exports.getPingRequest = function () {
-    let pingRequest = {};
+    var pingRequest = {};
     
     return pingRequest;
 }
 
 exports.getEnrollRequest = function (email, customerId, address, birthDate) {
-    let enrollRequest = {
+    var enrollRequest = {
     	uuid					:   CustomPreference.ACCOUNT_ID,
     	email					:	email,
     	external_customer_id	:	customerId,
@@ -34,7 +34,7 @@ exports.getEnrollRequest = function (email, customerId, address, birthDate) {
 }
 
 exports.getRewardRedeemRequest = function (email, rewardId) {
-    let rewardRedeemRequest = {
+    var rewardRedeemRequest = {
     	uuid					:	CustomPreference.ACCOUNT_ID,
     	email					:	email,
     	reward_id				:	rewardId
@@ -46,7 +46,7 @@ exports.getRewardRedeemRequest = function (email, rewardId) {
 }
 
 exports.getSetSubscriptionTypeRequest = function (email, customerId, subscriptionType) {
-    let setSubscriptionTypeRequest = {
+    var setSubscriptionTypeRequest = {
     	uuid					:	CustomPreference.ACCOUNT_ID,
     	email					:	email,
     	external_customer_id	:	customerId,

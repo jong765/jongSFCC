@@ -1,9 +1,9 @@
 'use strict';
 
-const Util = require('../util/Util');
+var Util = require('../util/Util');
 
 exports.getTiersRequest = function (accountId) {
-    let tiersRequest = {
+    var tiersRequest = {
     	uuid	:	accountId
     };
     

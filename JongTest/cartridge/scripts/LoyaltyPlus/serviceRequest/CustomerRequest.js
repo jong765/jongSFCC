@@ -1,9 +1,9 @@
 'use strict';
 
-const Util = require('../util/Util');
+var Util = require('../util/Util');
 
 exports.getUpdateCustomerInfoRequest = function (customerId, email, firstName, lastName, addressLine1, addressLine2, city, state, postalCode) {
-	let updateCustomerInfoRequest = {
+	var updateCustomerInfoRequest = {
 		external_customer_id	:	customerId,
 		email					:	email,
 		first_name				: 	firstName,
@@ -21,7 +21,7 @@ exports.getUpdateCustomerInfoRequest = function (customerId, email, firstName, l
 }
 
 exports.getUpdateEmailRequest = function (customerId, fromEmail, toEmail) {
-    let updateEmailRequest = {
+    var updateEmailRequest = {
     	external_customer_id	:	customerId,
     	from_email				:	fromEmail,
     	to_email				: 	toEmail
@@ -33,7 +33,7 @@ exports.getUpdateEmailRequest = function (customerId, fromEmail, toEmail) {
 }
 
 exports.getUpdateAttributesRequest = function (customerId, email, operation, path, value) {
-    let updateAttributesRequest = {
+    var updateAttributesRequest = {
     	external_customer_id	:	customerId,
     	email					:	email,
     	op						: 	operation,
@@ -47,7 +47,7 @@ exports.getUpdateAttributesRequest = function (customerId, email, operation, pat
 }
 
 exports.getCustomerRewardsRequest = function (accountId, customerId, loyaltyPlusCustomerId, email) {
-    let customerRewardsRequest = {
+    var customerRewardsRequest = {
     	uuid 					: 	accountId,
     	external_customer_id	:	customerId,
     	customer_id				:	loyaltyPlusCustomerId,
@@ -61,7 +61,7 @@ exports.getCustomerRewardsRequest = function (accountId, customerId, loyaltyPlus
 
 
 exports.getCustomerShowRequest = function (customerId, loyaltyPlusCustomerId, email) {
-    let customerShowRequest = {
+    var customerShowRequest = {
     	external_customer_id	:	customerId,
     	customer_id				:	loyaltyPlusCustomerId,
     	email					:	email

@@ -1,11 +1,11 @@
 'use strict';
 
-const ServiceRegistry = require('dw/svc/ServiceRegistry');
-const Status = require('dw/system/Status');
-const Site = require('dw/system/Site');
-const ApiRequest = require('../serviceRequest/ApiRequest');
-const Util = require('../util/Util');
-const UrlPath = require('../util/LoyaltyPlusConstants').UrlPath;
+var ServiceRegistry = require('dw/svc/ServiceRegistry');
+var Status = require('dw/system/Status');
+var Site = require('dw/system/Site');
+var ApiRequest = require('../serviceRequest/ApiRequest');
+var Util = require('../util/Util');
+var UrlPath = require('../util/LoyaltyPlusConstants').UrlPath;
 
 /**
  * Ping the LoyaltyPlus API server.
@@ -13,13 +13,13 @@ const UrlPath = require('../util/LoyaltyPlusConstants').UrlPath;
  * @returns {Object}
  */
 exports.ping = function () {
-    let data = {
+    var data = {
             urlPath       : UrlPath.PING,
             requestMethod : 'GET',
             request       : ApiRequest.getPingRequest()
     };
 
-    let result = Util.callService(data);
+    var result = Util.callService(data);
     return result;
 };
 
@@ -36,13 +36,13 @@ exports.ping = function () {
  * @returns {Object}
  */
 exports.enroll = function (email, customerId, firstName, lastName, address, birthDate) {
-    let data = {
+    var data = {
         urlPath       : UrlPath.ENROLL,
         requestMethod : 'POST',
         request       : ApiRequest.getEnrollRequest(email, customerId, firstName, lastName, address, birthDate)
     };
 
-    let result = Util.callService(data);
+    var result = Util.callService(data);
     return result;
 };
 
@@ -56,23 +56,23 @@ exports.enroll = function (email, customerId, firstName, lastName, address, birt
  * @returns {Object}
  */
 exports.rewardRedeem = function (accountId, email, rewardId) {
-    let data = {
+    var data = {
         urlPath       : UrlPath.REWARD_REDEEM,
         requestMethod : 'POST',
         request       : ApiRequest.getRewardRedeemRequest(accountId, email, rewardId)
     };
 
-    let result = Util.callService(data);
+    var result = Util.callService(data);
     return result;
 };
 
 exports.setSubscriptionType = function (accountId, email, customerId, subscriptionType) {
-    let data = {
+    var data = {
         urlPath       : UrlPath.SET_SUBSCRIPTION_TYPE,
         requestMethod : 'POST',
         request       : ApiRequest.getSetSubscriptionTypeRequest(accountId, email, customerId, subscriptionType)
     };
 
-    let result = Util.callService(data);
+    var result = Util.callService(data);
     return result;
 };

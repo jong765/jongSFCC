@@ -1,20 +1,20 @@
 'use strict';
 
-const ServiceRegistry = require('dw/svc/ServiceRegistry');
-const Status = require('dw/system/Status');
-const Site = require('dw/system/Site');
-const CustomerRequest = require('../serviceRequest/CustomerRequest');
-const Util = require('../util/Util');
-const UrlPath = require('../util/LoyaltyPlusConstants').UrlPath;
+var ServiceRegistry = require('dw/svc/ServiceRegistry');
+var Status = require('dw/system/Status');
+var Site = require('dw/system/Site');
+var CustomerRequest = require('../serviceRequest/CustomerRequest');
+var Util = require('../util/Util');
+var UrlPath = require('../util/LoyaltyPlusConstants').UrlPath;
 
 exports.updateCustomerInfo = function () {
-	let data = {
+	var data = {
 		urlPath       : UrlPath.UPDATE_CUSTOMER_INFO,
 	    requestMethod : 'POST',
 	    request       : CustomerRequest.getUpdateCustomerInfoRequest(customerId, email, firstName, lastName, addressLine1, addressLine2, city, state, postalCode)
 	};
 	
-    let result = Util.callService(data);
+    var result = Util.callService(data);
     return result;
 }
 

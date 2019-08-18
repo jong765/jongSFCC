@@ -1,10 +1,10 @@
 'use strict';
 
-const Util = require('../util/Util');
-const CustomPreference = require('../util/LoyaltyPlusConstants').CustomPreference;
+var Util = require('../util/Util');
+var CustomPreference = require('../util/LoyaltyPlusConstants').CustomPreference;
 
 exports.getRewardsRequest = function () {
-    let rewardsRequest = {
+    var rewardsRequest = {
     	uuid	:	CustomPreference.ACCOUNT_ID
     };
     

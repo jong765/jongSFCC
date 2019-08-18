@@ -1,6 +1,6 @@
 'use strict';
 
-const LocalServiceRegistry = require('dw/svc/LocalServiceRegistry');
+var LocalServiceRegistry = require('dw/svc/LocalServiceRegistry');
 var Logger = require('dw/system/Logger');
 var logger = Logger.getLogger("loyaltyplus-error", "LoyaltyPlusServiceInit.js");
 

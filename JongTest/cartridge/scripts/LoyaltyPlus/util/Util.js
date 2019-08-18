@@ -10,10 +10,13 @@ var Util = {};
 Util.callService = function (data) {
 	var loyaltyPlusServiceInit = require('~/cartridge/scripts/LoyaltyPlus/init/LoyaltyPlusServiceInit');
     var service = loyaltyPlusServiceInit.LoyaltyPlusService('loyaltyplus.http.default');
-    service.addParam("uuid", data.uuid);
-    service.addParam("sig", data.sig);
-    var response = service.call(data);
-    return response;
+    
+    for(var property in data.request){
+        service.addParam(property, data.request[property]);
+    }
+    
+    var result = service.call(data);
+    return result;
 }
 
 Util.getSignature = function (params) {

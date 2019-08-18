@@ -1,16 +1,16 @@
 'use strict';
 
-const TiersRequest = require('../serviceRequest/TiersRequest');
-const Util = require('../util/Util');
-const UrlPath = require('../util/LoyaltyPlusConstants').UrlPath;
+var TiersRequest = require('../serviceRequest/TiersRequest');
+var Util = require('../util/Util');
+var UrlPath = require('../util/LoyaltyPlusConstants').UrlPath;
 
 exports.tiers = function (accountId) {
-    let data = {
+    var data = {
         urlPath       : UrlPath.TIERS,
         requestMethod : 'GET',
         request       : TiersRequest.getTiersRequest(accountId)
     };
 
-    let result = Util.callService(data);
+    var result = Util.callService(data);
     return result;
 };
