@@ -1,6 +1,7 @@
 'use strict';
 
 var Util = require('../util/Util');
+var CustomPreference = require('../util/LoyaltyPlusConstants').CustomPreference;
 
 exports.getPingRequest = function () {
     let pingRequest = {};
@@ -8,9 +9,9 @@ exports.getPingRequest = function () {
     return pingRequest;
 }
 
-exports.getEnrollRequest = function (accountId, email, customerId, address, birthDate) {
+exports.getEnrollRequest = function (email, customerId, address, birthDate) {
     let enrollRequest = {
-    	uuid					:   accountId,
+    	uuid					:   CustomPreference.ACCOUNT_ID,
     	email					:	email,
     	external_customer_id	:	customerId,
     	first_name				:	firstName,
@@ -32,9 +33,9 @@ exports.getEnrollRequest = function (accountId, email, customerId, address, birt
     return enrollRequest;
 }
 
-exports.getRewardRedeemRequest = function (accountId, email, rewardId) {
+exports.getRewardRedeemRequest = function (email, rewardId) {
     let rewardRedeemRequest = {
-    	uuid					:	accountId,
+    	uuid					:	CustomPreference.ACCOUNT_ID,
     	email					:	email,
     	reward_id				:	rewardId
     };
@@ -44,9 +45,9 @@ exports.getRewardRedeemRequest = function (accountId, email, rewardId) {
     return rewardRedeemRequest;
 }
 
-exports.getSetSubscriptionTypeRequest = function (accountId, email, customerId, subscriptionType) {
+exports.getSetSubscriptionTypeRequest = function (email, customerId, subscriptionType) {
     let setSubscriptionTypeRequest = {
-    	uuid					:	accountId,
+    	uuid					:	CustomPreference.ACCOUNT_ID,
     	email					:	email,
     	external_customer_id	:	customerId,
     	subscription_type		:	subscriptionType

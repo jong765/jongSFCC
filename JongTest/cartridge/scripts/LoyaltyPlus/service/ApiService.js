@@ -3,7 +3,7 @@
 const ServiceRegistry = require('dw/svc/ServiceRegistry');
 const Status = require('dw/system/Status');
 const Site = require('dw/system/Site');
-const ApiRequest = require('../request/ApiRequest');
+const ApiRequest = require('../serviceRequest/ApiRequest');
 const Util = require('../util/Util');
 const UrlPath = require('../util/LoyaltyPlusConstants').UrlPath;
 
@@ -35,11 +35,11 @@ exports.ping = function () {
  * @param (String) birthDate
  * @returns {Object}
  */
-exports.enroll = function (accountId, email, customerId, firstName, lastName, address, birthDate) {
+exports.enroll = function (email, customerId, firstName, lastName, address, birthDate) {
     let data = {
         urlPath       : UrlPath.ENROLL,
         requestMethod : 'POST',
-        request       : ApiRequest.getEnrollRequest(accountId, email, customerId, firstName, lastName, address, birthDate)
+        request       : ApiRequest.getEnrollRequest(email, customerId, firstName, lastName, address, birthDate)
     };
 
     let result = Util.callService(data);

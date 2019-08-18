@@ -17,6 +17,7 @@ var UrlPath = {
 };
 
 var CustomPreference = {
+	ACCOUNT_ID				: Site.current.preferences.custom.lpAccountID,
 	SECRET_KEY				: Site.current.preferences.custom.lpSecretKey
 };
 
