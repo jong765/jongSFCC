@@ -24,7 +24,7 @@ function rejectEvent(args) {
     };
 
     try {
-    	var result = EventService.reject(args.emailAddress, args.extCustomerId, args.eventId);
+    	var result = EventService.reject(emailAddress, extCustomerId, eventId);
     } catch (e) {
         var exception = e;
         var errMessage = exception.message + "\n" + exception.stack;

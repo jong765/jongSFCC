@@ -1,6 +1,5 @@
 'use strict';
 
-var ServiceRegistry = require('dw/svc/ServiceRegistry');
 var Status = require('dw/system/Status');
 var Site = require('dw/system/Site');
 var CustomerRequest = require('../serviceRequest/CustomerRequest');

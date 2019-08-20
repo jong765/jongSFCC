@@ -3,12 +3,14 @@
 var Site = require('dw/system/Site');
 
 var UrlPath = {
+	APPROVE                 : "/data/event/approve",
 	CREATE_REFERRAL			: "/api/referral/create",
 	CUSTOMER_REWARDS 		: "/data/customer/rewards",
 	CUSTOMER_SHOW 			: "/data/customer/show",
 	ENROLL 					: "/api/enroll.json",
 	PING					: "/api/ping",
 	RECORD					: "/api/record.json",
+	REJECT					: "/data/event/reject",
 	REWARDS 				: "/data/rewards",
 	REWARD_REDEEM 			: "/api/reward_redeem.json",
 	SET_SUBSCRIPTION_TYPE 	: "/api/set_subscription_type.json",

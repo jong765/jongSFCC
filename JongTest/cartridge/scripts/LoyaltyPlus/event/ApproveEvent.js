@@ -24,7 +24,7 @@ function approveEvent(args) {
     };
 
     try {
-    	var result = EventService.record(args.emailAddress, args.extCustomerId, args.eventId);
+    	var result = EventService.approve(args.emailAddress, args.extCustomerId, args.eventId);
     } catch (e) {
         var exception = e;
         var errMessage = exception.message + "\n" + exception.stack;

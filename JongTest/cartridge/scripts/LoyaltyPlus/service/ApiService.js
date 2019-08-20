@@ -1,6 +1,5 @@
 'use strict';
 
-var ServiceRegistry = require('dw/svc/ServiceRegistry');
 var Status = require('dw/system/Status');
 var Site = require('dw/system/Site');
 var ApiRequest = require('../serviceRequest/ApiRequest');
@@ -57,24 +56,6 @@ exports.enroll = function (email, customerId, firstName, lastName, address, birt
         urlPath       : UrlPath.ENROLL,
         requestMethod : 'POST',
         request       : ApiRequest.getEnrollRequest(email, customerId, firstName, lastName, address, birthDate)
-    };
-
-    var result = Util.callService(data);
-    return result;
-};
-
-/**
- * Record an event.
- *
- * @param {String} emailAddress
- * @param {String} extCustomerId
- * @param {String} type
- */
-exports.record = function (emailAddress, extCustomerId, type) {
-    var data = {
-        urlPath       : UrlPath.RECORD,
-        requestMethod : 'POST',
-        request       : ApiRequest.getRecordEventRequest(emailAddress, extCustomerId, type)
     };
 
     var result = Util.callService(data);
