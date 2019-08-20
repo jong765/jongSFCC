@@ -8,6 +8,24 @@ var Util = require('../util/Util');
 var UrlPath = require('../util/LoyaltyPlusConstants').UrlPath;
 
 /**
+ * Generate a new code on behalf of the referee with the submitted details.
+ *
+ * @param {String} emailAddress
+ * @param {String} extCustomerId
+ * @param {String} type
+ */
+exports.createReferral = function (emailAddress, lpCustomerId, extCustomerId) {
+    var data = {
+        urlPath       : UrlPath.CREATE_REFERRAL,
+        requestMethod : 'POST',
+        request       : ApiRequest.getCreateReferralRequest(emailAddress, lpCustomerId, extCustomerId)
+    };
+
+    var result = Util.callService(data);
+    return result;
+};
+
+/**
  * Ping the LoyaltyPlus API server.
  *
  * @returns {Object}
@@ -26,7 +44,6 @@ exports.ping = function () {
 /**
  * Enroll a customer in the program.
  *
- * @param {String} accountId
  * @param {String} email
  * @param {String} customerId
  * @param {String} firstName
@@ -47,19 +64,37 @@ exports.enroll = function (email, customerId, firstName, lastName, address, birt
 };
 
 /**
+ * Record an event.
+ *
+ * @param {String} emailAddress
+ * @param {String} extCustomerId
+ * @param {String} type
+ */
+exports.record = function (emailAddress, extCustomerId, type) {
+    var data = {
+        urlPath       : UrlPath.RECORD,
+        requestMethod : 'POST',
+        request       : ApiRequest.getRecordEventRequest(emailAddress, extCustomerId, type)
+    };
+
+    var result = Util.callService(data);
+    return result;
+};
+
+/**
  * Trigger a reward redemption. A 'reward' event will be recorded. 
  * If a trigger email has been configured, the reward trigger email will be sent.
  *
- * @param {String} accountId
- * @param {String} email
+ * @param {String} emailAddress
+ * @param {String} extCustomerId
  * @param {String} rewardId
  * @returns {Object}
  */
-exports.rewardRedeem = function (accountId, email, rewardId) {
+exports.redeemReward = function (emailAddress, extCustomerId, rewardId) {
     var data = {
         urlPath       : UrlPath.REWARD_REDEEM,
         requestMethod : 'POST',
-        request       : ApiRequest.getRewardRedeemRequest(accountId, email, rewardId)
+        request       : ApiRequest.getRewardRedeemRequest(emailAddress, extCustomerId, rewardId)
     };
 
     var result = Util.callService(data);

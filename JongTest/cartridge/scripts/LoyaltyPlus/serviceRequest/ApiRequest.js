@@ -4,6 +4,19 @@ var Util = require('../util/Util');
 var CustomPreference = require('../util/LoyaltyPlusConstants').CustomPreference;
 var Constant = require('../util/LoyaltyPlusConstants').Constant;
 
+exports.getCreateReferralRequest = function (emailAddress, lpCustomerId, extCustomerId) {
+    var createReferralRequest = {
+    	uuid					:	CustomPreference.ACCOUNT_ID,
+    	email					:	emailAddress,
+    	customer_id				:	lpCustomerId,
+    	external_customer_id	:	extCustomerId
+    };
+    
+    createReferralRequest.sig = Util.getSignature(createReferralRequest);
+    
+    return createReferralRequest;
+}
+
 exports.getPingRequest = function () {
     var pingRequest = {};
     
@@ -35,16 +48,30 @@ exports.getEnrollRequest = function (email, customerId, address, birthDate) {
     return enrollRequest;
 }
 
-exports.getRewardRedeemRequest = function (email, rewardId) {
-    var rewardRedeemRequest = {
+exports.getRecordEventRequest = function (emailAddress, extCustomerId, type) {
+    var recordEventRequest = {
+    	uuid					:	CustomPreference.ACCOUNT_ID,
+    	email					:	emailAddress,
+    	external_customer_id	:	extCustomerId,
+    	type					:	type
+    };
+    
+    recordEventRequest.sig = Util.getSignature(recordEventRequest);
+    
+    return recordEventRequest;
+}
+
+exports.getRedeemRewardRequest = function (email, extCustomerId, rewardId) {
+    var redeemRewardRequest = {
     	uuid					:	CustomPreference.ACCOUNT_ID,
     	email					:	email,
+    	external_customer_id    :   extCustomerId,
     	reward_id				:	rewardId
     };
     
-    rewardRedeemRequest.sig = Util.getSignature(rewardRedeemRequest);
+    redeemRewardRequest.sig = Util.getSignature(redeemRewardRequest);
     
-    return rewardRedeemRequest;
+    return redeemRewardRequest;
 }
 
 exports.getSetSubscriptionTypeRequest = function (email, customerId, subscriptionType) {

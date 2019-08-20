@@ -14,28 +14,26 @@ var Logger = require('dw/system/Logger');
 var logger = Logger.getLogger("loyaltyplus-error", "RecordEvent.js");
 
 function execute(args) {
-	var customerShowResponse = customerShow(args);
-    args.customerInfo = customerShowResponse.customerInfo;
-    return customerShowResponse.success ? PIPELET_NEXT : PIPELET_ERROR;
+	var recordEventResponse = recordEvent(args);
+    return recordEventResponse.success ? PIPELET_NEXT : PIPELET_ERROR;
 }
 
-function customerShow(args) {
-    var customerShowResponse = {
-    	success 		: 	false,
-    	customerInfo 	: 	null
+function recordEvent(args) {
+    var recordEventResponse = {
+    	success 		: 	false
     };
 
     try {
-    	var result = CustomerService.customerShow(args.emailAddress, args.lpCustomerId, args.extCustomerId);
+    	var result = ApiService.record(args.emailAddress, args.extCustomerId, args.type);
     } catch (e) {
         var exception = e;
         var errMessage = exception.message + "\n" + exception.stack;
         logger.error(errMessage);
     }
-    return customerShowResponse;
+    return recordEventResponse;
 }
 
 module.exports = {
     'execute': execute,
-    'customerShow': customerShow
+    'recordEvent': recordEvent
 }
