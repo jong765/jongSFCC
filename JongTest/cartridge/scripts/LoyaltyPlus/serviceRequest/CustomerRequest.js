@@ -2,17 +2,17 @@
 
 var Util = require('../util/Util');
 
-exports.getUpdateCustomerInfoRequest = function (customerId, email, firstName, lastName, addressLine1, addressLine2, city, state, postalCode) {
+exports.getUpdateCustomerInfoRequest = function (emailAddress, extCustomerId, firstName, lastName, birthDate, address) {
 	var updateCustomerInfoRequest = {
-		external_customer_id	:	customerId,
-		email					:	email,
+		external_customer_id	:	extCustomerId,
+		email					:	emailAddress,
 		first_name				: 	firstName,
 		last_name				:	lastName,
-		address_line_1			:	addressLine1,
-		address_line_2			:	addressLine2,
-		city					:	city,
-		state					:	state,
-		postal_code				:	postalCode
+		address_line_1			:	address.address1,
+		address_line_2			:	address.address2,
+		city					:	address.city,
+		state					:	address.state,
+		postal_code				:	address.postalCode
 	};
 	
 	updateCustomerInfoRequest.sig = Util.getSignature(updateCustomerInfoRequest);
@@ -60,11 +60,11 @@ exports.getCustomerRewardsRequest = function (accountId, customerId, loyaltyPlus
 }
 
 
-exports.getCustomerShowRequest = function (customerId, loyaltyPlusCustomerId, email) {
+exports.getCustomerShowRequest = function (emailAddress, lpCustomerId, extCustomerId) {
     var customerShowRequest = {
-    	external_customer_id	:	customerId,
-    	customer_id				:	loyaltyPlusCustomerId,
-    	email					:	email
+    	external_customer_id	:	extCustomerId,
+    	customer_id				:	lpCustomerId,
+    	email					:	emailAddress
     };
     
     customerShowRequest.sig = Util.getSignature(customerShowRequest);

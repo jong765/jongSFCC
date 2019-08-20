@@ -21,5 +21,9 @@ var CustomPreference = {
 	SECRET_KEY				: Site.current.preferences.custom.lpSecretKey
 };
 
+var Constant = {
+	CHANNEL					: "Online"	
+}
+
 module.exports.UrlPath = UrlPath;
 module.exports.CustomPreference = CustomPreference;

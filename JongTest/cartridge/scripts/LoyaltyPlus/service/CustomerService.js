@@ -7,11 +7,11 @@ var CustomerRequest = require('../serviceRequest/CustomerRequest');
 var Util = require('../util/Util');
 var UrlPath = require('../util/LoyaltyPlusConstants').UrlPath;
 
-exports.updateCustomerInfo = function () {
+exports.updateCustomerInfo = function (emailAddress, extCustomerId, firstName, lastName, birthDate, address) {
 	var data = {
 		urlPath       : UrlPath.UPDATE_CUSTOMER_INFO,
 	    requestMethod : 'POST',
-	    request       : CustomerRequest.getUpdateCustomerInfoRequest(customerId, email, firstName, lastName, addressLine1, addressLine2, city, state, postalCode)
+	    request       : CustomerRequest.getUpdateCustomerInfoRequest(emailAddress, extCustomerId, firstName, lastName, birthDate, address)
 	};
 	
     var result = Util.callService(data);
@@ -51,11 +51,11 @@ exports.customerRewards = function (accountId, customerId, loyaltyPlusCustomerId
     return result;
 };
 
-exports.customerShow = function (customerId, loyaltyPlusCustomerId, email) {
+exports.customerShow = function (emailAddress, lpCustomerId, extCustomerId) {
     let data = {
         urlPath       : UrlPath.CUSTOMER_SHOW,
         requestMethod : 'GET',
-        request       : CustomerRequest.getCustomerShowRequest(customerId, loyaltyPlusCustomerId, email)
+        request       : CustomerRequest.getCustomerShowRequest(emailAddress, lpCustomerId, extCustomerId)
     };
 
     let result = Util.callService(data);

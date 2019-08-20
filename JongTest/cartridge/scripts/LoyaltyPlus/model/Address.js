@@ -1,17 +1,15 @@
 'use strict';
 
-var Class = require('../util/Class').Class;
-
-var Address = Class.extend({
-	address1	:	null,
-	address2	: 	null,
-	city		:	null,
-	state		:	null,
-	postalCode	:	null,
-	country		:	null,
-	homePhone	:	null,
-	workPhone	:	null,
-	mobilePhone	:	null
-});
+function Address(address1, address2, city, state, postalCode, country, homePhone, workPhone, mobilePhone) {
+	this.address1 = address1;
+	this.address2 = address2;
+	this.city = city;
+	this.state = state;
+	this.postalCode = postalCode;
+	this.country = country;
+	this.homePhone = homePhone;
+	this.workPhone = workPhone;
+	this.mobilePhone = mobilePhone;
+}
 
 module.exports = Address;

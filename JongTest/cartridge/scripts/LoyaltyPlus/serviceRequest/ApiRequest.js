@@ -2,6 +2,7 @@
 
 var Util = require('../util/Util');
 var CustomPreference = require('../util/LoyaltyPlusConstants').CustomPreference;
+var Constant = require('../util/LoyaltyPlusConstants').Constant;
 
 exports.getPingRequest = function () {
     var pingRequest = {};
@@ -25,7 +26,8 @@ exports.getEnrollRequest = function (email, customerId, address, birthDate) {
     	home_phone				:	address.homePhone,
     	work_phone				:	address.workPhone,
     	mobile_phone			:	address.mobilePhone,
-    	birthdate				:	birthDate
+    	birthdate				:	birthDate,
+    	channel					:   Constant.CHANNEL
     };
     
     enrollRequest.sig = Util.getSignature(enrollRequest);
