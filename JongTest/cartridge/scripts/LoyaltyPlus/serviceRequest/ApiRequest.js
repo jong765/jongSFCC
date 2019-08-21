@@ -17,30 +17,26 @@ exports.getCreateReferralRequest = function (emailAddress, lpCustomerId, extCust
     return createReferralRequest;
 }
 
-exports.getPingRequest = function () {
-    var pingRequest = {};
-    
-    return pingRequest;
-}
-
-exports.getEnrollRequest = function (email, customerId, address, birthDate) {
+exports.getEnrollRequest = function (customer) {
     var enrollRequest = {
     	uuid					:   CustomPreference.ACCOUNT_ID,
-    	email					:	email,
-    	external_customer_id	:	customerId,
-    	first_name				:	firstName,
-    	last_name				:	lastName,
-    	address_line_1			:	address.address1,
-    	address_line_2			:	address.address2,
-    	city					:	address.city,
-    	state					:	address.state,
-    	postal_code				:	address.postalCode,
-    	country					:	address.country,
-    	home_phone				:	address.homePhone,
-    	work_phone				:	address.workPhone,
-    	mobile_phone			:	address.mobilePhone,
-    	birthdate				:	birthDate,
-    	channel					:   Constant.CHANNEL
+    	email					:	customer.emailAddress,
+    	external_customer_id	:	customer.extCustomerId,
+    	name					: 	customer.name,
+    	first_name				:	customer.firstName,
+    	last_name				:	customer.lastName,
+    	address_line_1			:	customer.address.address1,
+    	address_line_2			:	customer.address.address2,
+    	city					:	customer.address.city,
+    	state					:	customer.address.state,
+    	postal_code				:	customer.address.postalCode,
+    	country					:	customer.address.country,
+    	home_phone				:	customer.address.homePhone,
+    	work_phone				:	customer.address.workPhone,
+    	mobile_phone			:	customer.address.mobilePhone,
+    	birthdate				:	customer.birthDate,
+    	channel					:   Constant.CHANNEL,
+    	enrolled_at				:	Util.getCurrentDate()
     };
     
     enrollRequest.sig = Util.getSignature(enrollRequest);
@@ -48,17 +44,10 @@ exports.getEnrollRequest = function (email, customerId, address, birthDate) {
     return enrollRequest;
 }
 
-exports.getRecordEventRequest = function (emailAddress, extCustomerId, type) {
-    var recordEventRequest = {
-    	uuid					:	CustomPreference.ACCOUNT_ID,
-    	email					:	emailAddress,
-    	external_customer_id	:	extCustomerId,
-    	type					:	type
-    };
+exports.getPingRequest = function () {
+    var pingRequest = {};
     
-    recordEventRequest.sig = Util.getSignature(recordEventRequest);
-    
-    return recordEventRequest;
+    return pingRequest;
 }
 
 exports.getRedeemRewardRequest = function (email, extCustomerId, rewardId) {

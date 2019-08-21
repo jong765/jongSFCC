@@ -41,4 +41,8 @@ Util.getSignature = function (params) {
     return signature;
 }
 
+Util.getCurrentDate = function () {
+	return "";
+}
+
 module.exports = Util;

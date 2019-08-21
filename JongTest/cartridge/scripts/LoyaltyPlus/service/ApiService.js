@@ -48,14 +48,14 @@ exports.ping = function () {
  * @param {String} firstName
  * @param {String} lastName
  * @param {Object} address
- * @param (String) birthDate
+ * @param {String} birthDate
  * @returns {Object}
  */
-exports.enroll = function (email, customerId, firstName, lastName, address, birthDate) {
+exports.enroll = function (customer) {
     var data = {
         urlPath       : UrlPath.ENROLL,
         requestMethod : 'POST',
-        request       : ApiRequest.getEnrollRequest(email, customerId, firstName, lastName, address, birthDate)
+        request       : ApiRequest.getEnrollRequest(customer)
     };
 
     var result = Util.callService(data);

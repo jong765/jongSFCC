@@ -17,7 +17,7 @@ exports.approve = function (emailAddress, extCustomerId, eventId) {
     var data = {
         urlPath       : UrlPath.APPROVE,
         requestMethod : 'POST',
-        request       : ApiRequest.getApproveEventRequest(emailAddress, extCustomerId, eventId)
+        request       : EventRequest.getApproveEventRequest(emailAddress, extCustomerId, eventId)
     };
 
     var result = Util.callService(data);
@@ -35,7 +35,7 @@ exports.record = function (emailAddress, extCustomerId, type) {
     var data = {
         urlPath       : UrlPath.RECORD,
         requestMethod : 'POST',
-        request       : ApiRequest.getRecordEventRequest(emailAddress, extCustomerId, type)
+        request       : EventRequest.getRecordEventRequest(emailAddress, extCustomerId, type)
     };
 
     var result = Util.callService(data);
@@ -53,7 +53,7 @@ exports.reject = function (emailAddress, extCustomerId, eventId) {
     var data = {
         urlPath       : UrlPath.REJECT,
         requestMethod : 'POST',
-        request       : ApiRequest.getRejectEventRequest(emailAddress, extCustomerId, eventId)
+        request       : EventRequest.getRejectEventRequest(emailAddress, extCustomerId, eventId)
     };
 
     var result = Util.callService(data);
