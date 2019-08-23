@@ -5,6 +5,7 @@ var Site = require('dw/system/Site');
 var UrlPath = {
 	APPROVE                 : "/data/event/approve",
 	CREATE_REFERRAL			: "/api/referral/create",
+	CUSTOMER_SEARCH			: "/data/customers/search",
 	CUSTOMER_REWARDS 		: "/data/customer/rewards",
 	CUSTOMER_SHOW 			: "/data/customer/show",
 	ENROLL 					: "/api/enroll.json",

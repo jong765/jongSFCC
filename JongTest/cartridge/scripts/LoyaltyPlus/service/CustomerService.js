@@ -50,6 +50,17 @@ exports.customerRewards = function (accountId, customerId, loyaltyPlusCustomerId
     return result;
 };
 
+exports.customerSearch = function (emailAddress, lastName, phone, address1, postalCode, page) {
+    let data = {
+        urlPath       : UrlPath.CUSTOMER_SEARCH,
+        requestMethod : 'GET',
+        request       : CustomerRequest.getCustomerSearchRequest(emailAddress, lastName, phone, address1, postalCode, page)
+    };
+
+    let result = Util.callService(data);
+    return result;
+};
+
 exports.customerShow = function (emailAddress, lpCustomerId, extCustomerId) {
     let data = {
         urlPath       : UrlPath.CUSTOMER_SHOW,

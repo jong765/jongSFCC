@@ -59,6 +59,21 @@ exports.getCustomerRewardsRequest = function (accountId, customerId, loyaltyPlus
     return customerRewardsRequest;
 }
 
+exports.getCustomerSearchRequest = function (emailAddress, lastName, phone, address1, postalCode, page) {
+    var customerSearchRequest = {
+    	email					:	emailAddress,
+    	last_name				:	lastName,
+    	phone					:	phone,
+    	address_line_1			:	address1,
+    	postal_code				:	postalCode,
+    	page					:	page
+    };
+    
+    customerSearchRequest.sig = Util.getSignature(customerSearchRequest);
+    
+    return customerSearchRequest;
+}
+
 
 exports.getCustomerShowRequest = function (emailAddress, lpCustomerId, extCustomerId) {
     var customerShowRequest = {
