@@ -1,13 +1,17 @@
 'use strict';
 
-function Customer(emailAddress, extCustomerId, firstName, lastName, birthDate, address) {
-	this.emailAddress = emailAddress,
-	this.extCustomerId = extCustomerId,
-	this.firstName = firstName,
-	this.lastName = lastName,
-	this.name = firstName + " " + lastName;
-	this.birthDate = birthDate;
-	this.address = address;
-}
+var Class = require('../util/Class').Class;
 
-module.exports = Customer;
+var LpResponse = Class.extend({
+    itemId: null,
+    locationId: null,
+    status: null,
+    viewName: null,
+    quantity: {
+        "DistributionCenters": 0,
+        "Stores": 0
+    },
+    totalQuantity: 0
+});
+
+module.exports = LpResponse;

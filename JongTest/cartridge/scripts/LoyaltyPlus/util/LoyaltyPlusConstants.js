@@ -10,6 +10,7 @@ var UrlPath = {
 	CUSTOMER_SHOW 			: "/data/customer/show",
 	ENROLL 					: "/api/enroll.json",
 	PING					: "/api/ping",
+	POINTS_VALUE			: "/data/points/value",
 	RECORD					: "/api/record.json",
 	REJECT					: "/data/event/reject",
 	REWARDS 				: "/data/rewards",

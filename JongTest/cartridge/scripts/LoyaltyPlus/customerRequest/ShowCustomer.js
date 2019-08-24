@@ -4,9 +4,11 @@
  *  Get customer information
  *
  *   @input emailAddress : String
- *   @input lpCustomerId : String
  *   @input extCustomerId : String
- *   @output customerInfo : Object
+ *   @input vendor : String
+ *   @input vendorId : String
+ *   @input include : String
+ *   @output response : Object
  * 
  */
 
@@ -15,28 +17,25 @@ var Logger = require('dw/system/Logger');
 var logger = Logger.getLogger("loyaltyplus-error", "ShowCustomer.js");
 
 function execute(args) {
-	var customerShowResponse = customerShow(args);
-    args.customerInfo = customerShowResponse.customerInfo;
-    return customerShowResponse.success ? PIPELET_NEXT : PIPELET_ERROR;
+	var response = run(args.emailAddress, args.extCustomerId, args.vendor, args.vendorId);
+    args.response = response;
+    return response.success ? PIPELET_NEXT : PIPELET_ERROR;
 }
 
-function customerShow(args) {
-    var customerShowResponse = {
-    	success 		: 	false,
-    	customerInfo 	: 	null
-    };
+function run(emailAddress, extCustomerId, vendor, vendorId, include) {
+    var response = null;
 
     try {
-    	var result = CustomerService.customerShow(args.emailAddress, args.lpCustomerId, args.extCustomerId);
+    	response = CustomerService.customerShow(emailAddress, extCustomerId, vendor, vendorId, include);
     } catch (e) {
         var exception = e;
         var errMessage = exception.message + "\n" + exception.stack;
         logger.error(errMessage);
     }
-    return customerShowResponse;
+    return response;
 }
 
 module.exports = {
     'execute': execute,
-    'customerShow': customerShow
+    'run': run
 }
