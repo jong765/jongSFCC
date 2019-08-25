@@ -18,8 +18,7 @@ var UrlPath = {
 	SET_SUBSCRIPTION_TYPE 	: "/api/set_subscription_type.json",
 	UPDATE_CUSTOMER_INFO 	: "/data/customer/update_customer_info",
 	UPDATE_EMAIL 			: "/data/customer/update_email",
-	UPDATE_ATTRIBUTES 		: "/data/customer/update_attributes",
-	TIERS 					: "/data/tiers"
+	UPDATE_ATTRIBUTES 		: "/data/customer/update_attributes"
 };
 
 var CustomPreference = {
