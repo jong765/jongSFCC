@@ -3,7 +3,6 @@
 var Status = require('dw/system/Status');
 var Site = require('dw/system/Site');
 var CustomerRequest = require('../serviceRequest/CustomerRequest');
-var ShowCustomerResponse = require('../serviceResponse/ShowCustomerResponse');
 var Util = require('../util/Util');
 var UrlPath = require('../util/LoyaltyPlusConstants').UrlPath;
 
@@ -16,18 +15,6 @@ exports.customerSearch = function (emailAddress, lastName, phone, address1, post
 
     var result = Util.callService(data);
     return result;
-};
-
-exports.customerShow = function (emailAddress, extCustomerId, vendor, vendorId, include) {
-    var data = {
-        urlPath       : UrlPath.CUSTOMER_SHOW,
-        requestMethod : 'GET',
-        request       : CustomerRequest.getCustomerShowRequest(emailAddress, extCustomerId, vendor, vendorId, include)
-    };
-
-    var result = Util.callService(data);
-    var response = new CustomerShowResponse(result);
-    return response;
 };
 
 exports.customerRewards = function (accountId, customerId, loyaltyPlusCustomerId, email) {

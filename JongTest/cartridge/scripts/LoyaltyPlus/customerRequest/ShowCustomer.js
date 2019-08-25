@@ -12,7 +12,7 @@
  * 
  */
 
-var CustomerService = require('../service/CustomerService');
+var CustomerShowService = require('../service/CustomerShowService');
 var Logger = require('dw/system/Logger');
 var logger = Logger.getLogger("loyaltyplus-error", "ShowCustomer.js");
 
@@ -26,7 +26,7 @@ function run(emailAddress, extCustomerId, vendor, vendorId, include) {
     var response = null;
 
     try {
-    	response = CustomerService.customerShow(emailAddress, extCustomerId, vendor, vendorId, include);
+    	response = CustomerShowService.run(emailAddress, extCustomerId, vendor, vendorId, include);
     } catch (e) {
         var exception = e;
         var errMessage = exception.message + "\n" + exception.stack;
