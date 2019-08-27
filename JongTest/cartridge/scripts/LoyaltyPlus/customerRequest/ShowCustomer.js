@@ -8,7 +8,7 @@
  *   @input vendor : String
  *   @input vendorId : String
  *   @input include : String
- *   @output response : Object
+ *   @output serviceResponse : Object
  * 
  */
 

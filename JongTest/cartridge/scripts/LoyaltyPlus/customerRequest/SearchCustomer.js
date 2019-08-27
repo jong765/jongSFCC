@@ -8,36 +8,35 @@
  *   @input phone : String
  *   @input address1 : String
  *   @input postalCode: String
- *   @output customerInfo : Object
+ *   @input page : Number
+ *   @output result : Object
  * 
  */
 
-var CustomerService = require('../service/CustomerService');
+var CustomerSearchService = require('../service/CustomerSearchService');
 var Logger = require('dw/system/Logger');
-var logger = Logger.getLogger("loyaltyplus-error", "LookupCustomer.js");
+var logger = Logger.getLogger("loyaltyplus-error", "SearchCustomer.js");
 
 function execute(args) {
-	var customerSearchResponse = customerSearch(args.emailAddress, args.lastName, args.phone, args.address1, args.postalCode, args.page);
-    args.customerInfo = customerSearchResponse.customerInfo;
-    return customerSearchResponse.success ? PIPELET_NEXT : PIPELET_ERROR;
+	var result = run(args.emailAddress, args.lastName, args.phone, args.address1, args.postalCode, args.page);
+    args.result = response;
+    return result.success ? PIPELET_NEXT : PIPELET_ERROR;
 }
 
-function search(emailAddress, lastName, phone, address1, postalCode, page) {
-    var customerSearchResponse = {
-    	success 		: 	false
-    };
-
+function run(emailAddress, lastName, phone, address1, postalCode, page) {
+    var result = null;
+    
     try {
-    	var result = CustomerService.customerSearch(args.emailAddress, args.lastName, args.phone, args.address1, args.postalCode, args.page);
+    	result = CustomerSearchService.run(emailAddress, lastName, phone, address1, postalCode, page);
     } catch (e) {
         var exception = e;
         var errMessage = exception.message + "\n" + exception.stack;
         logger.error(errMessage);
     }
-    return customerSearchResponse;
+    return result;
 }
 
 module.exports = {
     'execute': execute,
-    'search': search
+    'run': run
 }

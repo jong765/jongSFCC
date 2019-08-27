@@ -1,6 +1,5 @@
 'use strict';
 
-var CustomerEventsResponse = require('../serviceResponse/CustomerEventsResponse');
 var Util = require('../util/Util');
 var UrlPath = require('../util/LoyaltyPlusConstants').UrlPath;
 var CustomPreference = require('../util/LoyaltyPlusConstants').CustomPreference;
@@ -12,22 +11,21 @@ exports.run = function (emailAddress, lpCustomerId, extCustomerId, pageNumber, e
     var data = {
         urlPath       : UrlPath.CUSTOMER_EVENTS,
         requestMethod : 'GET',
-        request       : getCustomerEventsRequest(emailAddress, lpCustomerId, extCustomerId, pageNumber, entriesPerPage)
+        requestParam  : getCustomerEventsRequestParam(emailAddress, lpCustomerId, extCustomerId, pageNumber, entriesPerPage)
     };
 
     var result = Util.callService(data);
-    var response = new CustomerEventsResponse(result);
-    return response;
+    return result;
 };
 
-function getCustomerEventsRequest(emailAddress, lpCustomerId, extCustomerId, pageNumber, entriesPerPage) {
-    var request = {uuid : CustomPreference.ACCOUNT_ID};
-    if (emailAddress) request.email = emailAddress;
-    if (lpCustomerId) request.customer_id = lpCustomerId;
-    if (extCustomerId) request.external_customer_id = extCustomerId;
-    if (pageNumber) request.page_number = pageNumber;
-    if (entriesPerPage) request.entries_per_page = entriesPerPage;
-    request.sig = Util.getSignature(request);
+function getCustomerEventsRequestParam(emailAddress, lpCustomerId, extCustomerId, pageNumber, entriesPerPage) {
+    var requestParam = {uuid : CustomPreference.ACCOUNT_ID};
+    if (emailAddress) requestParam.email = emailAddress;
+    if (lpCustomerId) requestParam.customer_id = lpCustomerId;
+    if (extCustomerId) requestParam.external_customer_id = extCustomerId;
+    if (pageNumber) requestParam.page_number = pageNumber;
+    if (entriesPerPage) requestParam.entries_per_page = entriesPerPage;
+    requestParam.sig = Util.getSignature(requestParam);
     
-    return request;
+    return requestParam;
 }

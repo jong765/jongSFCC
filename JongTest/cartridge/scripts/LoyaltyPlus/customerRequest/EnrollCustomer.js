@@ -1,58 +1,45 @@
 /**
  * EnrollCustomer.js
  * 
- *  Enroll a customer in a LoyaltyPlus program.
+ *  Enroll a customer in the program.
  *
  *   @input emailAddress : String
- *   @input extCustomerId : String
  *   @input firstName : String
  *   @input lastName : String
- *   @input address1 : String
- *   @input address2 : String
- *   @input city : String
- *   @input postalCode : String
- *   @input country : String
- *   @input birthDate : Date
- *   @input phone : String
- *	 @input state : String
- *   @output lpCustomerId : String
- *   @output lastCheckin : String
+ *   @input postalCode: String
+ *   @input birthDate : String
+ *   @input homePhone : String
+ *   @input workPhone : String
+ *   @input mobilePhone : String
+ *   @input page : Number
+ *   @output result : Object
  * 
  */
 
-var ApiService = require('../service/ApiService');
-var Customer = require('../model/Customer');
-var Address = require('../model/Address');
+var CustomerEnrollService = require('../service/CustomerEnrollService');
 var Logger = require('dw/system/Logger');
 var logger = Logger.getLogger("loyaltyplus-error", "EnrollCustomer.js");
 
 function execute(args) {
-	var enrollResponse = enroll(args);
-    args.lpCustomerId = enrollResponse.lpCustomerId;
-    args.lastCheckin = enrollResponse.lastCheckin;
-    return enrollResponse.success ? PIPELET_NEXT : PIPELET_ERROR;
+	var result = run(args.emailAddress, args.firstName, args.lastName, args.postalCode, args.birthDate, args.homePhone, args.workPhone, args.mobilePhone);
+    args.result = response;
+    return result.success ? PIPELET_NEXT : PIPELET_ERROR;
 }
 
-function enroll(args) {
-    var enrollResponse = {
-    	success 		: 	false,
-    	lpCustomerId 	: 	null,
-    	lastCheckin 	:	null
-    };
-
+function run(emailAddress, firstName, lastName, postalCode, birthDate, homePhone, workPhone, mobilePhone) {
+    var result = null;
+    
     try {
-    	var address = new Address(args.address1, args.address2, args.city, args.state, args.postalCode, args.country, args.homePhone, args.workPhone, args.mobilePhone);
-    	var customer = new Customer(args.emailAddress, args.extCustomerId, args.firstName, args.lastName, args.birthDate, address);
-    	var result = ApiService.enroll(customer);
+    	result = CustomerEnrollService.run(emailAddress, firstName, lastName, postalCode, birthDate, homePhone, workPhone, mobilePhone);
     } catch (e) {
         var exception = e;
         var errMessage = exception.message + "\n" + exception.stack;
         logger.error(errMessage);
     }
-    return enrollResponse;
+    return result;
 }
 
 module.exports = {
     'execute': execute,
-    'enroll': enroll
+    'run': run
 }

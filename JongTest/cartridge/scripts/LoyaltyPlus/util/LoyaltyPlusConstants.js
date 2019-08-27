@@ -9,7 +9,7 @@ var UrlPath = {
 	CUSTOMER_SEARCH			: "/data/customers/search",
 	CUSTOMER_REWARDS 		: "/data/customer/rewards",
 	CUSTOMER_SHOW 			: "/data/customer/show",
-	ENROLL 					: "/api/enroll.json",
+	CUSTOMER_ENROLL 		: "/api/enroll.json",
 	PING					: "/api/ping",
 	POINTS_VALUE			: "/data/points/value",
 	RECORD					: "/api/record.json",

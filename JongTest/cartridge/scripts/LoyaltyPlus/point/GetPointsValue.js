@@ -4,31 +4,31 @@
  *  Get the points value, e.g. points to dollars conversion rate. This is only relevant for accounts who use a
  *   points at checkout reward system.
  *
- *   @output response : Object
+ *   @output result : Object
  * 
  */
 
-var PointService = require('../service/PointService');
+var PointsValueService = require('../service/PointsValueService');
 var Logger = require('dw/system/Logger');
 var logger = Logger.getLogger("loyaltyplus-error", "GetPointsValue.js");
 
 function execute(args) {
-	var response = run();
-    args.response = response;
-    return response.success ? PIPELET_NEXT : PIPELET_ERROR;
+	var result = run();
+    args.result = result;
+    return result.success ? PIPELET_NEXT : PIPELET_ERROR;
 }
 
 function run() {
-    var response = null;
+    var result = null;
 
     try {
-    	response = PointService.pointsValue();
+    	result = PointsValueService.run();
     } catch (e) {
         var exception = e;
         var errMessage = exception.message + "\n" + exception.stack;
         logger.error(errMessage);
     }
-    return response;
+    return result;
 }
 
 module.exports = {

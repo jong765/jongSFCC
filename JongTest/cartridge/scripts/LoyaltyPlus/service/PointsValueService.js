@@ -8,21 +8,20 @@ var CustomPreference = require('../util/LoyaltyPlusConstants').CustomPreference;
  * Get the points value, e.g. points to dollars conversion rate. This is only relevant for accounts who use a
  * points at checkout reward system.
  */
-exports.pointsValue = function () {
+exports.run = function () {
     var data = {
         urlPath       : UrlPath.POINTS_VALUE,
         requestMethod : 'GET',
-        request       : getPointsValueRequest()
+        requestParam  : getPointsValueRequestParam()
     };
 
     var result = Util.callService(data);
-    var response = {"success":result.object.success, "conversionRate":result.object.conversion_rate};
-    return response;
+    return result;
 };
 
-function getPointsValueRequest() {
-    var request = {uuid : CustomPreference.ACCOUNT_ID};
-    request.sig = Util.getSignature(request);
+function getPointsValueRequestParam() {
+    var requestParam = {uuid : CustomPreference.ACCOUNT_ID};
+    requestParam.sig = Util.getSignature(requestParam);
     
-    return request;
+    return requestParam;
 }

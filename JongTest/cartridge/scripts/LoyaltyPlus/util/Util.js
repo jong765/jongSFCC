@@ -11,8 +11,8 @@ Util.callService = function (data) {
 	var loyaltyPlusServiceInit = require('~/cartridge/scripts/LoyaltyPlus/init/LoyaltyPlusServiceInit');
     var service = loyaltyPlusServiceInit.LoyaltyPlusService('loyaltyplus.http.default');
     
-    for(var property in data.request){
-        service.addParam(property, data.request[property]);
+    for(var property in data.requestParam){
+        service.addParam(property, data.requestParam[property]);
     }
     
     var result = service.call(data);
