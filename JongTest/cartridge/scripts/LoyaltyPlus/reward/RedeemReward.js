@@ -1,38 +1,38 @@
 /**
- * ShowCustomer.js
+ * RewardRedeemService
  * 
- *  Get customer information
+ *  Trigger a reward redemption. A 'reward' event will be recorded. If a trigger email has been configured, the
+ *  reward trigger email will be sent.
  *
  *   @input emailAddress : String
  *   @input extCustomerId : String
- *   @input vendor : String
- *   @input vendorId : String
- *   @input include : String
- *   @output serviceResponse : Object
+ *   @input rewardId : String
+ *   @input detail : String
+ *   @output result : Object
  * 
  */
 
-var CustomerShowService = require('../service/CustomerShowService');
+var RewardRedeemService = require('../service/RewardRedeemService');
 var Logger = require('dw/system/Logger');
-var logger = Logger.getLogger("loyaltyplus-error", "ShowCustomer.js");
+var logger = Logger.getLogger("loyaltyplus-error", "RedeemReward.js");
 
 function execute(args) {
-	var response = run(args.emailAddress, args.extCustomerId, args.vendor, args.vendorId);
-    args.response = response;
-    return response.success ? PIPELET_NEXT : PIPELET_ERROR;
+	var result = run(args.emailAddress, args.extCustomerId, args.rewardId, args.detail);
+    args.result = result;
+    return result.success ? PIPELET_NEXT : PIPELET_ERROR;
 }
 
 function run(emailAddress, extCustomerId, vendor, vendorId, include) {
-    var response = null;
+    var result = null;
 
     try {
-    	response = CustomerShowService.run(emailAddress, extCustomerId, vendor, vendorId, include);
+    	result = CustomerShowService.run(emailAddress, extCustomerId, rewardId, detail);
     } catch (e) {
         var exception = e;
         var errMessage = exception.message + "\n" + exception.stack;
         logger.error(errMessage);
     }
-    return response;
+    return result;
 }
 
 module.exports = {

@@ -8,7 +8,7 @@
  *   @input extCustomerId : String
  *   @input pageNumber : Number
  *   @input entriesPerPage : Number
- *   @output response : Object
+ *   @output result : Object
  * 
  */
 
@@ -17,22 +17,22 @@ var Logger = require('dw/system/Logger');
 var logger = Logger.getLogger("loyaltyplus-error", "GetCustomerEvents.js");
 
 function execute(args) {
-	var response = run(args);
-	args.response = response;
-    return response.success ? PIPELET_NEXT : PIPELET_ERROR;
+	var result = run(args.emailAddress, args.lpCustomerId, args.extCustomerId, args.pageNumber, args.entriesPerPage);
+	args.result = response;
+    return result.success ? PIPELET_NEXT : PIPELET_ERROR;
 }
 
-function run(args) {
-	var response = null;
+function run(emailAddress, lpCustomerId, extCustomerId, pageNumber, entriesPerPage) {
+	var result = null;
 	
     try {
-    	var response = CustomerEventsService.run(args.emailAddress, args.lpCustomerId, args.extCustomerId, args.pageNumber, args.entriesPerPage);
+    	var result = CustomerEventsService.run(emailAddress, lpCustomerId, extCustomerId, pageNumber, entriesPerPage);
     } catch (e) {
         var exception = e;
         var errMessage = exception.message + "\n" + exception.stack;
         logger.error(errMessage);
     }
-    return response;
+    return result;
 }
 
 module.exports = {

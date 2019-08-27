@@ -8,7 +8,7 @@
  *   @input vendor : String
  *   @input vendorId : String
  *   @input include : String
- *   @output serviceResponse : Object
+ *   @output result : Object
  * 
  */
 
@@ -17,9 +17,9 @@ var Logger = require('dw/system/Logger');
 var logger = Logger.getLogger("loyaltyplus-error", "ShowCustomer.js");
 
 function execute(args) {
-	var response = run(args.emailAddress, args.extCustomerId, args.vendor, args.vendorId);
-    args.response = response;
-    return response.success ? PIPELET_NEXT : PIPELET_ERROR;
+	var result = run(args.emailAddress, args.extCustomerId, args.vendor, args.vendorId);
+    args.result = result;
+    return result.success ? PIPELET_NEXT : PIPELET_ERROR;
 }
 
 function run(emailAddress, extCustomerId, vendor, vendorId, include) {
