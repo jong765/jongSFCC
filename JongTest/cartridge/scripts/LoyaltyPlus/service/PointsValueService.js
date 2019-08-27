@@ -12,14 +12,14 @@ exports.run = function () {
     var data = {
         urlPath       : UrlPath.POINTS_VALUE,
         requestMethod : 'GET',
-        requestParam  : getPointsValueRequestParam()
+        requestParam  : getRequestParam()
     };
 
     var result = Util.callService(data);
     return result;
 };
 
-function getPointsValueRequestParam() {
+function getRequestParam() {
     var requestParam = {uuid : CustomPreference.ACCOUNT_ID};
     requestParam.sig = Util.getSignature(requestParam);
     

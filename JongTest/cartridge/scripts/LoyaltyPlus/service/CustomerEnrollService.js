@@ -11,14 +11,14 @@ exports.run = function (emailAddress, firstName, lastName, postalCode, birthDate
     var data = {
         urlPath       : UrlPath.CUSTOMER_ENROLL,
         requestMethod : 'GET',
-        requestParam  : getCustomerEnrollRequestParam(emailAddress, firstName, lastName, postalCode, birthDate, homePhone, workPhone, mobilePhone)
+        requestParam  : getRequestParam(emailAddress, firstName, lastName, postalCode, birthDate, homePhone, workPhone, mobilePhone)
     };
 
     var result = Util.callService(data);
     return result;
 };
 
-function getCustomerEnrollRequestParam(emailAddress, firstName, lastName, postalCode, birthDate, homePhone, workPhone, mobilePhone) {
+function getRequestParam(emailAddress, firstName, lastName, postalCode, birthDate, homePhone, workPhone, mobilePhone) {
 	var requestParam = {uuid:CustomPreference.ACCOUNT_ID};
 	if (emailAddress) requestParam.email = emailAddress;
 	if (firstName) requestParam.first_name = firstName;

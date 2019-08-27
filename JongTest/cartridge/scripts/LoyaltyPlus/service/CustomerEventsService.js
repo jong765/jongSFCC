@@ -11,14 +11,14 @@ exports.run = function (emailAddress, lpCustomerId, extCustomerId, pageNumber, e
     var data = {
         urlPath       : UrlPath.CUSTOMER_EVENTS,
         requestMethod : 'GET',
-        requestParam  : getCustomerEventsRequestParam(emailAddress, lpCustomerId, extCustomerId, pageNumber, entriesPerPage)
+        requestParam  : getRequestParam(emailAddress, lpCustomerId, extCustomerId, pageNumber, entriesPerPage)
     };
 
     var result = Util.callService(data);
     return result;
 };
 
-function getCustomerEventsRequestParam(emailAddress, lpCustomerId, extCustomerId, pageNumber, entriesPerPage) {
+function getRequestParam(emailAddress, lpCustomerId, extCustomerId, pageNumber, entriesPerPage) {
     var requestParam = {uuid : CustomPreference.ACCOUNT_ID};
     if (emailAddress) requestParam.email = emailAddress;
     if (lpCustomerId) requestParam.customer_id = lpCustomerId;

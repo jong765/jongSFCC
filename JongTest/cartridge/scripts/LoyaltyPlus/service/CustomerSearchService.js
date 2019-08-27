@@ -11,14 +11,14 @@ exports.run = function (emailAddress, lastName, phone, address1, postalCode, pag
     var data = {
         urlPath       : UrlPath.CUSTOMER_SEARCH,
         requestMethod : 'GET',
-        requestParam  : getCustomerSearchRequestParam(emailAddress, lastName, phone, address1, postalCode, page)
+        requestParam  : getRequestParam(emailAddress, lastName, phone, address1, postalCode, page)
     };
 
     var result = Util.callService(data);
     return result;
 };
 
-function getCustomerSearchRequestParam (emailAddress, lastName, phone, address1, postalCode, page) {
+function getRequestParam (emailAddress, lastName, phone, address1, postalCode, page) {
 	var requestParam = {uuid : CustomPreference.ACCOUNT_ID};
     if (emailAddress) requestParam.email = emailAddress;
     if (lastName) requestParam.last_name = lastName;

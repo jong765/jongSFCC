@@ -17,10 +17,11 @@
         <pipelet-node pipelet-name="Script" pipelet-set-identifier="bc_api">
           <config-property key="Transactional" value="false"/>
           <config-property key="OnError" value="PIPELET_ERROR"/>
-          <config-property key="ScriptFile" value="LoyaltyPlus/customerRequest/SearchCustomer.js"/>
+          <config-property key="ScriptFile" value="LoyaltyPlus/customerRequest/UpdateCustomerInfo.js"/>
           <key-binding alias="null" key="ScriptLog"/>
-          <key-binding alias="&quot;jkim@pacsun.com&quot;" key="emailAddress"/>
-          <key-binding alias="&quot;accept&quot;" key="lastName"/>
+          <key-binding alias="&quot;3450 E Miraloma Ave&quot;" key="address1"/>
+          <key-binding alias="&quot;Anaheim&quot;" key="city"/>
+          <key-binding alias="&quot;test@pacsun.com&quot;" key="emailAddress"/>
         </pipelet-node>
         <node-display x="0" y="1"/>
       </node>
