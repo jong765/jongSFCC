@@ -13,7 +13,7 @@
 * For example:
 *
 *    @input OrderNumber : String
-*-   @output ExampleOut : Number
+*    @output order : dw.order.Order
 *
 */
 
@@ -23,6 +23,7 @@
 function execute( pdict : PipelineDictionary ) : Number
 {
 	var order = OrderMgr.getOrder(pdict.OrderNumber);
+	pdict.order = order;
 
    return PIPELET_NEXT;
 }
