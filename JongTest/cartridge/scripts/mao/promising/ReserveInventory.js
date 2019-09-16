@@ -1,7 +1,7 @@
 /**
 * ReserveInventory.js
 * 
-*  Reserves the MAO inventory for the products that are limited in stock or to be picked up in store.
+*  Reserves the MAO inventory for the products that are to be picked up in store.
 *
 *    @input Order : dw.order.Order     (Required)
 *    @output Success : Boolean
@@ -45,14 +45,13 @@ function reserve(order) {
         {
             var lineItem = shippingLineItemIT.next();
 
-            var availabilityAlertStatus = lineItem.product.getAvailabilityModel().getInventoryRecord().custom.availabilityAlertStatus;
-            if (availabilityAlertStatus && availabilityAlertStatus.equalsIgnoreCase("LIMITED_STOCK")) {
-                var deliveryMethodId = lineItem.custom.pickTicketCode.equalsIgnoreCase("DTH") ? "ShipToAddress" : "PickUpAtStore";
+            //Reserve MAO inventory for BOPIS product line items only.
+            if (lineItem.custom.pickTicketCode.equalsIgnoreCase("PCK")) {
                 productLineItems.push({
                     "ItemId": lineItem.productID,
                     "Quantity": lineItem.quantity.value,
                     "OrderLineId": lineItem.position,
-                    "DeliveryMethodId": deliveryMethodId,
+                    "DeliveryMethodId": "PickUpAtStore",
                     "ShippingMethodId": lineItem.shipment.shippingMethod.displayName
                 });
                 needToReserve = true;
