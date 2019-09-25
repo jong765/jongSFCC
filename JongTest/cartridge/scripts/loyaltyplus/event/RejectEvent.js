@@ -1,34 +1,35 @@
-/********************************************************************************************
- *  GetRedeemedAwardAmount.js
+/**
+ *  RecordEvent.js
  * 
- *  Calculate total redeemed award amount for the last xx days.
- *
+ *  Record loyalty plus event.
+ * 
  *   @input lpExternalCustomerId : String
- *   @input numberOfDays : Number
+ *   @input eventType : String
+ *   @input eventId : String
  *   @output responseObject : Object
  */
 
-var PointsShowService = require('../service/PointsShowService');
+var RejectEventService = require('../service/RejectEventService');
 var Util = require('../util/Util');
-var logger = require('dw/system/Logger').getLogger("loyaltyplus-error", "GetRedeemedAwardAmount.js");
+var logger = require('dw/system/Logger').getLogger("loyaltyplus-error", "RejectEvent.js");
 
 function execute(args) {
-	var responseObject = run(args.amount);
+	var responseObject = run(args.lpExternalCustomerId, args.eventType, args.eventId);
 	args.responseObject = responseObject;
     return responseObject.success ? PIPELET_NEXT : PIPELET_ERROR;
 }
 
-function run(amount) {
+function run(lpExternalCustomerId, eventType, eventId) {
     var responseObject = {};
     try {
-        var validationResult = Util.validateRequiredParams({'lpExternalCustomerId':lpExternalCustomerId, 'numberOfDays':numberOfDays});
+        var validationResult = Util.validateRequiredParams({'lpExternalCustomerId':lpExternalCustomerId, 'eventType':eventType, 'eventId':eventId});
         if (!validationResult.success) {
             return validationResult;
         }
-        var result = PointsShowService.run('purchase', amount).object;
-        if (result) {
-            responseObject = {success : result.success,
-                              points : result.points};
+        var result = RejectEventService.run(lpExternalCustomerId, eventType, eventId).object;
+        var data = result.data;
+        if (data) {
+            responseObject = {success : result.success};
         } else {
             responseObject = {success : false};
         }

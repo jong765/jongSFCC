@@ -1,15 +1,8 @@
-/********************************************************************************************
- * 
+/**
  *  CustomerSearchService.js
  * 
- *  Description :   Search for customers using data such as email, name or phone number. 
- *  Author      :   Jong Kim
- *  Date        :   09/04/2019
- *  
- *  Modification log:
- *  
- *  	
- ********************************************************************************************/
+ *  Search for customers using data such as email, name or phone number.	
+ */
 'use strict';
 
 var Util = require('../util/Util');

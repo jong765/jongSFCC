@@ -1,34 +1,34 @@
 /********************************************************************************************
- *  GetRedeemedAwardAmount.js
+ *  UpdateCoupon.js
  * 
- *  Calculate total redeemed award amount for the last xx days.
+ *  Update status of a coupon code.
  *
- *   @input lpExternalCustomerId : String
- *   @input numberOfDays : Number
+ *   @input code : String
+ *   @input status : String
  *   @output responseObject : Object
  */
 
-var PointsShowService = require('../service/PointsShowService');
+var CouponUpdateService = require('../service/CouponUpdateService');
 var Util = require('../util/Util');
-var logger = require('dw/system/Logger').getLogger("loyaltyplus-error", "GetRedeemedAwardAmount.js");
+var logger = require('dw/system/Logger').getLogger("loyaltyplus-error", "UpdateCoupon.js");
 
 function execute(args) {
-	var responseObject = run(args.amount);
+	var responseObject = run(args.code, args.status);
 	args.responseObject = responseObject;
     return responseObject.success ? PIPELET_NEXT : PIPELET_ERROR;
 }
 
-function run(amount) {
+function run(code, status) {
     var responseObject = {};
     try {
-        var validationResult = Util.validateRequiredParams({'lpExternalCustomerId':lpExternalCustomerId, 'numberOfDays':numberOfDays});
+        var validationResult = Util.validateRequiredParams({'code':code, 'status':status});
         if (!validationResult.success) {
             return validationResult;
         }
-        var result = PointsShowService.run('purchase', amount).object;
-        if (result) {
-            responseObject = {success : result.success,
-                              points : result.points};
+        var result = CouponUpdateService.run(code, status).object;
+        var coupons = result.data;
+        if (coupons) {
+            responseObject = {success : result.success};
         } else {
             responseObject = {success : false};
         }

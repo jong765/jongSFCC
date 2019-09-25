@@ -19,15 +19,15 @@
           <config-property key="OnError" value="PIPELET_ERROR"/>
           <config-property key="ScriptFile" value="int_pacsun_api:loyaltyplus/customerRequest/EnrollCustomer.js"/>
           <key-binding alias="null" key="ScriptLog"/>
-          <key-binding alias="&quot;3450 E Miraloma Ave&quot;" key="addressLine1"/>
-          <key-binding alias="&quot;03-11&quot;" key="birthDate"/>
-          <key-binding alias="&quot;Anaheim&quot;" key="city"/>
-          <key-binding alias="&quot;jktest6@pacsun.com&quot;" key="emailAddress"/>
+          <key-binding alias="&quot;3037 Softwind way&quot;" key="addressLine1"/>
+          <key-binding alias="&quot;12-25&quot;" key="birthDate"/>
+          <key-binding alias="&quot;Torrance&quot;" key="city"/>
+          <key-binding alias="&quot;jktest11@pacsun.com&quot;" key="emailAddress"/>
           <key-binding alias="&quot;DMTEST&quot;" key="firstName"/>
-          <key-binding alias="&quot;ACCEPT5&quot;" key="lastName"/>
-          <key-binding alias="&quot;1234567890&quot;" key="mobilePhone"/>
-          <key-binding alias="&quot;92806&quot;" key="postalCode"/>
-          <key-binding alias="&quot;Male&quot;" key="shoppingPreference"/>
+          <key-binding alias="&quot;ACCEPT&quot;" key="lastName"/>
+          <key-binding alias="&quot;3333333333&quot;" key="mobilePhone"/>
+          <key-binding alias="&quot;90505&quot;" key="postalCode"/>
+          <key-binding alias="&quot;Both&quot;" key="shoppingPreference"/>
           <key-binding alias="&quot;CA&quot;" key="state"/>
         </pipelet-node>
         <node-display x="0" y="1"/>
@@ -60,12 +60,14 @@
           <config-property key="OnError" value="PIPELET_ERROR"/>
           <config-property key="ScriptFile" value="int_pacsun_api:loyaltyplus/customerRequest/ShowCustomer.js"/>
           <key-binding alias="null" key="ScriptLog"/>
-          <key-binding alias="&quot;92622145&quot;" key="lpExternalCustomerId"/>
+          <key-binding alias="&quot;75803173&quot;" key="lpExternalCustomerId"/>
           <key-binding alias="customerFound" key="customerFound"/>
           <key-binding alias="lastVisitDate" key="lastVisitDate"/>
           <key-binding alias="status" key="status"/>
           <key-binding alias="success" key="success"/>
           <key-binding alias="balance" key="balance"/>
+          <key-binding alias="emailAddress" key="emailAddress"/>
+          <key-binding alias="actionsNeededForNextTier" key="actionsNeededForNextTier"/>
         </pipelet-node>
         <node-display x="0" y="1"/>
       </node>
@@ -97,11 +99,15 @@
           <config-property key="OnError" value="PIPELET_ERROR"/>
           <config-property key="ScriptFile" value="int_pacsun_api:loyaltyplus/customerRequest/UpdateCustomerInfo.js"/>
           <key-binding alias="null" key="ScriptLog"/>
-          <key-binding alias="null" key="addressLine1"/>
-          <key-binding alias="&quot;2001-12-02&quot;" key="birthDate"/>
+          <key-binding alias="&quot;3450 E Miraloma Ave&quot;" key="addressLine1"/>
+          <key-binding alias="null" key="birthDate"/>
           <key-binding alias="result" key="result"/>
           <key-binding alias="&quot;Female&quot;" key="shoppingPreference"/>
-          <key-binding alias="&quot;92622145&quot;" key="lpExternalCustomerId"/>
+          <key-binding alias="&quot;87834312&quot;" key="lpExternalCustomerId"/>
+          <key-binding alias="&quot;Anaheim&quot;" key="city"/>
+          <key-binding alias="&quot;92608&quot;" key="postalCode"/>
+          <key-binding alias="&quot;CA&quot;" key="state"/>
+          <key-binding alias="&quot;1111111111&quot;" key="mobilePhone"/>
         </pipelet-node>
         <node-display x="0" y="1"/>
       </node>
@@ -133,7 +139,7 @@
           <config-property key="OnError" value="PIPELET_ERROR"/>
           <config-property key="ScriptFile" value="int_pacsun_api:loyaltyplus/customerRequest/LookupCustomer.js"/>
           <key-binding alias="null" key="ScriptLog"/>
-          <key-binding alias="&quot;jktest5@pacsun.com&quot;" key="emailAddress"/>
+          <key-binding alias="&quot;&quot;" key="emailAddress"/>
           <key-binding alias="customerFound" key="customerFound"/>
           <key-binding alias="lastVisitDate" key="lastVisitDate"/>
           <key-binding alias="lpExternalCustomerId" key="lpExternalCustomerId"/>
@@ -170,6 +176,74 @@
           <config-property key="ScriptFile" value="int_pacsun_api:loyaltyplus/awards/CalculateProformaPoints.js"/>
           <key-binding alias="null" key="ScriptLog"/>
           <key-binding alias="100" key="amount"/>
+        </pipelet-node>
+        <node-display x="0" y="1"/>
+      </node>
+      <simple-transition>
+        <transition-display>
+          <bend-point relative-to="source" x="0" y="1"/>
+        </transition-display>
+      </simple-transition>
+      <node>
+        <end-node/>
+        <node-display x="0" y="1"/>
+      </node>
+    </segment>
+  </branch>
+  <branch basename="RetrieveCoupons">
+    <segment>
+      <node>
+        <start-node call-mode="private" name="RetrieveCoupons" secure="false"/>
+        <node-display x="4" y="5"/>
+      </node>
+      <simple-transition>
+        <transition-display>
+          <bend-point relative-to="source" x="0" y="1"/>
+        </transition-display>
+      </simple-transition>
+      <node>
+        <pipelet-node pipelet-name="Script" pipelet-set-identifier="bc_api">
+          <config-property key="Transactional" value="false"/>
+          <config-property key="OnError" value="PIPELET_ERROR"/>
+          <config-property key="ScriptFile" value="int_pacsun_api:loyaltyplus/awards/RetrieveCoupons.js"/>
+          <key-binding alias="null" key="ScriptLog"/>
+          <key-binding alias="responseObject" key="responseObject"/>
+          <key-binding alias="&quot;75803173&quot;" key="lpExtCustomerId"/>
+        </pipelet-node>
+        <node-display x="0" y="1"/>
+      </node>
+      <simple-transition>
+        <transition-display>
+          <bend-point relative-to="source" x="0" y="1"/>
+        </transition-display>
+      </simple-transition>
+      <node>
+        <end-node/>
+        <node-display x="0" y="1"/>
+      </node>
+    </segment>
+  </branch>
+  <branch basename="RecordPurchase">
+    <segment>
+      <node>
+        <start-node call-mode="private" name="RecordPurchase" secure="false"/>
+        <node-display x="7" y="5"/>
+      </node>
+      <simple-transition>
+        <transition-display>
+          <bend-point relative-to="source" x="0" y="1"/>
+        </transition-display>
+      </simple-transition>
+      <node>
+        <pipelet-node pipelet-name="Script" pipelet-set-identifier="bc_api">
+          <config-property key="Transactional" value="false"/>
+          <config-property key="OnError" value="PIPELET_ERROR"/>
+          <config-property key="ScriptFile" value="int_pacsun_api:loyaltyplus/record/RecordEvent.js"/>
+          <key-binding alias="null" key="ScriptLog"/>
+          <key-binding alias="&quot;Purchase&quot;" key="eventType"/>
+          <key-binding alias="&quot;75803173&quot;" key="lpExternalCustomerId"/>
+          <key-binding alias="responseObject" key="responseObject"/>
+          <key-binding alias="&quot;70038925&quot;" key="orderNo"/>
         </pipelet-node>
         <node-display x="0" y="1"/>
       </node>

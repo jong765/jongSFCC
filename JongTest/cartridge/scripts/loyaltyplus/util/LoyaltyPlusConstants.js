@@ -1,15 +1,8 @@
-/********************************************************************************************
- * 
+/**
  *  LoyaltyPlusConstants.js
  *  
- *  Description :	Loyalty plus constants
- *  Author      :	Jong Kim
- *  Date        :   09/10/2019
- *  
- *  Modification log:
- *  
- *  	
- ********************************************************************************************/
+ *  Loyalty plus constants	
+ */
 'use strict';
 
 var Site = require('dw/system/Site');

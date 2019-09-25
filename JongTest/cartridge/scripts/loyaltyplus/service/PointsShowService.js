@@ -1,15 +1,8 @@
-/********************************************************************************************
- * 
+/**
  *  PointsShowService.js
  * 
- *  Description :   Get the number of points a customer could earn from a particular event.
- *  Author      :   Jong Kim
- *  Date        :   09/11/2019
- *  
- *  Modification log:
- *  
- *  	
- ********************************************************************************************/
+ *  Get the number of points a customer could earn from a particular event. 	
+ */
 'use strict';
 
 var Util = require('../util/Util');

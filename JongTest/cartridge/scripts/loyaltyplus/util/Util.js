@@ -1,15 +1,8 @@
-/********************************************************************************************
- * 
+/**
  *  Util.js
  *  
- *  Description :   Utility functions for loyalty plus
- *  Author      :	Jong Kim
- *  Date        :   09/04/2019
- *  
- *  Modification log:
- *  
- *  	
- ********************************************************************************************/
+ *  Utility functions for loyalty plus 	
+ */
 'use strict';
 
 var Util = {};
@@ -47,7 +40,7 @@ Util.getSignature = function (params) {
         dataToSign += keys[i]+params[keys[i]];
     }
 
-    dataToSign = dataToSign.replace("[", "").replace("]", "");
+    dataToSign = dataToSign.replace(/[[\]]/g, "");
 
     logger.debug("dataToSign: " + dataToSign);
     var encryptor = new MessageDigest('MD5');
@@ -63,6 +56,16 @@ Util.validateRequiredParams = function (params) {
         }
     }
     return {success : true};
+}
+
+Util.copyObject = function (mainObj) {
+    let objCopy = {};
+    let key;
+  
+    for (key in mainObj) {
+      objCopy[key] = mainObj[key];
+    }
+    return objCopy;
 }
 
 module.exports = Util;

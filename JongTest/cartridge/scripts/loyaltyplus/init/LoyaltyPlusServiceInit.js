@@ -1,15 +1,8 @@
-/********************************************************************************************
- * 
+/**
  *  LoyaltyPlusServiceInit.js
  *  
- *  Description :	Service init for loyalty plus API's
- *  Author 		:	Jong Kim
- *  Date   		:   09/04/2019
- *  
- *  Modification log:
- *  
- *  	
- ********************************************************************************************/
+ *  Service init for loyalty plus API's	
+ */
 'use strict';
 
 var LocalServiceRegistry = require('dw/svc/LocalServiceRegistry');
@@ -34,6 +27,7 @@ exports.LoyaltyPlusService = function (serviceId) {
 	    },
 	
 	    parseResponse: function(svc, client) {
+			logger.debug("API Response: " + client.text);
 	        return JSON.parse(client.text);
 	    },
 	    

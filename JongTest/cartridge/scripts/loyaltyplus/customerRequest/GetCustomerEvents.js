@@ -1,53 +1,47 @@
-/********************************************************************************************
- * GetCustomerEvents.js
+/**
+ *  GetCustomerEvents.js
  * 
- *  Description :   Get history of point earning events completed by a customer.
- *  Author      :	Jong Kim
- *  Date        :   09/09/2019
+ *  Get history of point earning events completed by a customer.
  *
- *   @input emailAddress : String
+ *   @input lpExtCustomerId : String
  *   @input pageNumber : Number
  *   @input entriesPerPage : Number
- *   @output result : Object
- * 
- *  Modification log:
- * 
- * 
- ********************************************************************************************/
+ *   @output responseObject : Object
+ */
 
 var CustomerEventsService = require('../service/CustomerEventsService');
 var Util = require('../util/Util');
 var logger = require('dw/system/Logger').getLogger("loyaltyplus-error", "GetCustomerEvents.js");
 
 function execute(args) {
-	var result = run(args.emailAddress, args.pageNumber, args.entriesPerPage);
-	args.result = result;
-    return result.success ? PIPELET_NEXT : PIPELET_ERROR;
+	var responseObject = run(args.lpExtCustomerId, args.pageNumber, args.entriesPerPage);
+	args.responseObject = responseObject;
+    return responseObject.success ? PIPELET_NEXT : PIPELET_ERROR;
 }
 
-function run(emailAddress, pageNumber, entriesPerPage) {
+function run(lpExtCustomerId, pageNumber, entriesPerPage) {
+    var responseObject = {};
     try {
-        var validationResult = Util.validateRequiredParams({'emailAddress':emailAddress});
+        var validationResult = Util.validateRequiredParams({'lpExtCustomerId':lpExtCustomerId});
         if (!validationResult.success) {
             return validationResult;
         }
-        var result = CustomerEventsService.run(emailAddress, pageNumber, entriesPerPage).object;
+        var result = CustomerEventsService.run(lpExtCustomerId, pageNumber, entriesPerPage).object;
         var data = result.data;
         if (data) {
-            return {success     :   result.success,
-                    data        :   data
-                   };
+            responseObject = {success : result.success,
+                              data : data};
         } else {
-            return {success     :   false
-                   };
+            responseObject = {success : false};
         }
     } catch (e) {
         var exception = e;
         var errMessage = exception.message + "\n" + exception.stack;
         logger.error(errMessage);
-        return {success : false};
+        responseObject = {success : false};
     }
-    return result;
+    logger.debug("responseObject: " + JSON.stringify(responseObject));
+    return responseObject;
 }
 
 module.exports = {
