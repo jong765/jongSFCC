@@ -1,5 +1,5 @@
 /**
- *  RecordEventService.js
+ *  RecordService.js
  * 
  *  Record an event. 	
  */
@@ -23,32 +23,21 @@ exports.run = function (externalCustomerId, type, order) {
 
 function getRequestParam(externalCustomerId, type, order) {
     var requestParam = {uuid : CustomPreference.ACCOUNT_ID};
-    var signatureParam = null;
     if (externalCustomerId) requestParam.external_customer_id = externalCustomerId;
     if (type) requestParam.type = type;
     if (type.equalsIgnoreCase("Purchase")) {
         requestParam.value = order.totalGrossPrice.value;
         requestParam.event_id = order.orderNo;
-        signatureParam = Util.copyObject(requestParam);
         var productLineItems = order.getProductLineItems();
-        var parameterString = "";
-        var counter = 1;
 	    for (var i in productLineItems) {
             var productLineItem = productLineItems[i];
-            requestParam["products[" + i + "][price]"] = productLineItem.price.value;
-            requestParam["products[" + i + "][product_id]"] = productLineItem.productID;
-            requestParam["products[" + i + "][quantity]"] = productLineItem.quantity.value;
-            if (counter == 1)
-                parameterString += "products" + i + "price" + productLineItem.price.value + "product_id" + productLineItem.productID + "quantity" + productLineItem.quantity.value;
-            else
-                parameterString += i + "price" + productLineItem.price.value + "product_id" + productLineItem.productID + "quantity" + productLineItem.quantity.value;
-            counter++;
+            requestParam["products[i][product_id]"] = productLineItem.productID;
+            requestParam["products[i][price]"] = productLineItem.price.value;
+            requestParam["products[i][quantity]"] = productLineItem.quantity.value;
         }
-        signatureParam[parameterString] = "";
     }
-    requestParam.channel = Constant.CHANNEL;
-    signatureParam.channel = Constant.CHANNEL;
-    requestParam.sig = Util.getSignature(signatureParam);
+    requestParam.channel = Constant.CHANNEL;	
+    requestParam.sig = Util.getSignature(requestParam);
     
     return requestParam;
 }
