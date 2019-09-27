@@ -22,13 +22,14 @@
           <key-binding alias="&quot;3037 Softwind way&quot;" key="addressLine1"/>
           <key-binding alias="&quot;12-25&quot;" key="birthDate"/>
           <key-binding alias="&quot;Torrance&quot;" key="city"/>
-          <key-binding alias="&quot;jktest11@pacsun.com&quot;" key="emailAddress"/>
+          <key-binding alias="&quot;jktest17@pacsun.com&quot;" key="emailAddress"/>
           <key-binding alias="&quot;DMTEST&quot;" key="firstName"/>
           <key-binding alias="&quot;ACCEPT&quot;" key="lastName"/>
           <key-binding alias="&quot;3333333333&quot;" key="mobilePhone"/>
           <key-binding alias="&quot;90505&quot;" key="postalCode"/>
           <key-binding alias="&quot;Both&quot;" key="shoppingPreference"/>
           <key-binding alias="&quot;CA&quot;" key="state"/>
+          <key-binding alias="&quot;100&quot;" key="preferredStore"/>
         </pipelet-node>
         <node-display x="0" y="1"/>
       </node>
@@ -139,7 +140,7 @@
           <config-property key="OnError" value="PIPELET_ERROR"/>
           <config-property key="ScriptFile" value="int_pacsun_api:loyaltyplus/customerRequest/LookupCustomer.js"/>
           <key-binding alias="null" key="ScriptLog"/>
-          <key-binding alias="&quot;&quot;" key="emailAddress"/>
+          <key-binding alias="&quot;jktest1@pacsun.com&quot;" key="emailAddress"/>
           <key-binding alias="customerFound" key="customerFound"/>
           <key-binding alias="lastVisitDate" key="lastVisitDate"/>
           <key-binding alias="lpExternalCustomerId" key="lpExternalCustomerId"/>
