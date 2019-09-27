@@ -10,7 +10,7 @@
  *   @output status : String
  *   @output topTierName : String
  *   @output shoppingPreference : String
- *   @output actionsNeededForNextTier : Number
+ *   @output actionsNeededForNextTier : String
  *   @output lastVisitDate : String
  *   @output success : Boolean
  */
@@ -31,7 +31,6 @@ function execute(args) {
     args.actionsNeededForNextTier = responseObject.actionsNeededForNextTier;
     args.lastVisitDate = responseObject.lastVisitDate;
     args.success = responseObject.success;
-    logger.debug("result: " + JSON.stringify(result));
     return responseObject.success ? PIPELET_NEXT : PIPELET_ERROR;
 }
 
@@ -48,11 +47,11 @@ function run(lpExternalCustomerId) {
         if (data) {
             responseObject = {success : result.success,
                               customerFound : true,
-                              emailAddress : data.email.trim(),
+                              emailAddress : data.email,
                               balance : data.balance,
-                              status : data.status.trim(),
-                              topTierName : data.top_tier_name.trim(),
-                              shoppingPreference : data.member_attributes.shopping_preference.trim(),
+                              status : data.status,
+                              topTierName : data.top_tier_name,
+                              shoppingPreference : data.member_attributes.shopping_preference,
                               actionsNeededForNextTier : data.actions_needed_for_next_tier,
                               lastVisitDate : data.last_visit_date};
         } else {

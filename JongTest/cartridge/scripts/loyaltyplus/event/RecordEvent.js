@@ -17,7 +17,7 @@
  *   @output responseObject : Object
  */
 
-var RecordService = require('../service/RecordService');
+var RecordEventService = require('../service/RecordEventService');
 var OrderMgr = require('dw/order/OrderMgr');
 var Util = require('../util/Util');
 var logger = require('dw/system/Logger').getLogger("loyaltyplus-error", "RecordEvent.js");
@@ -41,7 +41,7 @@ function run(lpExternalCustomerId, eventType, orderNo) {
             return validationResult;
         }
         var order = OrderMgr.getOrder(orderNo);
-        var result = RecordService.run(lpExternalCustomerId, eventType, order).object;
+        var result = RecordEventService.run(lpExternalCustomerId, eventType, order).object;
         var data = result.data;
         if (data) {
             responseObject = {success : result.success,

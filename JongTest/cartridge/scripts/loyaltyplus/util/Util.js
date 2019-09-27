@@ -58,4 +58,14 @@ Util.validateRequiredParams = function (params) {
     return {success : true};
 }
 
+Util.copyObject = function (mainObj) {
+    let objCopy = {};
+    let key;
+  
+    for (key in mainObj) {
+      objCopy[key] = mainObj[key];
+    }
+    return objCopy;
+}
+
 module.exports = Util;
