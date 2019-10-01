@@ -11,18 +11,21 @@ var CustomPreference = require('../util/LoyaltyPlusConstants').CustomPreference;
 var Constant = require('../util/LoyaltyPlusConstants').Constant;
 var logger = require('dw/system/Logger').getLogger("loyaltyplus-error", "LoyaltyPlusServiceInit.js");
 
-exports.run = function (emailAddress, firstName, lastName, birthDate, shoppingPreference, address, mobilePhone) {
+exports.run = function (emailAddress, firstName, lastName, birthDate, shoppingPreference, 
+        preferredStore, address, mobilePhone) {
     var data = {
         urlPath       : UrlPath.CUSTOMER_ENROLL,
         requestMethod : 'GET',
-        requestParam  : getRequestParam(emailAddress, firstName, lastName, birthDate, shoppingPreference, address, mobilePhone)
+        requestParam  : getRequestParam(emailAddress, firstName, lastName, birthDate, shoppingPreference, 
+                preferredStore, address, mobilePhone)
     };
 
     var result = Util.callService(data);
     return result;
 };
 
-function getRequestParam(emailAddress, firstName, lastName, birthDate, shoppingPreference, address, mobilePhone) {
+function getRequestParam(emailAddress, firstName, lastName, birthDate, shoppingPreference, 
+        preferredStore, address, mobilePhone) {
 	var requestParam = {uuid:CustomPreference.ACCOUNT_ID};
 	if (emailAddress) requestParam.email = emailAddress;
 	if (firstName) requestParam.first_name = firstName;

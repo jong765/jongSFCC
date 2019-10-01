@@ -41,7 +41,7 @@ function run(lpExternalCustomerId) {
         if (!validationResult.success) {
             return validationResult;
         }
-        var include = "detail,member_attributes,tier_stats";
+        var include = "detail, coupons, member_attributes, points_expiration_schedule, purchase_stats, tier_stats";
         var result = CustomerShowService.run(lpExternalCustomerId, include).object;
         var data = result.data;
         if (data) {

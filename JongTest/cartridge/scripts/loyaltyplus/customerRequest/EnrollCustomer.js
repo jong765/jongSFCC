@@ -8,6 +8,7 @@
  *   @input lastName : String
  *   @input birthDate : String
  *   @input shoppingPreference : String
+ *   @input preferredStore : String
  *   @input addressLine1 : String
  *   @input addressLine2 : String
  *   @input city : String
@@ -24,12 +25,14 @@ var Util = require('../util/Util');
 var logger = require('dw/system/Logger').getLogger("loyaltyplus-error", "EnrollCustomer.js");
 
 function execute(args) {
-	var responseObject = run(args.emailAddress, args.firstName, args.lastName, args.birthDate, args.shoppingPreference, args.addressLine1, args.addressLine2, args.city, args.postalCode, args.state, args.mobilePhone);
+    var responseObject = run(args.emailAddress, args.firstName, args.lastName, args.birthDate, args.shoppingPreference, 
+        args.preferredStore,args.addressLine1, args.addressLine2, args.city, args.postalCode, args.state, args.mobilePhone);
     args.responseObject = responseObject;
     return responseObject.success ? PIPELET_NEXT : PIPELET_ERROR;
 }
 
-function run(emailAddress, firstName, lastName, birthDate, shoppingPreference, addressLine1, addressLine2, city, postalCode, state, mobilePhone) {
+function run(emailAddress, firstName, lastName, birthDate, shoppingPreference, 
+    preferredStore, addressLine1, addressLine2, city, postalCode, state, mobilePhone) {
     var responseObject = {};
     try {
         var validationResult = Util.validateRequiredParams({'emailAddress':emailAddress});
@@ -37,7 +40,8 @@ function run(emailAddress, firstName, lastName, birthDate, shoppingPreference, a
             return validationResult;
         }
         var address = new Address(addressLine1, addressLine2, city, postalCode, state, null);
-        var result = CustomerEnrollService.run(emailAddress, firstName, lastName, birthDate, shoppingPreference, address, mobilePhone).object;
+        var result = CustomerEnrollService.run(emailAddress, firstName, lastName, birthDate, shoppingPreference, 
+            preferredStore, address, mobilePhone).object;
         var data = result.data;
         if (data) {
             responseObject = {success : result.success,

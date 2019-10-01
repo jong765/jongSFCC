@@ -16,14 +16,13 @@ exports.LoyaltyPlusService = function (serviceId) {
 	        var requestMethod       = args.requestMethod;
 	        
 	        svc.addHeader('Content-Type', 'application/json');
+	        svc.addHeader('Accept', 'application/json');
 	        svc.setRequestMethod(requestMethod);
 	        svc.setURL(url);
 	
 	        logger.debug("requestParam: " + JSON.stringify(args.requestParam));
-	        
-	        if (requestMethod === "POST") {
-	        	return JSON.stringify(args.request);
-	        }
+	        logger.debug("requestBody: " + JSON.stringify(args.requestBody));
+	        return JSON.stringify(args.requestBody);
 	    },
 	
 	    parseResponse: function(svc, client) {
