@@ -10,15 +10,23 @@ var logger = require('dw/system/Logger').getLogger("loyaltyplus-test", "Test.js"
 
 function run() {
 	//var response = enrollCustomer();
-	var response = updateCustomerInfo();
-	//var response = showCustomer();
+	//var response = updateCustomerInfo();
+	//var response = lookupCustomer();
+	var response = showCustomer();
 	//var response = getCustomerEvents();
 	//var response = updateShoppingPreference();
 	//var response = updatePreferredStore();
 	//var response = enrollPOST();
 	//var response = getSignature();
 
+	logResponse(response);
 	return true;
+}
+
+function lookupCustomer() {
+	var lookupCustomer = require('../customerRequest/LookupCustomer');
+	var emailAddress = "jktest1@pacsun.com";
+	var response = lookupCustomer.run(emailAddress);
 }
 
 function updateCustomerInfo() {
@@ -36,7 +44,6 @@ function updateCustomerInfo() {
 	var mobilePhone = "1112223333";
 	var updateCustomerInfo = require('../customerRequest/UpdateCustomerInfo');
 	var response = updateCustomerInfo.run(lpExternalCustomerId, emailAddress, firstName, lastName, birthDate, shoppingPreference, addressLine1, addressLine2, city, postalCode, state, mobilePhone);
-	logResponse(response);
 }
 
 function enrollCustomer() {
@@ -56,7 +63,7 @@ function enrollCustomer() {
 	var marketingId = "MOB";
 	var response = enrollCustomer.run(emailAddress, firstName, lastName, birthDate, shoppingPreference, preferredStore,
 			addressLine1, addressLine2, city, postalCode, state, mobilePhone, marketingId);
-	logResponse(response);
+
     return response;
 }
 
@@ -114,7 +121,7 @@ function getCustomerEvents() {
 
 function showCustomer() {
 	var showCustomer = require('../customerRequest/ShowCustomer');
-	var lpExternalCustomerId = "97577177";
+	var lpExternalCustomerId = "75587003";
 	var response = showCustomer.run(lpExternalCustomerId);
 	return response;
 }

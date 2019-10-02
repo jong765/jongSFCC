@@ -8,9 +8,10 @@
  *   @output emailAddress : String
  *   @output balance : Number
  *   @output status : String
- *   @output topTierName : String
  *   @output shoppingPreference : String
- *   @output actionsNeededForNextTier : String
+ *   @output tierName : String
+ *   @output tierExpirationDate : String
+ *   @output pointsNeededForNextTier : String
  *   @output lastVisitDate : String
  *   @output success : Boolean
  */
@@ -26,9 +27,12 @@ function execute(args) {
     args.emailAddress = responseObject.emailAddress;
     args.balance = responseObject.balance;
     args.status = responseObject.status;
-    args.topTierName = responseObject.topTierName;
     args.shoppingPreference = responseObject.shoppingPreference;
-    args.actionsNeededForNextTier = responseObject.actionsNeededForNextTier;
+    args.tierName = responseObject.tierName;
+    args.tierExpirationDate = responseObject.tierExpirationDate;
+    args.tierJoinDate = responseObject.tierJoinDate;
+    args.pointsNeededForNextTier = responseObject.pointsNeededForNextTier;
+    args.pointsNeededToKeepCurrentTier = responseObject.pointsNeededToKeepCurrentTier;
     args.lastVisitDate = responseObject.lastVisitDate;
     args.success = responseObject.success;
     return responseObject.success ? PIPELET_NEXT : PIPELET_ERROR;
@@ -50,9 +54,12 @@ function run(lpExternalCustomerId) {
                               emailAddress : data.email,
                               balance : data.balance,
                               status : data.status,
-                              topTierName : data.top_tier_name,
                               shoppingPreference : data.member_attributes.shopping_preference,
-                              actionsNeededForNextTier : data.actions_needed_for_next_tier,
+                              tierName : data.top_tier_name,
+                              tierExpirationDate : data.top_tier_expiration_date,
+                              tierJoinDate : data.top_tier_join_date,
+                              pointsNeededForNextTier : data.actions_needed_for_next_tier,
+                              pointsNeededToKeepCurrentTier : data.actions_needed_to_keep_tier,
                               lastVisitDate : data.last_visit_date};
         } else {
             responseObject = {success : result.success,
