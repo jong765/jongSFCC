@@ -20,7 +20,7 @@ exports.LoyaltyPlusService = function (serviceId) {
 	        svc.setRequestMethod(requestMethod);
 	        svc.setURL(url);
 	
-	        logger.debug("requestParam: " + JSON.stringify(args.requestParam));
+	        logger.debug("url: " + url + "?" + getApiUrl(args.requestParam));
 	        logger.debug("requestBody: " + JSON.stringify(args.requestBody));
 	        return JSON.stringify(args.requestBody);
 	    },
@@ -74,3 +74,11 @@ exports.LoyaltyPlusService = function (serviceId) {
         }
 	});
 };
+
+function getApiUrl(params) {
+	var api_url = "";
+	for (var key in params) {
+		api_url += key+"="+encodeURIComponent(params[key])+"&";
+	}
+	return api_url;
+}

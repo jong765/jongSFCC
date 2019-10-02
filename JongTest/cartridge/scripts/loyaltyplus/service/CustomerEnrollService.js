@@ -12,12 +12,12 @@ var Constant = require('../util/LoyaltyPlusConstants').Constant;
 var logger = require('dw/system/Logger').getLogger("loyaltyplus-error", "LoyaltyPlusServiceInit.js");
 
 exports.run = function (emailAddress, firstName, lastName, birthDate, shoppingPreference, 
-        preferredStore, address, mobilePhone) {
+        preferredStore, address, mobilePhone, marketingId) {
     var data = {
         urlPath       : UrlPath.CUSTOMER_ENROLL,
         requestMethod : 'GET',
         requestParam  : getRequestParam(emailAddress, firstName, lastName, birthDate, shoppingPreference, 
-                preferredStore, address, mobilePhone)
+                preferredStore, address, mobilePhone, marketingId)
     };
 
     var result = Util.callService(data);
@@ -25,7 +25,7 @@ exports.run = function (emailAddress, firstName, lastName, birthDate, shoppingPr
 };
 
 function getRequestParam(emailAddress, firstName, lastName, birthDate, shoppingPreference, 
-        preferredStore, address, mobilePhone) {
+        preferredStore, address, mobilePhone, marketingId) {
 	var requestParam = {uuid:CustomPreference.ACCOUNT_ID};
 	if (emailAddress) requestParam.email = emailAddress;
 	if (firstName) requestParam.first_name = firstName;
@@ -38,6 +38,7 @@ function getRequestParam(emailAddress, firstName, lastName, birthDate, shoppingP
 	if (address.postalCode) requestParam.postal_code = address.postalCode;
 	if (address.state) requestParam.state = address.state;
 	if (mobilePhone) requestParam.mobile_phone = mobilePhone;
+	if (marketingId) requestParam.sub_channel = Util.getSubChannel(marketingId);
 	requestParam.channel = Constant.CHANNEL;
 	requestParam.sig = Util.getSignature(requestParam);
 

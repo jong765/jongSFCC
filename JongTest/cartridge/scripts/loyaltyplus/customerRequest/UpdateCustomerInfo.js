@@ -4,6 +4,7 @@
  *  Change external customer id or personal information of a member.
  *
  *   @input lpExternalCustomerId : String
+ *   @input emailAddress : String
  *   @input firstName : String
  *   @input lastName : String
  *   @input birthDate : String
@@ -23,12 +24,12 @@ var Util = require('../util/Util');
 var logger = require('dw/system/Logger').getLogger("loyaltyplus-error", "UpdateCustomerInfo.js");
 
 function execute(args) {
-	var responseObject = run(args.lpExternalCustomerId, args.firstName, args.lastName, args.birthDate, args.shoppingPreference, args.addressLine1, args.addressLine2, args.city, args.postalCode, args.state, args.mobilePhone);
+	var responseObject = run(args.lpExternalCustomerId, args.emailAddress, args.firstName, args.lastName, args.birthDate, args.shoppingPreference, args.addressLine1, args.addressLine2, args.city, args.postalCode, args.state, args.mobilePhone);
     args.responseObject = responseObject;
     return result.responseObject ? PIPELET_NEXT : PIPELET_ERROR;
 }
 
-function run(lpExternalCustomerId, firstName, lastName, birthDate, shoppingPreference, addressLine1, addressLine2, city, postalCode, state, mobilePhone) {
+function run(lpExternalCustomerId, emailAddress, firstName, lastName, birthDate, shoppingPreference, addressLine1, addressLine2, city, postalCode, state, mobilePhone) {
     var responseObject = {};
     try {
         var validationResult = Util.validateRequiredParams({'lpExternalCustomerId':lpExternalCustomerId});
@@ -36,7 +37,7 @@ function run(lpExternalCustomerId, firstName, lastName, birthDate, shoppingPrefe
             return validationResult;
         }
         var address = new Address(addressLine1, addressLine2, city, postalCode, state, null);
-        var result = UpdateCustomerInfoService.run(lpExternalCustomerId, firstName, lastName, birthDate, shoppingPreference, address, mobilePhone).object;
+        var result = UpdateCustomerInfoService.run(lpExternalCustomerId, emailAddress, firstName, lastName, birthDate, shoppingPreference, address, mobilePhone).object;
         responseObject  = result? {success : result.success} : {success : false};
     } catch (e) {
         var exception = e;

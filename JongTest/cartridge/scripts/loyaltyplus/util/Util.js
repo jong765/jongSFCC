@@ -8,7 +8,7 @@
 var Util = {};
 var logger = require('dw/system/Logger').getLogger("loyaltyplus-error", "Util.js");
 
-Util.callService = function (data) {
+Util.callService = function(data) {
 	var loyaltyPlusServiceInit = require('../init/LoyaltyPlusServiceInit');
     var service = loyaltyPlusServiceInit.LoyaltyPlusService('loyaltyplus.http.default');
     
@@ -19,7 +19,7 @@ Util.callService = function (data) {
     return result;
 }
 
-Util.getSignature = function (params) {
+Util.getSignature = function(params) {
     var CustomPreference = require('../util/LoyaltyPlusConstants').CustomPreference;
     var MessageDigest = require('dw/crypto/MessageDigest');
     var Encoding = require('dw/crypto/Encoding');
@@ -48,7 +48,7 @@ Util.getSignature = function (params) {
     return signature;
 }
 
-Util.validateRequiredParams = function (params) {
+Util.validateRequiredParams = function(params) {
     var propertyArray = Object.keys(params);
     for (var i=0; i<propertyArray.length; i++){
         if (empty(params[propertyArray[i]])) {
@@ -58,7 +58,7 @@ Util.validateRequiredParams = function (params) {
     return {success : true};
 }
 
-Util.copyObject = function (mainObj) {
+Util.copyObject = function(mainObj) {
     let objCopy = {};
     let key;
   
@@ -66,6 +66,21 @@ Util.copyObject = function (mainObj) {
       objCopy[key] = mainObj[key];
     }
     return objCopy;
+}
+
+Util.getSubChannel = function(marketingId) {
+	var subChannel = null;
+	switch (marketingId) {
+		case "DSK":
+			subChannel = "Desktop";
+			break;
+		case "MOB":
+			subChannel = "Mobile Web";
+			break;
+		default:
+			break;
+	}
+	return subChannel;
 }
 
 module.exports = Util;

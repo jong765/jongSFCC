@@ -6,16 +6,58 @@
  * @module controllers/Test
  */
 
+var logger = require('dw/system/Logger').getLogger("loyaltyplus-test", "Test.js");
+
 function run() {
 	//var response = enrollCustomer();
+	var response = updateCustomerInfo();
 	//var response = showCustomer();
 	//var response = getCustomerEvents();
-	var response = updateShoppingPreference();
+	//var response = updateShoppingPreference();
 	//var response = updatePreferredStore();
-	//var response = enroll1();
+	//var response = enrollPOST();
 	//var response = getSignature();
 
-	return response.success;
+	return true;
+}
+
+function updateCustomerInfo() {
+	var lpExternalCustomerId = 93301125;
+	var emailAddress = null;
+	var firstName = "Jong"; 
+	var lastName = "Kim";
+	var birthDate = "12-25";
+	var shoppingPreference = "Both";
+	var addressLine1 = "3450 E Miraloma Ave";
+	var addressLine2 = null;
+	var city = null;
+	var postalCode = null;
+	var state = null;
+	var mobilePhone = "1112223333";
+	var updateCustomerInfo = require('../customerRequest/UpdateCustomerInfo');
+	var response = updateCustomerInfo.run(lpExternalCustomerId, emailAddress, firstName, lastName, birthDate, shoppingPreference, addressLine1, addressLine2, city, postalCode, state, mobilePhone);
+	logResponse(response);
+}
+
+function enrollCustomer() {
+	var enrollCustomer = require('../customerRequest/EnrollCustomer');
+	var emailAddress = "jktest27@pacsun.com";
+	var firstName = "Jong"
+	var lastName = "Kim";
+	var birthDate = "04-17";
+	var shoppingPreference = "Both";
+	var preferredStore = null;
+	var addressLine1 = "3450 E Miraloma Ave";
+	var addressLine2 = null;
+	var city = "Anaheim";
+	var postalCode = "92806";
+	var state = "CA";
+	var mobilePhone = "3733329983";
+	var marketingId = "MOB";
+	var response = enrollCustomer.run(emailAddress, firstName, lastName, birthDate, shoppingPreference, preferredStore,
+			addressLine1, addressLine2, city, postalCode, state, mobilePhone, marketingId);
+	logResponse(response);
+    return response;
 }
 
 function getSignature() {
@@ -49,13 +91,16 @@ function updatePreferredStore() {
     return response;
 }
 
-function enroll1() {
-	var enrollCustomer = require('../customerRequest/EnrollCustomer');
-	var emailAddress = "jktest22@pacsun.com";
+function enrollPOST() {
+	var enrollCustomer = require('../customerRequest/EnrollCustomer-POST');
+	var emailAddress = "jktest25@pacsun.com";
 	var firstName = "jong";
 	var lastName = "kim";
+	var birthDate = "12-25";
+	var shoppingPreference = "Female";
+	var preferredStore = null;
 
-	var response = enrollCustomer.run(emailAddress, firstName, lastName, null, null, null,
+	var response = enrollCustomer.run(emailAddress, firstName, lastName, birthDate, shoppingPreference, preferredStore,
 			null, null, null, null, null, null);
     return response;
 }
@@ -67,30 +112,16 @@ function getCustomerEvents() {
 	return response;
 }
 
-function enrollCustomer() {
-	var enrollCustomer = require('../customerRequest/EnrollCustomer');
-	var emailAddress = "jktest22@pacsun.com";
-	var firstName = "jong"
-	var lastName = "kim";
-	var birthDate = "03-12";
-	var shoppingPreference = "Both";
-	var preferredStore = null;
-	var addressLine1 = "3450 E Miraloma Ave";
-	var addressLine2 = null;
-	var city = "Anaheim";
-	var postalCode = "92806";
-	var state = "CA";
-	var mobilePhone = "3733329983";
-	var response = enrollCustomer.run(emailAddress, firstName, lastName, birthDate, shoppingPreference, preferredStore,
-			addressLine1, addressLine2, city, postalCode, state, mobilePhone);
-    return response;
-}
-
 function showCustomer() {
 	var showCustomer = require('../customerRequest/ShowCustomer');
 	var lpExternalCustomerId = "97577177";
 	var response = showCustomer.run(lpExternalCustomerId);
 	return response;
+}
+
+function logResponse(response) {
+	logger.debug("response: " + JSON.stringify(response));
+	return;
 }
 
 module.exports.run = run;
