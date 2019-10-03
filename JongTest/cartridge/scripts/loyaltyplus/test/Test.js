@@ -12,7 +12,9 @@ function run() {
 	//var response = enrollCustomer();
 	//var response = updateCustomerInfo();
 	//var response = lookupCustomer();
-	var response = showCustomer();
+	//var response = showCustomer();
+	//var response = recordPurchaseEvent();
+	var response = recordReturnEvent();
 	//var response = getCustomerEvents();
 	//var response = updateShoppingPreference();
 	//var response = updatePreferredStore();
@@ -21,6 +23,22 @@ function run() {
 
 	logResponse(response);
 	return true;
+}
+
+function recordPurchaseEvent() {
+	var recordPurchaseEvent = require('../event/RecordPurchaseEvent');
+	var lpExternalCustomerId = "75587003";
+	var orderNo = "70038826";
+	var response = recordPurchaseEvent.run(lpExternalCustomerId, orderNo);
+	return response;
+}
+
+function recordReturnEvent() {
+	var recordReturnEvent = require('../event/RecordReturnEvent');
+	var lpExternalCustomerId = "75587003";
+	var orderNo = "70038826";
+	var response = recordReturnEvent.run(lpExternalCustomerId, orderNo);
+	return response;
 }
 
 function lookupCustomer() {
