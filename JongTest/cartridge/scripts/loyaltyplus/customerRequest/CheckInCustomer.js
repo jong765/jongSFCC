@@ -8,6 +8,7 @@
  */
 
 var UpdateCustomerInfoService = require('../service/UpdateCustomerInfoService');
+var CustomerInfo = require('../model/CustomerInfo');
 var Util = require('../util/Util');
 var logger = require('dw/system/Logger').getLogger("loyaltyplus-error", "CheckInCustomer.js");
 
@@ -24,8 +25,13 @@ function run(lpExternalCustomerId) {
         if (!validationResult.success) {
             return validationResult;
         }
-        var result = UpdateCustomerInfoService.run(lpExternalCustomerId, emailAddress, firstName, lastName, birthDate, shoppingPreference, address, mobilePhone).object;
-        responseObject  = result? {success : result.success} : {success : false};
+        var result = updateLastVisitDate(lpExternalCustomerId);
+        if (result.success) {
+        	
+        } else {
+        	return {success : false};
+        }
+        
     } catch (e) {
         var exception = e;
         var errMessage = exception.message + "\n" + exception.stack;
@@ -33,6 +39,15 @@ function run(lpExternalCustomerId) {
         responseObject = {success : false};
     }
     logger.debug("responseObject: " + JSON.stringify(responseObject));
+    return responseObject;
+}
+
+function updateLastVisitDate(lpExternalCustomerId) {
+	var customerInfo = new CustomerInfo();
+    customerInfo.externalCustomerId = lpExternalCustomerId;
+    customerInfo.lastVisitDate = Util.getCurrentDate("yyyy-MM-dd'T'HH:MM:ss-HH:MM");
+    var result = UpdateCustomerInfoService.run(customerInfo).object;
+    responseObject  = result? {success : result.success} : {success : false};
     return responseObject;
 }
 

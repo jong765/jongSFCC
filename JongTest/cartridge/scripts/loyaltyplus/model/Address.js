@@ -5,13 +5,13 @@
  */
 'use strict';
 
-function Address(addressLine1, addressLine2, city, postalCode, state, country) {
-	this.addressLine1 = addressLine1;
-	this.addressLine2 = addressLine2;
-	this.city = city;
-	this.postalCode = postalCode;
-	this.state = state;
-	this.country = country;
+function Address() {
+	this.addressLine1 = "undefined"; //These initial values must be "undefined" string, not undefined.
+	this.addressLine2 = "undefined";
+	this.city = "undefined";
+	this.postalCode = "undefined";
+	this.state = "undefined";
+	this.country = "undefined";
 }
 
 Address.prototype = 

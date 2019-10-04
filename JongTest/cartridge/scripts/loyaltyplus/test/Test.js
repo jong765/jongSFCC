@@ -10,9 +10,10 @@ var logger = require('dw/system/Logger').getLogger("loyaltyplus-test", "Test.js"
 
 function run() {
 	//var response = enrollCustomer();
-	//var response = updateCustomerInfo();
+	var response = updateCustomerInfo();
 	//var response = lookupCustomer();
-	var response = showCustomer();
+	//var response = showCustomer();
+	//var response = checkInCustomer();
 	//var response = recordPurchaseEvent();
 	//var response = recordReturnEvent();
 	//var response = recordCheckInEvent();
@@ -27,10 +28,34 @@ function run() {
 	return true;
 }
 
+function updateCustomerInfo() {
+	var lpExternalCustomerId = 93301125;
+	var newEmailAddress = null;
+	var firstName = "Jong"; 
+	var lastName = "Kim";
+	var birthDate = "11-03";
+	var shoppingPreference = "Male";
+	var addressLine1 = "3037 Softwind way";
+	var addressLine2 = null;
+	var city = "Torrance";
+	var postalCode = "90505";
+	var state = "CA";
+	var mobilePhone = "3373373347";
+	var updateCustomerInfo = require('../customerRequest/UpdateCustomerInfo');
+	var response = updateCustomerInfo.run(lpExternalCustomerId, newEmailAddress, firstName, lastName, birthDate, shoppingPreference, addressLine1, addressLine2, city, postalCode, state, mobilePhone);
+}
+
 function testDate() {
 	var dateFormat = "yyyy-MM-dd'T'HH:MM:ss-HH:MM";
 	//var dateFormat = "yyyy-MM-dd'T'HH:MM:ss.SSS";
 	var response = Util.getCurrentDate(dateFormat);
+	return response;
+}
+
+function checkInCustomer() {
+	var lpExternalCustomerId = "75587003";
+	var checkInCustomer = require('../customerRequest/CheckInCustomer');
+	var response = checkInCustomer.run(lpExternalCustomerId);
 	return response;
 }
 
@@ -61,23 +86,6 @@ function lookupCustomer() {
 	var lookupCustomer = require('../customerRequest/LookupCustomer');
 	var emailAddress = "jktest1@pacsun.com";
 	var response = lookupCustomer.run(emailAddress);
-}
-
-function updateCustomerInfo() {
-	var lpExternalCustomerId = 93301125;
-	var emailAddress = null;
-	var firstName = "Jong"; 
-	var lastName = "Kim";
-	var birthDate = "12-25";
-	var shoppingPreference = "Both";
-	var addressLine1 = "3450 E Miraloma Ave";
-	var addressLine2 = null;
-	var city = null;
-	var postalCode = null;
-	var state = null;
-	var mobilePhone = "1112223333";
-	var updateCustomerInfo = require('../customerRequest/UpdateCustomerInfo');
-	var response = updateCustomerInfo.run(lpExternalCustomerId, emailAddress, firstName, lastName, birthDate, shoppingPreference, addressLine1, addressLine2, city, postalCode, state, mobilePhone);
 }
 
 function enrollCustomer() {
