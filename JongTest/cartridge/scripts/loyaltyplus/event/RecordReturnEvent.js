@@ -28,7 +28,7 @@ function run(lpExternalCustomerId, orderNo) {
             return validationResult;
         }
         var order = OrderMgr.getOrder(orderNo);
-        var result = RecordEventService.run(lpExternalCustomerId, "return", order, null, orderNo).object;
+        var result = RecordEventService.run(lpExternalCustomerId, "return", order, null, orderNo, order.custom.marketingId).object;
         var data = result.data;
         if (data) {
             responseObject = {success : result.success,

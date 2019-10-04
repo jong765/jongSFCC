@@ -40,6 +40,7 @@ function getRequestParam(emailAddress, firstName, lastName, birthDate, shoppingP
 	if (mobilePhone) requestParam.mobile_phone = mobilePhone;
 	if (marketingId) requestParam.sub_channel = Util.getSubChannel(marketingId);
 	requestParam.channel = Constant.CHANNEL;
+	requestParam.last_visit_date = Util.getCurrentDate("yyyy-MM-dd'T'HH:MM:ss-HH:MM");
 	requestParam.sig = Util.getSignature(requestParam);
 
 	logger.debug("requestParam: " + JSON.stringify(requestParam));

@@ -14,7 +14,7 @@ exports.run = function (externalCustomerId, emailAddress, firstName, lastName, b
     var data = {
         urlPath       : UrlPath.UPDATE_CUSTOMER_INFO,
         requestMethod : 'GET',
-        requestParam  : getRequestParam(externalCustomerId, emailAddress, firstName, lastName, birthDate, shoppingPreference, address, mobilePhone)
+        requestParam  : getRequestParam(externalCustomerId, emailAddress, firstName, lastName, birthDate, shoppingPreference, address, mobilePhone, lastVisitDate)
     };
 
     var result = Util.callService(data);

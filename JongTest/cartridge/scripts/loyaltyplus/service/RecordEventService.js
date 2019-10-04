@@ -10,18 +10,18 @@ var UrlPath = require('../util/LoyaltyPlusConstants').UrlPath;
 var CustomPreference = require('../util/LoyaltyPlusConstants').CustomPreference;
 var Constant = require('../util/LoyaltyPlusConstants').Constant;
 
-exports.run = function (externalCustomerId, type, order, eventId, originalEventId) {
+exports.run = function (externalCustomerId, type, order, eventId, originalEventId, marketingId) {
     var data = {
         urlPath       : UrlPath.RECORD,
         requestMethod : 'GET',
-        requestParam  : getRequestParam(externalCustomerId, type, order, eventId, originalEventId)
+        requestParam  : getRequestParam(externalCustomerId, type, order, eventId, originalEventId, marketingId)
     };
 
     var result = Util.callService(data);
     return result;
 };
 
-function getRequestParam(externalCustomerId, type, order, eventId, originalEventId) {
+function getRequestParam(externalCustomerId, type, order, eventId, originalEventId, marketingId) {
     var requestParam = {uuid : CustomPreference.ACCOUNT_ID};
     var signatureParam = null;
     if (externalCustomerId) requestParam.external_customer_id = externalCustomerId;
@@ -29,7 +29,7 @@ function getRequestParam(externalCustomerId, type, order, eventId, originalEvent
     if (eventId) requestParam.event_id = eventId;
     if (originalEventId) requestParam.original_event_id = originalEventId;
     requestParam.channel = Constant.CHANNEL;
-    requestParam.sub_channel = Util.getSubChannel(order.custom.marketingId);
+    if (marketingId) requestParam.sub_channel = Util.getSubChannel(marketingId);
     if (type.equalsIgnoreCase("Purchase")) {
     	requestParam.value = order.totalGrossPrice.value;
     } else if (type.equalsIgnoreCase("Return")) {

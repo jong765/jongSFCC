@@ -6,6 +6,8 @@
 'use strict';
 
 var Util = {};
+var StringUtils = require('dw/util/StringUtils');
+var Calendar = require('dw/util/Calendar');
 var logger = require('dw/system/Logger').getLogger("loyaltyplus-error", "Util.js");
 
 Util.callService = function(data) {
@@ -81,6 +83,13 @@ Util.getSubChannel = function(marketingId) {
 			break;
 	}
 	return subChannel;
+}
+
+Util.getCurrentDate = function(dateFormat) {
+	var calendar = new Calendar();
+	calendar.timeZone = "PST";
+    var currentDateString = StringUtils.formatCalendar( calendar, dateFormat);
+    return currentDateString;
 }
 
 module.exports = Util;

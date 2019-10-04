@@ -5,24 +5,40 @@
  *
  * @module controllers/Test
  */
-
+var Util = require('../util/Util');
 var logger = require('dw/system/Logger').getLogger("loyaltyplus-test", "Test.js");
 
 function run() {
 	//var response = enrollCustomer();
 	//var response = updateCustomerInfo();
 	//var response = lookupCustomer();
-	//var response = showCustomer();
+	var response = showCustomer();
 	//var response = recordPurchaseEvent();
-	var response = recordReturnEvent();
+	//var response = recordReturnEvent();
+	//var response = recordCheckInEvent();
 	//var response = getCustomerEvents();
 	//var response = updateShoppingPreference();
 	//var response = updatePreferredStore();
 	//var response = enrollPOST();
 	//var response = getSignature();
+	//var response = testDate();
 
 	logResponse(response);
 	return true;
+}
+
+function testDate() {
+	var dateFormat = "yyyy-MM-dd'T'HH:MM:ss-HH:MM";
+	//var dateFormat = "yyyy-MM-dd'T'HH:MM:ss.SSS";
+	var response = Util.getCurrentDate(dateFormat);
+	return response;
+}
+
+function recordCheckInEvent() {
+	var lpExternalCustomerId = "75587003";
+	var recordCheckInEvent = require('../event/RecordCheckInEvent');
+	var response = recordCheckInEvent.run(lpExternalCustomerId);
+	return response;
 }
 
 function recordPurchaseEvent() {
@@ -66,7 +82,7 @@ function updateCustomerInfo() {
 
 function enrollCustomer() {
 	var enrollCustomer = require('../customerRequest/EnrollCustomer');
-	var emailAddress = "jktest27@pacsun.com";
+	var emailAddress = "jktest31@pacsun.com";
 	var firstName = "Jong"
 	var lastName = "Kim";
 	var birthDate = "04-17";
@@ -78,7 +94,7 @@ function enrollCustomer() {
 	var postalCode = "92806";
 	var state = "CA";
 	var mobilePhone = "3733329983";
-	var marketingId = "MOB";
+	var marketingId = "DSK";
 	var response = enrollCustomer.run(emailAddress, firstName, lastName, birthDate, shoppingPreference, preferredStore,
 			addressLine1, addressLine2, city, postalCode, state, mobilePhone, marketingId);
 
@@ -139,7 +155,7 @@ function getCustomerEvents() {
 
 function showCustomer() {
 	var showCustomer = require('../customerRequest/ShowCustomer');
-	var lpExternalCustomerId = "75587003";
+	var lpExternalCustomerId = "88028808";
 	var response = showCustomer.run(lpExternalCustomerId);
 	return response;
 }
