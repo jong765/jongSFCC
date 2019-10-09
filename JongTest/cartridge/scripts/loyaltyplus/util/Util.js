@@ -85,11 +85,4 @@ Util.getSubChannel = function(marketingId) {
 	return subChannel;
 }
 
-Util.getCurrentDate = function(dateFormat) {
-	var calendar = new Calendar();
-	calendar.timeZone = "PST";
-    var currentDateString = StringUtils.formatCalendar( calendar, dateFormat);
-    return currentDateString;
-}
-
 module.exports = Util;

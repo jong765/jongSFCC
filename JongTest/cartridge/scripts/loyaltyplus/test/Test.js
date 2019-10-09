@@ -6,31 +6,75 @@
  * @module controllers/Test
  */
 var Util = require('../util/Util');
+var DateUtil = require('../util/DateUtil');
 var logger = require('dw/system/Logger').getLogger("loyaltyplus-test", "Test.js");
 
 function run() {
 	//var response = enrollCustomer();
-	var response = updateCustomerInfo();
+	//var response = updateCustomerInfo();
 	//var response = lookupCustomer();
 	//var response = showCustomer();
-	//var response = checkInCustomer();
+	var response = checkInCustomer();
 	//var response = recordPurchaseEvent();
 	//var response = recordReturnEvent();
 	//var response = recordCheckInEvent();
-	//var response = getCustomerEvents();
+	//var response = getCustomerCheckInEvents();
 	//var response = updateShoppingPreference();
 	//var response = updatePreferredStore();
 	//var response = enrollPOST();
 	//var response = getSignature();
 	//var response = testDate();
+	//var response = formatDate();
+	//var response = getDifferenceInDays();
 
 	logResponse(response);
 	return true;
 }
 
+function checkInCustomer() {
+	var lpExternalCustomerId = "96132844"; //jktest22@pacsun.com
+	var enrollmentDate = "2019-10-01T16:07:21-07:00";
+	var marketingId = "DSK";
+	var checkInCustomer = require('../customerRequest/CheckInCustomer');
+	var response = checkInCustomer.run(lpExternalCustomerId, enrollmentDate, marketingId);
+	return response;
+}
+
+function formatDate() {
+	var sevenDaysAgo = DateUtil.formatDate(DateUtil.addDays(new Date(), -7), "yyyy-MM-dd'T'HH:MM:ss");
+	return sevenDaysAgo;
+}
+
+function getCustomerCheckInEvents() {
+	var getCustomerEvents = require('../customerRequest/GetCustomerEvents');
+	var lpExternalCustomerId = "93301125"; //jktest20@pacsun.com
+	var eventType = "checkin";
+	var dateFilter = "created_at";
+	var afterDate = DateUtil.formatDate(DateUtil.addDays(new Date(), -7), "yyyy-MM-dd'T'HH:MM:ss");
+	var response = getCustomerEvents.run(lpExternalCustomerId, eventType, dateFilter, afterDate, null, null);
+	return response;
+}
+
+function formatDateString() {
+	var dateString = "2019-10-04T16:07:21-0700";
+	//var dateString = "2019/10/04 16:07:21-0700";
+	var dateFormat = "MM/dd/yyyy HH:MM:ss";
+	var response = DateUtil.formatDate(dateString, dateFormat);
+	return response;
+}
+
+function getDifferenceInDays() {
+	//var dateFormat = "yyyy-MM-dd'T'HH:MM:ss-HH:MM";
+	//var dateFormat = "yyyy-MM-dd'T'HH:MM:ss.SSS"; HH:mm:ss
+	var dateString1 = "2019-10-04T16:07:21-0700";
+	var date2 = new Date();
+	var response = DateUtil.getDifferenceInDays(dateString1, date2);
+	return response;
+}
+
 function updateCustomerInfo() {
 	var lpExternalCustomerId = 93301125;
-	var newEmailAddress = null;
+	var newEmailAddress = "jktest20@pacsun.com";
 	var firstName = "Jong"; 
 	var lastName = "Kim";
 	var birthDate = "11-03";
@@ -43,20 +87,6 @@ function updateCustomerInfo() {
 	var mobilePhone = "3373373347";
 	var updateCustomerInfo = require('../customerRequest/UpdateCustomerInfo');
 	var response = updateCustomerInfo.run(lpExternalCustomerId, newEmailAddress, firstName, lastName, birthDate, shoppingPreference, addressLine1, addressLine2, city, postalCode, state, mobilePhone);
-}
-
-function testDate() {
-	var dateFormat = "yyyy-MM-dd'T'HH:MM:ss-HH:MM";
-	//var dateFormat = "yyyy-MM-dd'T'HH:MM:ss.SSS";
-	var response = Util.getCurrentDate(dateFormat);
-	return response;
-}
-
-function checkInCustomer() {
-	var lpExternalCustomerId = "75587003";
-	var checkInCustomer = require('../customerRequest/CheckInCustomer');
-	var response = checkInCustomer.run(lpExternalCustomerId);
-	return response;
 }
 
 function recordCheckInEvent() {
@@ -152,13 +182,6 @@ function enrollPOST() {
 	var response = enrollCustomer.run(emailAddress, firstName, lastName, birthDate, shoppingPreference, preferredStore,
 			null, null, null, null, null, null);
     return response;
-}
-
-function getCustomerEvents() {
-	var getCustomerEvents = require('../customerRequest/GetCustomerEvents');
-	var lpExtCustomerId = "97577177";
-	var response = getCustomerEvents.run(lpExtCustomerId, null, null);
-	return response;
 }
 
 function showCustomer() {

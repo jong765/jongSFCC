@@ -4,6 +4,7 @@
  *  Get history of point earning events completed by a customer.
  *
  *   @input lpExtCustomerId : String
+ *   @input eventType : String
  *   @input pageNumber : Number
  *   @input entriesPerPage : Number
  *   @output responseObject : Object
@@ -14,19 +15,19 @@ var Util = require('../util/Util');
 var logger = require('dw/system/Logger').getLogger("loyaltyplus-error", "GetCustomerEvents.js");
 
 function execute(args) {
-	var responseObject = run(args.lpExtCustomerId, args.pageNumber, args.entriesPerPage);
+	var responseObject = run(args.lpExtCustomerId, args.eventType, args.dateFilter, args.afterDate, args.pageNumber, args.entriesPerPage);
 	args.responseObject = responseObject;
     return responseObject.success ? PIPELET_NEXT : PIPELET_ERROR;
 }
 
-function run(lpExtCustomerId, pageNumber, entriesPerPage) {
+function run(lpExtCustomerId, eventType, dateFilter, afterDate, pageNumber, entriesPerPage) {
     var responseObject = {};
     try {
         var validationResult = Util.validateRequiredParams({'lpExtCustomerId':lpExtCustomerId});
         if (!validationResult.success) {
             return validationResult;
         }
-        var result = CustomerEventsService.run(lpExtCustomerId, pageNumber, entriesPerPage).object;
+        var result = CustomerEventsService.run(lpExtCustomerId, eventType, dateFilter, afterDate, pageNumber, entriesPerPage).object;
         var data = result.data;
         if (data) {
             responseObject = {success : result.success,

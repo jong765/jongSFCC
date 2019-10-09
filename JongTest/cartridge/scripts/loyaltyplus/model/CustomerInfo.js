@@ -14,7 +14,6 @@ function CustomerInfo() {
 	this.birthDate = "undefined";
 	this.mobilePhone = "undefined";
 	this.shoppingPreference = "undefined";
-	this.lastVisitDate = "undefined";
 }
 
 CustomerInfo.prototype = 
@@ -28,7 +27,8 @@ CustomerInfo.prototype =
 	},
 	
 	setNewEmailAddress : function(value){
-		this.newEmailAddress = value;
+		if (!empty(value.trim()))
+			this.newEmailAddress = value;
 	},
 
 	getNewEmailAddress : function(){
@@ -81,14 +81,6 @@ CustomerInfo.prototype =
 
 	getShoppingPreference : function(){
 		return this.shoppingPreference;
-	},
-
-	setLastVisitDate : function(value){
-		this.lastVisitDate = value;
-	},
-		
-	getLastVisitDate : function(){
-		return this.lastVisitDate;
 	}
 }
 

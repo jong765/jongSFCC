@@ -53,7 +53,7 @@ function run(lpExternalCustomerId, newEmailAddress, firstName, lastName, birthDa
 function getCustomerInfo(lpExternalCustomerId, newEmailAddress, firstName, lastName, birthDate, shoppingPreference, addressLine1, addressLine2, city, postalCode, state, mobilePhone) {
 	var customerInfo = new CustomerInfo();
 	customerInfo.externalCustomerId = lpExternalCustomerId;
-	customerInfo.newEmailAddress = newEmailAddress;
+	customerInfo.setNewEmailAddress(newEmailAddress);
 	customerInfo.firstName = firstName;
 	customerInfo.lastName = lastName;
 	customerInfo.birthDate = birthDate;
