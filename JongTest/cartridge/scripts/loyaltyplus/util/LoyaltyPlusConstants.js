@@ -39,7 +39,8 @@ var CustomPreference = {
 };
 
 var Constant = {
-	CHANNEL					: "Online"
+	CHANNEL						   : "Online",
+	LIKE_PRODUCT_LIMIT_PER_MONTH   : 10
 }
 
 module.exports.UrlPath = UrlPath;

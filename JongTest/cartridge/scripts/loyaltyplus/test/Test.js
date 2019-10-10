@@ -19,6 +19,7 @@ function run() {
 	//var response = recordPurchaseEvent();
 	//var response = recordReturnEvent();
 	//var response = recordCheckInEvent();
+	//var response = recordLikeProductEvent();
 	//var response = getCustomerCheckInEvents();
 	//var response = updateShoppingPreference();
 	//var response = updatePreferredStore();
@@ -30,6 +31,14 @@ function run() {
 
 	logResponse(response);
 	return true;
+}
+
+function recordLikeProductEvent() {
+	var lpExternalCustomerId = "75587003"; //jktest1@pacsun.com
+	var marketingId = "DSK";
+	var RecordLikeProductEvent = require('../event/RecordLikeProductEvent');
+	var response = RecordLikeProductEvent.run(lpExternalCustomerId, marketingId);
+	return response;
 }
 
 function showCustomer() {
