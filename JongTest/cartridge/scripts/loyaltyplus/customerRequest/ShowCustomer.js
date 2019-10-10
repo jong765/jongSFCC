@@ -55,7 +55,7 @@ function run(lpExternalCustomerId) {
                               balance : data.balance,
                               status : data.status,
                               shoppingPreference : data.member_attributes.shopping_preference,
-                              tierName : data.top_tier_name,
+                              tierName : data.top_tier_name.trim(),
                               tierExpirationDate : data.top_tier_expiration_date,
                               tierJoinDate : data.top_tier_join_date,
                               pointsNeededForNextTier : data.actions_needed_for_next_tier,
