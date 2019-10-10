@@ -8,6 +8,7 @@
 var Util = require('../util/Util');
 var UrlPath = require('../util/LoyaltyPlusConstants').UrlPath;
 var CustomPreference = require('../util/LoyaltyPlusConstants').CustomPreference;
+var logger = require('dw/system/Logger').getLogger("loyaltyplus-error", "CustomerShowService.js");
 
 exports.run = function (lpExternalCustomerId, include) {
     var data = {

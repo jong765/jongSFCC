@@ -9,6 +9,7 @@ var Util = require('../util/Util');
 var UrlPath = require('../util/LoyaltyPlusConstants').UrlPath;
 var CustomPreference = require('../util/LoyaltyPlusConstants').CustomPreference;
 var Constant = require('../util/LoyaltyPlusConstants').Constant;
+var logger = require('dw/system/Logger').getLogger("loyaltyplus-error", "RecordEventService.js");
 
 exports.run = function (externalCustomerId, type, order, eventId, originalEventId, marketingId) {
     var data = {

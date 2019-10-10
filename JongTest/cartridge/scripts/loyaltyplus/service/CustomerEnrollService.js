@@ -9,7 +9,7 @@ var Util = require('../util/Util');
 var UrlPath = require('../util/LoyaltyPlusConstants').UrlPath;
 var CustomPreference = require('../util/LoyaltyPlusConstants').CustomPreference;
 var Constant = require('../util/LoyaltyPlusConstants').Constant;
-var logger = require('dw/system/Logger').getLogger("loyaltyplus-error", "LoyaltyPlusServiceInit.js");
+var logger = require('dw/system/Logger').getLogger("loyaltyplus-error", "CustomerEnrollService.js");
 
 exports.run = function (emailAddress, firstName, lastName, birthDate, shoppingPreference, 
         preferredStore, address, mobilePhone, marketingId) {

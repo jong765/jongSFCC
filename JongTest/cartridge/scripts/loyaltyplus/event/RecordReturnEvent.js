@@ -11,7 +11,7 @@
 var RecordEventService = require('../service/RecordEventService');
 var OrderMgr = require('dw/order/OrderMgr');
 var Util = require('../util/Util');
-var logger = require('dw/system/Logger').getLogger("loyaltyplus-error", "RecordPurchaseEvent.js");
+var logger = require('dw/system/Logger').getLogger("loyaltyplus-error", "RecordReturnEvent.js");
 
 function execute(args) {
 	var responseObject = run(args.lpExternalCustomerId, args.orderNo);

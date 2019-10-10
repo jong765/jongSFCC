@@ -1,7 +1,7 @@
 /********************************************************************************************
- *  UpdateAttributes.js
+ *  UpdateShoppingPreference.js
  * 
- *  Update the custom attributes of a member.
+ *  Update the ShoppingPreference custom attribute of a member.
  *
  *   @input lpExternalCustomerId : String
  *   @input shoppingPreference : String
@@ -10,7 +10,7 @@
 
 var UpdateAttributesService = require('../service/UpdateAttributesService');
 var Util = require('../util/Util');
-var logger = require('dw/system/Logger').getLogger("loyaltyplus-error", "UpdateAttributes.js");
+var logger = require('dw/system/Logger').getLogger("loyaltyplus-error", "UpdateShoppingPreference.js");
 
 function execute(args) {
 	var responseObject = run(args.lpExternalCustomerId, args.shoppingPreference);
