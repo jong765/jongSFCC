@@ -10,10 +10,10 @@ var DateUtil = require('../util/DateUtil');
 var logger = require('dw/system/Logger').getLogger("loyaltyplus-test", "Test.js");
 
 function run() {
-	//var response = enrollCustomer();
+	var response = enrollCustomer();
 	//var response = updateCustomerInfo();
 	//var response = lookupCustomer();
-	var response = showCustomer();
+	//var response = showCustomer();
 	//var response = checkInCustomer();
 	//var response = completeProfile();
 	//var response = recordPurchaseEvent();
@@ -69,7 +69,6 @@ function enrollCustomer() {
 	var lastName = "Kim";
 	var birthDate = "04-17";
 	var shoppingPreference = "Both";
-	var preferredStore = null;
 	var addressLine1 = "3450 E Miraloma Ave";
 	var addressLine2 = null;
 	var city = "Anaheim";
@@ -77,7 +76,7 @@ function enrollCustomer() {
 	var state = "CA";
 	var mobilePhone = "3733329983";
 	var marketingId = "DSK";
-	var response = enrollCustomer.run(emailAddress, firstName, lastName, birthDate, shoppingPreference, preferredStore,
+	var response = enrollCustomer.run(emailAddress, firstName, lastName, birthDate, shoppingPreference,
 			addressLine1, addressLine2, city, postalCode, state, mobilePhone, marketingId);
 
     return response;
