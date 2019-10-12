@@ -15,8 +15,10 @@
  *   @output responseObject : Object
  */
 
-var RecordCompleteProfileEvent = require('../event/RecordCompleteProfileEvent');
 var GetCustomerEvents = require('../customerRequest/GetCustomerEvents');
+var RecordEventService = require('../service/RecordEventService');
+var RecordRequestParam = require('../model/RecordRequestParam');
+var EventType = require('../util/LoyaltyPlusConstants').EventType;
 var Util = require('../util/Util');
 var logger = require('dw/system/Logger').getLogger("loyaltyplus-error", "CompleteProfile.js");
 
@@ -35,7 +37,7 @@ function run(lpExternalCustomerId, emailAddress, firstName, lastName, birthDate,
         }
         if (isProfileComplete(emailAddress, firstName, lastName, birthDate, postalCode, shoppingPreference) &&
     		!isProfileCompleteInLP(lpExternalCustomerId)) {
-    		responseObject = RecordCompleteProfileEvent.run(lpExternalCustomerId, marketingId);
+    		responseObject = recordEvent(lpExternalCustomerId, marketingId);
         } else {
         	responseObject = {success : true};
         } 
@@ -46,6 +48,28 @@ function run(lpExternalCustomerId, emailAddress, firstName, lastName, birthDate,
         responseObject = {success : false};
     }
     logger.debug("responseObject: " + JSON.stringify(responseObject));
+    return responseObject;
+}
+
+function recordEvent(lpExternalCustomerId, marketingId) {
+    var responseObject = {};
+    var type = EventType.COMPLETE_PROFILE;
+    try {
+        var result = RecordEventService.run(new RecordRequestParam(lpExternalCustomerId, type, marketingId)).object;
+        var data = result.data;
+        if (data) {
+            responseObject = {success : result.success,
+                              points : data.points,
+                              eventId : data.id};
+        } else {
+            responseObject = {success : false};
+        }
+    } catch (e) {
+        var exception = e;
+        var errMessage = exception.message + "\n" + exception.stack;
+        logger.error(errMessage);
+        responseObject = {success : false};
+    }
     return responseObject;
 }
 

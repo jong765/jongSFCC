@@ -1,7 +1,7 @@
 /**
- *  RecordLikeProductEvent.js
+ *  LikeProduct.js
  * 
- *  Record loyalty plus complete_profile event.
+ *  Record loyalty plus like_a_product event.
  * 
  *   @input lpExternalCustomerId : String
  *   @input marketingId : String
@@ -10,11 +10,12 @@
 
 var RecordEventService = require('../service/RecordEventService');
 var GetCustomerEvents = require('../customerRequest/GetCustomerEvents');
-var OrderMgr = require('dw/order/OrderMgr');
+var RecordRequestParam = require('../model/RecordRequestParam');
+var EventType = require('../util/LoyaltyPlusConstants').EventType;
 var Util = require('../util/Util');
 var DateUtil = require('../util/DateUtil');
 var Constant = require('../util/LoyaltyPlusConstants').Constant;
-var logger = require('dw/system/Logger').getLogger("loyaltyplus-error", "RecordLikeProductEvent.js");
+var logger = require('dw/system/Logger').getLogger("loyaltyplus-error", "LikeProduct.js");
 
 function execute(args) {
 	var responseObject = run(args.lpExternalCustomerId, args.marketingId);
@@ -31,18 +32,10 @@ function run(lpExternalCustomerId, marketingId) {
             return validationResult;
         }
         if (getLikeProductCountLP(lpExternalCustomerId) < Constant.LIKE_PRODUCT_LIMIT_PER_MONTH) {
-	        var result = RecordEventService.run(lpExternalCustomerId, "like_a_product", null, null, null, marketingId).object;
-	        var data = result.data;
-	        if (data) {
-	            responseObject = {success : result.success,
-	                              points : data.points,
-	                              eventId : data.id};
-	        } else {
-	            responseObject = {success : false};
-	        }
+        	responseObject = recordEvent(lpExternalCustomerId, marketingId);
         } else {
-        		responseObject = {success : true};
-        }
+        	responseObject = {success : true};
+        } 
     } catch (e) {
         var exception = e;
         var errMessage = exception.message + "\n" + exception.stack;
@@ -64,6 +57,28 @@ function getLikeProductCountLP(lpExternalCustomerId) {
 	}
 	logger.debug("likeProductCountLP: " + returnCount);
 	return returnCount;
+}
+
+function recordEvent(lpExternalCustomerId, marketingId) {
+    var responseObject = {};
+    var type = EventType.LIKE_A_PRODUCT;
+    try {
+        var result = RecordEventService.run(new RecordRequestParam(lpExternalCustomerId, type, marketingId)).object;
+        var data = result.data;
+        if (data) {
+            responseObject = {success : result.success,
+                              points : data.points,
+                              eventId : data.id};
+        } else {
+            responseObject = {success : false};
+        }
+    } catch (e) {
+        var exception = e;
+        var errMessage = exception.message + "\n" + exception.stack;
+        logger.error(errMessage);
+        responseObject = {success : false};
+    }
+    return responseObject;
 }
 
 module.exports = {

@@ -1,5 +1,5 @@
 /********************************************************************************************
- *  CheckInCustomer.js
+ *  CheckIn.js
  * 
  *  Take care of processes when customer checks in.
  *
@@ -10,10 +10,12 @@
  */
 
 var GetCustomerEvents = require('../customerRequest/GetCustomerEvents');
-var RecordCheckInEvent = require('../event/RecordCheckInEvent');
+var RecordEventService = require('../service/RecordEventService');
+var RecordRequestParam = require('../model/RecordRequestParam');
+var EventType = require('../util/LoyaltyPlusConstants').EventType;
 var Util = require('../util/Util');
 var DateUtil = require('../util/DateUtil');
-var logger = require('dw/system/Logger').getLogger("loyaltyplus-error", "CheckInCustomer.js");
+var logger = require('dw/system/Logger').getLogger("loyaltyplus-error", "CheckIn.js");
 
 function execute(args) {
 	var responseObject = run(args.lpExternalCustomerId, args.enrollmentDate, args.marketingId);
@@ -24,13 +26,14 @@ function execute(args) {
 function run(lpExternalCustomerId, enrollmentDate, marketingId) {
     var responseObject = {};
     try {
-        var validationResult = Util.validateRequiredParams({'lpExternalCustomerId':lpExternalCustomerId});
+        var validationResult = Util.validateRequiredParams({'lpExternalCustomerId':lpExternalCustomerId, 
+        	'enrollmentDate':enrollmentDate});
         if (!validationResult.success) {
             return validationResult;
         }
         // Check in if 7 days passed since last check in and enrollment date
         if (over7DaysSinceEnrollmentDate(enrollmentDate) && over7DaysSinceLastCheckIn(lpExternalCustomerId)) {
-        	responseObject = RecordCheckInEvent.run(lpExternalCustomerId, marketingId);
+        	responseObject = recordEvent(lpExternalCustomerId, marketingId);
         } else {
         	responseObject = {success : true};
         }
@@ -41,6 +44,28 @@ function run(lpExternalCustomerId, enrollmentDate, marketingId) {
         responseObject = {success : false};
     }
     logger.debug("responseObject: " + JSON.stringify(responseObject));
+    return responseObject;
+}
+
+function recordEvent(lpExternalCustomerId, marketingId) {
+    var responseObject = {};
+    var type = EventType.CHECK_IN;
+    try {
+        var result = RecordEventService.run(new RecordRequestParam(lpExternalCustomerId, type, marketingId)).object;
+        var data = result.data;
+        if (data) {
+            responseObject = {success : result.success,
+                              points : data.points,
+                              eventId : data.id};
+        } else {
+            responseObject = {success : false};
+        }
+    } catch (e) {
+        var exception = e;
+        var errMessage = exception.message + "\n" + exception.stack;
+        logger.error(errMessage);
+        responseObject = {success : false};
+    }
     return responseObject;
 }
 

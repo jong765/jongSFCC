@@ -1,7 +1,7 @@
 /**
- *  RecordPurchaseEvent.js
+ *  Return.js
  * 
- *  Record loyalty plus purchase event.
+ *  Record loyalty plus return event.
  * 
  *   @input lpExternalCustomerId : String
  *   @input orderNo : String
@@ -9,9 +9,11 @@
  */
 
 var RecordEventService = require('../service/RecordEventService');
+var RecordRequestParam = require('../model/RecordRequestParam');
+var EventType = require('../util/LoyaltyPlusConstants').EventType;
 var OrderMgr = require('dw/order/OrderMgr');
 var Util = require('../util/Util');
-var logger = require('dw/system/Logger').getLogger("loyaltyplus-error", "RecordPurchaseEvent.js");
+var logger = require('dw/system/Logger').getLogger("loyaltyplus-error", "Return.js");
 
 function execute(args) {
 	var responseObject = run(args.lpExternalCustomerId, args.orderNo);
@@ -28,7 +30,25 @@ function run(lpExternalCustomerId, orderNo) {
             return validationResult;
         }
         var order = OrderMgr.getOrder(orderNo);
-        var result = RecordEventService.run(lpExternalCustomerId, "purchase", order, null, null, order.custom.marketingId).object;
+        responseObject = recordEvent(lpExternalCustomerId, order, order.custom.marketingId);
+    } catch (e) {
+        var exception = e;
+        var errMessage = exception.message + "\n" + exception.stack;
+        logger.error(errMessage);
+        responseObject = {success : false};
+    }
+    logger.debug("responseObject: " + JSON.stringify(responseObject));
+    return responseObject;
+}
+
+function recordEvent(lpExternalCustomerId, order, marketingId) {
+    var responseObject = {};
+    var type = EventType.RETURN;
+    try {
+    	var recordRequestParam = new RecordRequestParam(lpExternalCustomerId, type, marketingId);
+    	recordRequestParam.setValue(order.totalGrossPrice.value * -1);
+    	recordRequestParam.setEventId(order.orderNo);
+        var result = RecordEventService.run(recordRequestParam).object;
         var data = result.data;
         if (data) {
             responseObject = {success : result.success,
@@ -43,7 +63,6 @@ function run(lpExternalCustomerId, orderNo) {
         logger.error(errMessage);
         responseObject = {success : false};
     }
-    logger.debug("responseObject: " + JSON.stringify(responseObject));
     return responseObject;
 }
 

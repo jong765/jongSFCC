@@ -38,6 +38,14 @@ var CustomPreference = {
 	SECRET_KEY				: Site.current.preferences.custom.lpSecretKey
 };
 
+var EventType = {
+	CHECK_IN				:	"checkin",
+	COMPLETE_PROFILE		:	"complete_profile",
+	LIKE_A_PRODUCT			:	"like_a_product",
+	PURCHASE				:	"purchase",
+	RETURN					:	"return"
+};
+
 var Constant = {
 	CHANNEL						   : "Online",
 	LIKE_PRODUCT_LIMIT_PER_MONTH   : 10
@@ -46,3 +54,4 @@ var Constant = {
 module.exports.UrlPath = UrlPath;
 module.exports.CustomPreference = CustomPreference;
 module.exports.Constant = Constant;
+module.exports.EventType = EventType;

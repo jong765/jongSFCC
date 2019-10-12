@@ -5,39 +5,51 @@
  */
 'use strict';
 
+var OrderMgr = require('dw/order/OrderMgr');
 var Util = require('../util/Util');
 var UrlPath = require('../util/LoyaltyPlusConstants').UrlPath;
 var CustomPreference = require('../util/LoyaltyPlusConstants').CustomPreference;
 var Constant = require('../util/LoyaltyPlusConstants').Constant;
 var logger = require('dw/system/Logger').getLogger("loyaltyplus-error", "RecordEventService.js");
 
-exports.run = function (externalCustomerId, type, order, eventId, originalEventId, marketingId) {
+exports.run = function (recordRequestParam) {
     var data = {
         urlPath       : UrlPath.RECORD,
         requestMethod : 'GET',
-        requestParam  : getRequestParam(externalCustomerId, type, order, eventId, originalEventId, marketingId)
+        requestParam  : getRequestParam(recordRequestParam)
     };
 
     var result = Util.callService(data);
     return result;
 };
 
-function getRequestParam(externalCustomerId, type, order, eventId, originalEventId, marketingId) {
+function getRequestParam(recordRequestParam) {
+	logger.debug("recordRequestParam: " + recordRequestParam.toString());
     var requestParam = {uuid : CustomPreference.ACCOUNT_ID};
     var signatureParam = null;
-    if (externalCustomerId) requestParam.external_customer_id = externalCustomerId;
-    if (type) requestParam.type = type;
-    if (eventId) requestParam.event_id = eventId;
-    if (originalEventId) requestParam.original_event_id = originalEventId;
+    
+    requestParam.external_customer_id = recordRequestParam.externalCustomerId;
+    
+    requestParam.type = recordRequestParam.type;
+    
+    if (recordRequestParam.eventId != "undefined") 
+    	requestParam.event_id = recordRequestParam.eventId;
+    
+    if (recordRequestParam.originalEventId != "undefined") 
+    	requestParam.original_event_id = recordRequestParam.originalEventId;
+    
+    if (recordRequestParam.marketingId != "undefined") 
+    	requestParam.sub_channel = Util.getSubChannel(recordRequestParam.marketingId);
+    
+    if (recordRequestParam.value != "undefined")
+    	requestParam.value = recordRequestParam.value;
+    
     requestParam.channel = Constant.CHANNEL;
-    if (marketingId) requestParam.sub_channel = Util.getSubChannel(marketingId);
-    if (type.equalsIgnoreCase("Purchase")) {
-    	requestParam.value = order.totalGrossPrice.value;
-    } else if (type.equalsIgnoreCase("Return")) {
-    	requestParam.value = order.totalGrossPrice.value * -1;
-    }
-    if (type.equalsIgnoreCase("Purchase")) {
+    
+    if (recordRequestParam.type.equalsIgnoreCase("Purchase")) {
         signatureParam = Util.copyObject(requestParam);
+        var orderNo = recordRequestParam.getEventId();
+        var order = OrderMgr.getOrder(orderNo);
         var productLineItems = order.getProductLineItems();
         var parameterString = "";
         var counter = 1;
@@ -57,6 +69,6 @@ function getRequestParam(externalCustomerId, type, order, eventId, originalEvent
     } else {
         requestParam.sig = Util.getSignature(requestParam);
     } 
-    
+
     return requestParam;
 }

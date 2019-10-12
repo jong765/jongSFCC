@@ -10,16 +10,16 @@ var DateUtil = require('../util/DateUtil');
 var logger = require('dw/system/Logger').getLogger("loyaltyplus-test", "Test.js");
 
 function run() {
-	var response = enrollCustomer();
+	//var response = enrollCustomer();
 	//var response = updateCustomerInfo();
 	//var response = lookupCustomer();
 	//var response = showCustomer();
-	//var response = checkInCustomer();
+	//var response = checkIn();
 	//var response = completeProfile();
-	//var response = recordPurchaseEvent();
-	//var response = recordReturnEvent();
+	//var response = purchase();
+	var response = returnn();
 	//var response = recordCheckInEvent();
-	//var response = recordLikeProductEvent();
+	//var response = likeProduct();
 	//var response = getCustomerCheckInEvents();
 	//var response = updateShoppingPreference();
 	//var response = updatePreferredStore();
@@ -33,11 +33,25 @@ function run() {
 	return true;
 }
 
-function recordLikeProductEvent() {
-	var lpExternalCustomerId = "75587003"; //jktest1@pacsun.com
+function completeProfile() {
+	var lpExternalCustomerId = "94387328";
+	var emailAddress = "jktest25@pacsun.com";
+	var firstName = "Jong";
+	var lastName = "Kim";
+	var birthDate = "0803";
+	var postalCode = "92806";
+	var shoppingPreference = "Both";
 	var marketingId = "DSK";
-	var RecordLikeProductEvent = require('../event/RecordLikeProductEvent');
-	var response = RecordLikeProductEvent.run(lpExternalCustomerId, marketingId);
+	var completeProfile = require('../event/CompleteProfile');
+	var response = completeProfile.run(lpExternalCustomerId, emailAddress, firstName, lastName, birthDate, postalCode, shoppingPreference, marketingId);
+	return response;
+}
+
+function likeProduct() {
+	var lpExternalCustomerId = "94387328"; //jktest25@pacsun.com
+	var marketingId = "DSK";
+	var LikeProduct = require('../event/LikeProduct');
+	var response = LikeProduct.run(lpExternalCustomerId, marketingId);
 	return response;
 }
 
@@ -45,20 +59,6 @@ function showCustomer() {
 	var showCustomer = require('../customerRequest/ShowCustomer');
 	var lpExternalCustomerId = "75587003"; //jktest1@pacsun.com
 	var response = showCustomer.run(lpExternalCustomerId);
-	return response;
-}
-
-function completeProfile() {
-	var lpExternalCustomerId = "96132844"; //jktest22@pacsun.com
-	var emailAddress = "jktest22@pacsun.com";
-	var firstName = "Jong";
-	var lastName = "Kim";
-	var birthDate = "0803";
-	var postalCode = "92806";
-	var shoppingPreference = "Both";
-	var marketingId = "DSK";
-	var completeProfile = require('../customerRequest/CompleteProfile');
-	var response = completeProfile.run(lpExternalCustomerId, emailAddress, firstName, lastName, birthDate, postalCode, shoppingPreference, marketingId);
 	return response;
 }
 
@@ -82,12 +82,12 @@ function enrollCustomer() {
     return response;
 }
 
-function checkInCustomer() {
-	var lpExternalCustomerId = "96132844"; //jktest22@pacsun.com
-	var enrollmentDate = "2019-10-01T16:07:21-07:00";
+function checkIn() {
+	var lpExternalCustomerId = "94387328"; //jktest25@pacsun.com
+	var enrollmentDate = "2019-10-02T16:07:21-07:00";
 	var marketingId = "DSK";
-	var checkInCustomer = require('../customerRequest/CheckInCustomer');
-	var response = checkInCustomer.run(lpExternalCustomerId, enrollmentDate, marketingId);
+	var checkIn = require('../event/CheckIn');
+	var response = checkIn.run(lpExternalCustomerId, enrollmentDate, marketingId);
 	return response;
 }
 
@@ -147,18 +147,18 @@ function recordCheckInEvent() {
 	return response;
 }
 
-function recordPurchaseEvent() {
-	var recordPurchaseEvent = require('../event/RecordPurchaseEvent');
-	var lpExternalCustomerId = "75587003";
-	var orderNo = "70038826";
-	var response = recordPurchaseEvent.run(lpExternalCustomerId, orderNo);
+function purchase() {
+	var purchase = require('../event/Purchase');
+	var lpExternalCustomerId = "94387328"; //jktest25@pacsun.com
+	var orderNo = "70039425";
+	var response = purchase.run(lpExternalCustomerId, orderNo);
 	return response;
 }
 
-function recordReturnEvent() {
+function returnn() {
 	var recordReturnEvent = require('../event/RecordReturnEvent');
-	var lpExternalCustomerId = "75587003";
-	var orderNo = "70038826";
+	var lpExternalCustomerId = "94387328"; //jktest25@pacsun.com
+	var orderNo = "70039425";
 	var response = recordReturnEvent.run(lpExternalCustomerId, orderNo);
 	return response;
 }
