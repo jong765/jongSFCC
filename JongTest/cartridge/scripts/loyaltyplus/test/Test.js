@@ -156,10 +156,10 @@ function purchase() {
 }
 
 function returnn() {
-	var recordReturnEvent = require('../event/RecordReturnEvent');
+	var returnn = require('../event/Return');
 	var lpExternalCustomerId = "94387328"; //jktest25@pacsun.com
 	var orderNo = "70039425";
-	var response = recordReturnEvent.run(lpExternalCustomerId, orderNo);
+	var response = returnn.run(lpExternalCustomerId, orderNo);
 	return response;
 }
 
