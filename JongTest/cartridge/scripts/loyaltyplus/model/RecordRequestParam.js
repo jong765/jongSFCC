@@ -20,15 +20,6 @@ function RecordRequestParam(externalCustomerId, type, marketingId) {
 
 RecordRequestParam.prototype = 
 {
-	init : function(externalCustomerId, type, marketingId) {
-		if (!empty(externalCustomerId))
-			this.externalCustomerId = externalCustomerId.trim();
-		if (!empty(type))
-			this.type = type.trim();
-		if (!empty(marketingId))
-			this.marketingId = marketingId.trim();
-	},
-	
 	setExternalCustomerId : function(value){
 		this.externalCustomerId = value;
 	},

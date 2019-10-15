@@ -46,7 +46,7 @@ function recordEvent(lpExternalCustomerId, order, marketingId) {
     var type = EventType.RETURN;
     try {
     	var recordRequestParam = new RecordRequestParam(lpExternalCustomerId, type, marketingId);
-    	recordRequestParam.setValue(order.totalGrossPrice.value * -1);
+    	recordRequestParam.setValue(order.adjustedMerchandizeTotalNetPrice.value * -1);
     	recordRequestParam.setEventId(order.orderNo);
         var result = RecordEventService.run(recordRequestParam).object;
         var data = result.data;

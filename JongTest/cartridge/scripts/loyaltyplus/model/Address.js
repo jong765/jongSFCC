@@ -6,7 +6,7 @@
 'use strict';
 
 function Address() {
-	this.addressLine1 = "undefined"; //These initial values must be "undefined" string, not undefined.
+	this.addressLine1 = "undefined";
 	this.addressLine2 = "undefined";
 	this.city = "undefined";
 	this.postalCode = "undefined";
@@ -17,7 +17,8 @@ function Address() {
 Address.prototype = 
 {
 	setAddressLine1 : function(value){
-		this.addressLine1 = value;
+		if (!empty(value))
+			this.addressLine1 = value;
 	},
 
 	getAddressLine1 : function(){
@@ -25,7 +26,8 @@ Address.prototype =
 	},
 
 	setAddressLine2 : function(value){
-		this.addressLine2 = value;
+		if (!empty(value))
+			this.addressLine2 = value;
 	},
 		
 	getAddressLine2 : function(){
@@ -33,7 +35,8 @@ Address.prototype =
 	},
 
 	setCity : function(value){
-		this.city = value;
+		if (!empty(value))
+			this.city = value;
 	},
 		
 	getCity : function(){
@@ -41,7 +44,8 @@ Address.prototype =
 	},
 
 	setPostalCode : function(value){
-		this.postalCode = value;
+		if (!empty(value))
+			this.postalCode = value;
 	},
 		
 	getPostalCode : function(){
@@ -49,7 +53,8 @@ Address.prototype =
 	},
 
 	setState : function(value){
-		this.state = value;
+		if (!empty(value))
+			this.state = value;
 	},
 		
 	getState : function(){
@@ -57,7 +62,8 @@ Address.prototype =
 	},
 
 	setCountry : function(value){
-		this.country = value;
+		if (!empty(value))
+			this.country = value;
 	},
 		
 	getCountry : function(){

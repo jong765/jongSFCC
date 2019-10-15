@@ -6,6 +6,7 @@
 'use strict';
 
 var OrderMgr = require('dw/order/OrderMgr');
+var ProductMgr = require('dw/catalog/ProductMgr');
 var Util = require('../util/Util');
 var UrlPath = require('../util/LoyaltyPlusConstants').UrlPath;
 var CustomPreference = require('../util/LoyaltyPlusConstants').CustomPreference;
@@ -58,10 +59,19 @@ function getRequestParam(recordRequestParam) {
             requestParam["products[" + i + "][price]"] = productLineItem.price.value;
             requestParam["products[" + i + "][product_id]"] = productLineItem.productID;
             requestParam["products[" + i + "][quantity]"] = productLineItem.quantity.value;
-            if (counter == 1)
-                parameterString += "products" + i + "price" + productLineItem.price.value + "product_id" + productLineItem.productID + "quantity" + productLineItem.quantity.value;
-            else
-                parameterString += i + "price" + productLineItem.price.value + "product_id" + productLineItem.productID + "quantity" + productLineItem.quantity.value;
+            var productCategory = getProductCategory(productLineItem.productID);
+            if (productCategory != null) {
+            	requestParam["products[" + i + "][categories]"] = productCategory;
+            }
+            if (counter == 1) {
+            	parameterString += "products" + i;
+            } else {
+            	parameterString += i;
+            }
+            if (productCategory != null)
+            	parameterString += "categories" + productCategory;
+            parameterString += "price" + productLineItem.price.value + "product_id" + productLineItem.productID + 
+        		"quantity" + productLineItem.quantity.value;
             counter++;
         }
         signatureParam[parameterString] = "";
@@ -71,4 +81,17 @@ function getRequestParam(recordRequestParam) {
     } 
 
     return requestParam;
+}
+
+function getProductCategory(productId) {
+	var categoryName = null;
+	try {
+		var product = ProductMgr.getProduct(productId);
+		categoryName = product.getVariationModel().getMaster().classificationCategory.displayName;
+	} catch(e) {
+		var exception = e;
+        var errMessage = exception.message + "\n" + exception.stack;
+		logger.error("Error getting category name for the productId " + productId);
+	}
+	return categoryName;
 }

@@ -52,20 +52,22 @@ function run(lpExternalCustomerId, newEmailAddress, firstName, lastName, birthDa
 
 function getCustomerInfo(lpExternalCustomerId, newEmailAddress, firstName, lastName, birthDate, shoppingPreference, addressLine1, addressLine2, city, postalCode, state, mobilePhone) {
 	var customerInfo = new CustomerInfo();
-	customerInfo.externalCustomerId = lpExternalCustomerId;
+	customerInfo.setExternalCustomerId(lpExternalCustomerId);
 	customerInfo.setNewEmailAddress(newEmailAddress);
-	customerInfo.firstName = firstName;
-	customerInfo.lastName = lastName;
-	customerInfo.birthDate = birthDate;
-	customerInfo.shoppingPreference = shoppingPreference;
-	customerInfo.mobilePhone = mobilePhone;
-	var address = new Address();
-	address.addressLine1 = addressLine1;
-	address.addressLine2 = addressLine2;
-	address.city = city;
-	address.postalCode = postalCode;
-	address.state = state;
-	customerInfo.address = address;
+	customerInfo.setFirstName(firstName);
+	customerInfo.setLastName(lastName);
+	customerInfo.setBirthDate(birthDate);
+	customerInfo.setShoppingPreference(shoppingPreference);
+	if (!empty(addressLine1) || !empty(city) || !empty(state) || !empty(postalCode)) {
+		var address = new Address();
+		address.setAddressLine1(addressLine1);
+		address.setAddressLine2(addressLine2);
+		address.setCity(city);
+		address.setPostalCode(postalCode);
+		address.setState(state);
+		customerInfo.setAddress(address);
+	}
+	customerInfo.setMobilePhone(mobilePhone);
 	return customerInfo;
 }
 

@@ -12,34 +12,46 @@ var CustomPreference = require('../util/LoyaltyPlusConstants').CustomPreference;
 var Constant = require('../util/LoyaltyPlusConstants').Constant;
 var logger = require('dw/system/Logger').getLogger("loyaltyplus-error", "CustomerEnrollService.js");
 
-exports.run = function (emailAddress, firstName, lastName, birthDate, shoppingPreference, 
-        address, mobilePhone, marketingId) {
+exports.run = function (customerInfo, marketingId) {
     var data = {
         urlPath       : UrlPath.CUSTOMER_ENROLL,
         requestMethod : 'GET',
-        requestParam  : getRequestParam(emailAddress, firstName, lastName, birthDate, shoppingPreference, 
-                address, mobilePhone, marketingId)
+        requestParam  : getRequestParam(customerInfo, marketingId)
     };
 
     var result = Util.callService(data);
     return result;
 };
 
-function getRequestParam(emailAddress, firstName, lastName, birthDate, shoppingPreference, 
-        address, mobilePhone, marketingId) {
+function getRequestParam(customerInfo, marketingId) {
+	logger.debug("customerInfo: " + JSON.stringify(customerInfo));
 	var requestParam = {uuid:CustomPreference.ACCOUNT_ID};
-	if (emailAddress) requestParam.email = emailAddress;
-	if (firstName) requestParam.first_name = firstName;
-	if (lastName) requestParam.last_name = lastName;
-	if (birthDate) requestParam.birthdate = birthDate;
-	if (shoppingPreference) requestParam["custom_attributes[shopping_preference]"] = shoppingPreference;
-	if (address.addressLine1) requestParam.address_line_1 = address.addressLine1;
-	if (address.addressLine2) requestParam.address_line_2 = address.addressLine2;
-	if (address.city) requestParam.city = address.city;
-	if (address.postalCode) requestParam.postal_code = address.postalCode;
-	if (address.state) requestParam.state = address.state;
-	if (mobilePhone) requestParam.mobile_phone = mobilePhone;
-	if (marketingId) requestParam.sub_channel = Util.getSubChannel(marketingId);
+	if (customerInfo.emailAddress != "undefined") 
+		requestParam.email = customerInfo.emailAddress;
+	if (customerInfo.firstName != "undefined") 
+		requestParam.first_name = customerInfo.firstName;
+	if (customerInfo.lastName != "undefined") 
+		requestParam.last_name = customerInfo.lastName;
+	if (customerInfo.birthDate != "undefined") 
+		requestParam.birthdate = customerInfo.birthDate;
+	if (customerInfo.shoppingPreference != "undefined") 
+		requestParam["custom_attributes[shopping_preference]"] = customerInfo.shoppingPreference;
+	if (customerInfo.address != "undefined") {
+		if (customerInfo.address.addressLine1 != "undefined") 
+			requestParam.address_line_1 = customerInfo.address.addressLine1;
+		if (customerInfo.address.addressLine2 != "undefined") 
+			requestParam.address_line_2 = customerInfo.address.addressLine2;
+		if (customerInfo.address.city != "undefined") 
+			requestParam.city = customerInfo.address.city;
+		if (customerInfo.address.postalCode != "undefined") 
+			requestParam.postal_code = customerInfo.address.postalCode;
+		if (customerInfo.address.state != "undefined") 
+			requestParam.state = customerInfo.address.state;
+	}
+	if (customerInfo.mobilePhone != "undefined") 
+		requestParam.mobile_phone = customerInfo.mobilePhone;
+	if (customerInfo.marketingId != "undefined") 
+		requestParam.sub_channel = Util.getSubChannel(marketingId);
 	requestParam.channel = Constant.CHANNEL;
 	requestParam.last_visit_date = DateUtil.getCurrentDateString("yyyy-MM-dd'T'HH:MM:ss-HH:MM");
 	requestParam.sig = Util.getSignature(requestParam);

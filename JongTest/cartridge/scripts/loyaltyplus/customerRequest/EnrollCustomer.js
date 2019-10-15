@@ -20,6 +20,7 @@
 'use strict';
 
 var CustomerEnrollService = require('../service/CustomerEnrollService');
+var CustomerInfo = require('../model/CustomerInfo');
 var Address = require('../model/Address');
 var Util = require('../util/Util');
 var logger = require('dw/system/Logger').getLogger("loyaltyplus-error", "EnrollCustomer.js");
@@ -35,13 +36,13 @@ function run(emailAddress, firstName, lastName, birthDate, shoppingPreference,
     addressLine1, addressLine2, city, postalCode, state, mobilePhone, marketingId) {
     var responseObject = {};
     try {
-        var validationResult = Util.validateRequiredParams({'emailAddress':emailAddress});
+        var validationResult = Util.validateRequiredParams({'emailAddress':emailAddress.trim()});
         if (!validationResult.success) {
             return validationResult;
         }
-        var address = new Address(addressLine1, addressLine2, city, postalCode, state, null);
-        var result = CustomerEnrollService.run(emailAddress, firstName, lastName, birthDate, shoppingPreference, 
-            address, mobilePhone, marketingId).object;
+        var customerInfo = getCustomerInfo(emailAddress, firstName, lastName, birthDate, shoppingPreference, 
+        	    addressLine1, addressLine2, city, postalCode, state, mobilePhone);
+        var result = CustomerEnrollService.run(customerInfo, marketingId).object;
         var data = result.data;
         if (data) {
             responseObject = {success : result.success,
@@ -59,6 +60,27 @@ function run(emailAddress, firstName, lastName, birthDate, shoppingPreference,
     }
     logger.debug("responseObject: " + JSON.stringify(responseObject));
     return responseObject;
+}
+
+function getCustomerInfo(emailAddress, firstName, lastName, birthDate, shoppingPreference, 
+	    addressLine1, addressLine2, city, postalCode, state, mobilePhone) {
+	var customerInfo = new CustomerInfo();
+	customerInfo.setEmailAddress(emailAddress);
+	customerInfo.setFirstName(firstName);
+	customerInfo.setLastName(lastName);
+	customerInfo.setBirthDate(birthDate);
+	customerInfo.setShoppingPreference(shoppingPreference);
+	if (!empty(addressLine1) || !empty(city) || !empty(state) || !empty(postalCode)) {
+		var address = new Address();
+		address.setAddressLine1(addressLine1);
+		address.setAddressLine2(addressLine2);
+		address.setCity(city);
+		address.setPostalCode(postalCode);
+		address.setState(state);
+		customerInfo.setAddress(address);
+	}
+	customerInfo.setMobilePhone(mobilePhone);
+	return customerInfo;
 }
 
 module.exports = {

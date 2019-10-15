@@ -6,7 +6,8 @@
 'use strict';
 
 function CustomerInfo() {
-	this.externalCustomerId = "undefined"; //These initial values must be "undefined" string, not undefined.
+	this.externalCustomerId = "undefined";
+	this.emailAddress = "undefined";
 	this.newEmailAddress = "undefined";
 	this.firstName = "undefined";
 	this.lastName = "undefined";
@@ -19,16 +20,26 @@ function CustomerInfo() {
 CustomerInfo.prototype = 
 {
 	setExternalCustomerId : function(value){
-		this.externalCustomerId = value;
+		if (!empty(value))
+			this.externalCustomerId = value;
 	},
 
 	getExternalCustomerId : function(){
 		return this.externalCustomerId;
 	},
 	
+	setEmailAddress : function(value){
+		if (value != null && !empty(value.trim()))
+			this.emailAddress = value;
+	},
+
+	getEmailAddress : function(){
+		return this.emailAddress;
+	},
+	
 	setNewEmailAddress : function(value){
-		if (!empty(value.trim()))
-			this.newEmailAddress = value;
+		if (value != null && !empty(value.trim()))
+			this.newEmailAddress = value.trim();
 	},
 
 	getNewEmailAddress : function(){
@@ -36,7 +47,8 @@ CustomerInfo.prototype =
 	},
 	
 	setFirstName : function(value){
-		this.firstName = value;
+		if (!empty(value))
+			this.firstName = value;
 	},
 
 	getFirstName : function(){
@@ -44,7 +56,8 @@ CustomerInfo.prototype =
 	},
 	
 	setLastName : function(value){
-		this.lastName = value;
+		if (!empty(value))
+			this.lastName = value;
 	},
 
 	getLastName : function(){
@@ -52,7 +65,8 @@ CustomerInfo.prototype =
 	},
 		
 	setAddress : function(value){
-		this.address = value;
+		if (!empty(value))
+			this.address = value;
 	},
 
 	getAddress : function(){
@@ -60,7 +74,8 @@ CustomerInfo.prototype =
 	},
 	
 	setBirthDate : function(value){
-		this.birthDate = value;
+		if (!empty(value))
+			this.birthDate = value;
 	},
 
 	getBirthDate : function(){
@@ -68,7 +83,8 @@ CustomerInfo.prototype =
 	},
 	
 	setMobilePhone : function(value){
-		this.mobilePhone = value;
+		if (!empty(value))
+			this.mobilePhone = value;
 	},
 
 	getMobilePhone : function(){
@@ -76,7 +92,8 @@ CustomerInfo.prototype =
 	},
 	
 	setShoppingPreference : function(value){
-		this.shoppingPreference = value;
+		if (!empty(value))
+			this.shoppingPreference = value;
 	},
 
 	getShoppingPreference : function(){
