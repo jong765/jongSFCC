@@ -5,10 +5,11 @@
  *
  *   @input emailAddress : String
  *   @output customerFound : Boolean
- *   @output lpExternalCustomerId : String
+ *   @output externalCustomerId : String
  *   @output lastVisitDate : String
  *   @output duplicateEmailsFound : Boolean
  *   @output success : Boolean
+ *   @output errorMessage : String
  */
 'use strict';
 
@@ -19,10 +20,11 @@ var logger = require('dw/system/Logger').getLogger("loyaltyplus-error", "LookupC
 function execute(args) {
 	var responseObject = run(args.emailAddress);
     args.customerFound = responseObject.customerFound? responseObject.customerFound : null;
-    args.lpExternalCustomerId = responseObject.lpExternalCustomerId? responseObject.lpExternalCustomerId : null;
+    args.externalCustomerId = responseObject.externalCustomerId? responseObject.lpExternalCustomerId : null;
     args.lastVisitDate = responseObject.lastVisitDate? responseObject.lastVisitDate : null;
     args.duplicateEmailsFound = responseObject.duplicateEmailsFound? responseObject.duplicateEmailsFound : null;
     args.success = responseObject.success;
+    args.errorMessage = responseObject.errorMessage;
     return responseObject.success ? PIPELET_NEXT : PIPELET_ERROR;
 }
 
@@ -33,31 +35,39 @@ function run(emailAddress) {
         if (!validationResult.success) {
             return validationResult;
         }
-        var result = CustomerSearchService.run(emailAddress).object;
-        if (result.data.length > 1) {
-            responseObject = {success : false,
-                              customerFound : false,
-                              duplicateEmailsFound : true};
+        var result = CustomerSearchService.run(emailAddress);
+        if (result.object) {
+	        if (result.object.data.length > 1) {
+	            responseObject = {success : false,
+	                              customerFound : false,
+	                              duplicateEmailsFound : true};
+	        } else {
+	            var data = result.object.data[0];
+	            if (data) {
+	                responseObject = {success : result.object.success,
+	                                  customerFound : true,
+	                                  externalCustomerId : data.external_customer_id,
+	                                  status : data.status,
+	                                  lastVisitDate : data.last_visit_date,
+	                                  duplicateEmailsFound : false,
+	                                  errorMessage : result.object.data.message};
+	            } else {
+	                responseObject = {success : result.object.success,
+	                                  customerFound : false,
+	                                  duplicateEmailsFound : false,
+	                                  errorMessage : result.errorMessage};
+	            }
+	        }
         } else {
-            var data = result.data[0];
-            if (data) {
-                responseObject = {success : result.success,
-                                  customerFound : true,
-                                  lpExternalCustomerId : data.external_customer_id,
-                                  status : data.status,
-                                  lastVisitDate : data.last_visit_date,
-                                  duplicateEmailsFound : false};
-            } else {
-                responseObject = {success : result.success,
-                                  customerFound : false,
-                                  duplicateEmailsFound : false};
-            }
-        }
+        	responseObject = {success : false,
+  				              errorMessage : result.errorMessage};
+        }   
     } catch (e) {
         var exception = e;
         var errMessage = exception.message + "\n" + exception.stack;
         logger.error(errMessage);
-        responseObject = {success : false};
+        responseObject = {success : false,
+        		          errorMessage : errMessage};
     }
     logger.debug("responseObject: " + JSON.stringify(responseObject));
     return responseObject;

@@ -11,9 +11,9 @@ var logger = require('dw/system/Logger').getLogger("loyaltyplus-test", "Test.js"
 
 function run() {
 	//var response = enrollCustomer();
-	//var response = updateCustomerInfo();
+	var response = updateCustomerInfo();
 	//var response = lookupCustomer();
-	var response = showCustomer();
+	//var response = showCustomer();
 	//var response = checkIn();
 	//var response = completeProfile();
 	//var response = purchase();
@@ -32,6 +32,24 @@ function run() {
 	return true;
 }
 
+function updateCustomerInfo() {
+	var externalCustomerId = 95508188;
+	var newEmailAddress = "jkupdt42@pacsun.com";
+	var firstName = "Jong"; 
+	var lastName = "Kim";
+	var birthDate = "12-07";
+	var shoppingPreference = "Both";
+	var addressLine1 = "3030 Softwind way";
+	var addressLine2 = null;
+	var city = "Torrance";
+	var postalCode = "90506";
+	var state = "CA";
+	var mobilePhone = "3373373347";
+	var updateCustomerInfo = require('../customerRequest/UpdateCustomerInfo');
+	var response = updateCustomerInfo.run(externalCustomerId, newEmailAddress, firstName, lastName, birthDate, shoppingPreference, addressLine1, addressLine2, city, postalCode, state, mobilePhone);
+	return response;
+}
+
 function showCustomer() {
 	var showCustomer = require('../customerRequest/ShowCustomer');
 	var externalCustomerId = "93301125";
@@ -42,7 +60,7 @@ function showCustomer() {
 
 function lookupCustomer() {
 	var lookupCustomer = require('../customerRequest/LookupCustomer');
-	var emailAddress = "jkupdt36@pacsun.com";
+	var emailAddress = "jktest427@pacsun.com";
 	var response = lookupCustomer.run(emailAddress);
 	return response;
 }
@@ -61,23 +79,6 @@ function purchase() {
 	var orderNo = "70039529";
 	var response = purchase.run(lpExternalCustomerId, orderNo);
 	return response;
-}
-
-function updateCustomerInfo() {
-	var lpExternalCustomerId = 98574038;
-	var newEmailAddress = "jkupdt36@pacsun.com";
-	var firstName = "Jong"; 
-	var lastName = "Kim";
-	var birthDate = "12-07";
-	var shoppingPreference = "Both";
-	var addressLine1 = "3030 Softwind way";
-	var addressLine2 = null;
-	var city = "Torrance";
-	var postalCode = "90506";
-	var state = "CA";
-	var mobilePhone = "3373373347";
-	var updateCustomerInfo = require('../customerRequest/UpdateCustomerInfo');
-	var response = updateCustomerInfo.run(lpExternalCustomerId, newEmailAddress, firstName, lastName, birthDate, shoppingPreference, addressLine1, addressLine2, city, postalCode, state, mobilePhone);
 }
 
 function enrollCustomer() {
