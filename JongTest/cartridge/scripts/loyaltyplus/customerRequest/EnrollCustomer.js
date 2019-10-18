@@ -15,7 +15,9 @@
  *   @input state : String
  *   @input mobilePhone : String
  *   @input marketingId : String
- *   @output responseObject : Object
+ *   @output success : String
+ *   @output externalCustomerId : String
+ *   @output errorMessage: String
  */
 'use strict';
 
@@ -28,7 +30,9 @@ var logger = require('dw/system/Logger').getLogger("loyaltyplus-error", "EnrollC
 function execute(args) {
     var responseObject = run(args.emailAddress, args.firstName, args.lastName, args.birthDate, args.shoppingPreference, 
         args.addressLine1, args.addressLine2, args.city, args.postalCode, args.state, args.mobilePhone, args.marketingId);
-    args.responseObject = responseObject;
+    args.success = responseObject.success;
+    args.externalCustomerId = responseObject.externalCustomerId;
+    args.errorMessage = responseObject.errorMessage;
     return responseObject.success ? PIPELET_NEXT : PIPELET_ERROR;
 }
 
@@ -42,21 +46,24 @@ function run(emailAddress, firstName, lastName, birthDate, shoppingPreference,
         }
         var customerInfo = getCustomerInfo(emailAddress, firstName, lastName, birthDate, shoppingPreference, 
         	    addressLine1, addressLine2, city, postalCode, state, mobilePhone);
-        var result = CustomerEnrollService.run(customerInfo, marketingId).object;
-        var data = result.data;
-        if (data) {
-            responseObject = {success : result.success,
-            		          lpExternalCustomerId : data.external_customer_id,
-                              errorCode : data.code,
-                              errorMessage : data.message};
+        var result = CustomerEnrollService.run(customerInfo, marketingId);
+        if (result.object) {
+            responseObject = {success : result.object.success,
+            		          externalCustomerId : result.object.data.external_customer_id,
+                              errorCode : result.object.data.code,
+                              errorMessage : result.object.data.message};
         } else {
-            responseObject = {success : false};
+            responseObject = {success : false,
+            		          externalCustomerId : null,
+            				  errorMessage : result.errorMessage};
         }
     } catch (e) {
         var exception = e;
         var errMessage = exception.message + "\n" + exception.stack;
         logger.error(errMessage);
-        responseObject = {success : false};
+        responseObject = {success : false,
+        		          externalCustomerId : null,
+        		          errorMessage : errMessage};
     }
     logger.debug("responseObject: " + JSON.stringify(responseObject));
     return responseObject;

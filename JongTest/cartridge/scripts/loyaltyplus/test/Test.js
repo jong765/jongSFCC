@@ -12,8 +12,8 @@ var logger = require('dw/system/Logger').getLogger("loyaltyplus-test", "Test.js"
 function run() {
 	//var response = enrollCustomer();
 	//var response = updateCustomerInfo();
-	var response = lookupCustomer();
-	//var response = showCustomer();
+	//var response = lookupCustomer();
+	var response = showCustomer();
 	//var response = checkIn();
 	//var response = completeProfile();
 	//var response = purchase();
@@ -23,7 +23,6 @@ function run() {
 	//var response = getCustomerCheckInEvents();
 	//var response = updateShoppingPreference();
 	//var response = updatePreferredStore();
-	//var response = enrollPOST();
 	//var response = getSignature();
 	//var response = testDate();
 	//var response = formatDate();
@@ -32,6 +31,14 @@ function run() {
 	logResponse(response);
 	return true;
 }
+
+function showCustomer() {
+	var showCustomer = require('../customerRequest/ShowCustomer');
+	var externalCustomerId = "93301125";
+	var response = showCustomer.run(externalCustomerId);
+	return response;
+}
+
 
 function lookupCustomer() {
 	var lookupCustomer = require('../customerRequest/LookupCustomer');
@@ -71,13 +78,6 @@ function updateCustomerInfo() {
 	var mobilePhone = "3373373347";
 	var updateCustomerInfo = require('../customerRequest/UpdateCustomerInfo');
 	var response = updateCustomerInfo.run(lpExternalCustomerId, newEmailAddress, firstName, lastName, birthDate, shoppingPreference, addressLine1, addressLine2, city, postalCode, state, mobilePhone);
-}
-
-function showCustomer() {
-	var showCustomer = require('../customerRequest/ShowCustomer');
-	var lpExternalCustomerId = "91215221";
-	var response = showCustomer.run(lpExternalCustomerId);
-	return response;
 }
 
 function enrollCustomer() {
@@ -198,20 +198,6 @@ function updatePreferredStore() {
 	var preferredStore = "0010";
 
 	var response = updateShoppingPreference.run(externalCustomerId, preferredStore);
-    return response;
-}
-
-function enrollPOST() {
-	var enrollCustomer = require('../customerRequest/EnrollCustomer-POST');
-	var emailAddress = "jktest25@pacsun.com";
-	var firstName = "jong";
-	var lastName = "kim";
-	var birthDate = "12-25";
-	var shoppingPreference = "Female";
-	var preferredStore = null;
-
-	var response = enrollCustomer.run(emailAddress, firstName, lastName, birthDate, shoppingPreference, preferredStore,
-			null, null, null, null, null, null);
     return response;
 }
 

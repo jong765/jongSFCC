@@ -21,7 +21,6 @@ exports.LoyaltyPlusService = function (serviceId) {
 	        svc.setURL(url);
 	
 	        logger.debug("url: " + url + "?" + getApiUrl(args.requestParam));
-	        logger.debug("requestBody: " + JSON.stringify(args.requestBody));
 	        return JSON.stringify(args.requestBody);
 	    },
 	
