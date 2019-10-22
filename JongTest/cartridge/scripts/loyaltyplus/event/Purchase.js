@@ -3,9 +3,10 @@
  * 
  *  Record loyalty plus purchase event.
  * 
- *   @input lpExternalCustomerId : String
- *   @input orderNo : String
- *   @output responseObject : Object
+ *   @input externalCustomerId : String
+ *   @output success : Boolean
+ *   @output points : Number
+ *   @output eventId : String
  */
 
 var RecordEventService = require('../service/RecordEventService');
@@ -16,53 +17,47 @@ var Util = require('../util/Util');
 var logger = require('dw/system/Logger').getLogger("loyaltyplus-error", "Purchase.js");
 
 function execute(args) {
-	var responseObject = run(args.lpExternalCustomerId, args.orderNo);
-	args.responseObject = responseObject;
+	var responseObject = run(args.externalCustomerId, args.orderNo);
+	args.success = responseObject.success;
+	args.points = responseObject.points;
+	args.eventId = responseObject.eventId;
     return responseObject.success ? PIPELET_NEXT : PIPELET_ERROR;
 }
 
-function run(lpExternalCustomerId, orderNo) {
+function run(externalCustomerId, orderNo) {
     var responseObject = {};
+    var type = EventType.PURCHASE;
     try {
         var validationResult = {success:false};
-        validationResult = Util.validateRequiredParams({'lpExternalCustomerId':lpExternalCustomerId, 'orderNo':orderNo});
+        validationResult = Util.validateRequiredParams({'externalCustomerId':externalCustomerId, 'orderNo':orderNo});
         if (!validationResult.success) {
             return validationResult;
         }
         var order = OrderMgr.getOrder(orderNo);
-        responseObject = recordEvent(lpExternalCustomerId, order, order.custom.marketingId);
-    } catch (e) {
-        var exception = e;
-        var errMessage = exception.message + "\n" + exception.stack;
-        logger.error(errMessage);
-        responseObject = {success : false};
-    }
-    logger.debug("responseObject: " + JSON.stringify(responseObject));
-    return responseObject;
-}
-
-function recordEvent(lpExternalCustomerId, order, marketingId) {
-    var responseObject = {};
-    var type = EventType.PURCHASE;
-    try {
-    	var recordRequestParam = new RecordRequestParam(lpExternalCustomerId, type, marketingId);
+        var recordRequestParam = new RecordRequestParam(externalCustomerId, type, order.custom.marketingId);
     	recordRequestParam.setValue(order.adjustedMerchandizeTotalNetPrice.value);
     	recordRequestParam.setEventId(order.orderNo);
-        var result = RecordEventService.run(recordRequestParam).object;
-        var data = result.data;
-        if (data) {
-            responseObject = {success : result.success,
-                              points : data.points,
-                              eventId : data.id};
+        var result = RecordEventService.run(recordRequestParam);
+        if (result.object) {
+        	var data = result.object.data;
+            responseObject = {success : result.object.success,
+                              points : data.points? data.points : null,
+                              eventId : data.id? data.id : null,
+                              errorMessage : data.message? data.message : null};
         } else {
-            responseObject = {success : false};
+            responseObject = {success : false,
+            		          points : null,
+            		          eventId : null,
+            		          errorMessage : result.errorMessage};
         }
     } catch (e) {
         var exception = e;
         var errMessage = exception.message + "\n" + exception.stack;
         logger.error(errMessage);
-        responseObject = {success : false};
+        responseObject = {success : false,
+                          errorMessage : errMessage}
     }
+    logger.debug("responseObject: " + JSON.stringify(responseObject));
     return responseObject;
 }
 

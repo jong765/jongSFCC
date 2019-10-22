@@ -6,7 +6,7 @@
  *   @input emailAddress : String
  *   @input firstName : String
  *   @input lastName : String
- *   @input birthDate : String
+ *   @input birthDate : String  (mm-dd or mmdd format only)
  *   @input shoppingPreference : String
  *   @input addressLine1 : String
  *   @input addressLine2 : String

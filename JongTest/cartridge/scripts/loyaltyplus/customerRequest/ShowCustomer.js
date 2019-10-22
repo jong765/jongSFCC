@@ -11,7 +11,6 @@
  *   @output tierName : String
  *   @output tierExpirationDate : String
  *   @output pointsNeededForNextTier : String
- *   @output lastVisitDate : String
  *   @output success : Boolean
  *   @output code : String
  *   @output message : String
@@ -34,7 +33,6 @@ function execute(args) {
     args.tierJoinDate = responseObject.tierJoinDate;
     args.pointsNeededForNextTier = responseObject.pointsNeededForNextTier;
     args.pointsNeededToKeepCurrentTier = responseObject.pointsNeededToKeepCurrentTier;
-    args.lastVisitDate = responseObject.lastVisitDate;
     args.success = responseObject.success;
     args.code = responseObject.code;
     args.message = responseObject.message;
@@ -63,13 +61,12 @@ function run(externalCustomerId) {
                               tierJoinDate : data.top_tier_join_date,
                               pointsNeededForNextTier : data.actions_needed_for_next_tier,
                               pointsNeededToKeepCurrentTier : data.actions_needed_to_keep_tier,
-                              lastVisitDate : data.last_visit_date,
                               code : data.code,
                               message : data.message,
                               errorMessage : result.errorMessage};
         } else {
             responseObject = {success : false,
-                              errorMessage : result.errorMessage}
+                              errorMessage : result.errorMessage};
         }
     } catch (e) {
         var exception = e;

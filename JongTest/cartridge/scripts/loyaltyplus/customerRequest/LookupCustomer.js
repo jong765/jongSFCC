@@ -6,7 +6,6 @@
  *   @input emailAddress : String
  *   @output customerFound : Boolean
  *   @output externalCustomerId : String
- *   @output lastVisitDate : String
  *   @output duplicateEmailsFound : Boolean
  *   @output success : Boolean
  *   @output errorMessage : String
@@ -21,7 +20,6 @@ function execute(args) {
 	var responseObject = run(args.emailAddress);
     args.customerFound = responseObject.customerFound? responseObject.customerFound : null;
     args.externalCustomerId = responseObject.externalCustomerId? responseObject.lpExternalCustomerId : null;
-    args.lastVisitDate = responseObject.lastVisitDate? responseObject.lastVisitDate : null;
     args.duplicateEmailsFound = responseObject.duplicateEmailsFound? responseObject.duplicateEmailsFound : null;
     args.success = responseObject.success;
     args.errorMessage = responseObject.errorMessage;
@@ -37,7 +35,7 @@ function run(emailAddress) {
         }
         var result = CustomerSearchService.run(emailAddress);
         if (result.object) {
-	        if (result.object.data.length > 1) {
+	        if (result.object.data.length > 1) {  // duplicate emails found
 	            responseObject = {success : false,
 	                              customerFound : false,
 	                              duplicateEmailsFound : true};
@@ -48,7 +46,6 @@ function run(emailAddress) {
 	                                  customerFound : true,
 	                                  externalCustomerId : data.external_customer_id,
 	                                  status : data.status,
-	                                  lastVisitDate : data.last_visit_date,
 	                                  duplicateEmailsFound : false,
 	                                  errorMessage : result.object.data.message};
 	            } else {

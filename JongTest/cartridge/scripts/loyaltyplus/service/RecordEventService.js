@@ -59,7 +59,11 @@ function getRequestParam(recordRequestParam) {
             requestParam["products[" + i + "][price]"] = productLineItem.price.value;
             requestParam["products[" + i + "][product_id]"] = productLineItem.productID;
             requestParam["products[" + i + "][quantity]"] = productLineItem.quantity.value;
-            var productCategory = getProductCategory(productLineItem.productID);
+            var product = ProductMgr.getProduct(productLineItem.productID);
+            var productCategory = getProductCategory(product);
+            if (product.brand != null) {
+            	requestParam["products[" + i + "][brands]"] = product.brand;
+            }
             if (productCategory != null) {
             	requestParam["products[" + i + "][categories]"] = productCategory;
             }
@@ -68,6 +72,8 @@ function getRequestParam(recordRequestParam) {
             } else {
             	parameterString += i;
             }
+            if (product.brand != null)
+            	parameterString += "brands" + product.brand;
             if (productCategory != null)
             	parameterString += "categories" + productCategory;
             parameterString += "price" + productLineItem.price.value + "product_id" + productLineItem.productID + 
@@ -83,10 +89,9 @@ function getRequestParam(recordRequestParam) {
     return requestParam;
 }
 
-function getProductCategory(productId) {
+function getProductCategory(product) {
 	var categoryName = null;
 	try {
-		var product = ProductMgr.getProduct(productId);
 		categoryName = product.getVariationModel().getMaster().classificationCategory.displayName;
 	} catch(e) {
 		var exception = e;

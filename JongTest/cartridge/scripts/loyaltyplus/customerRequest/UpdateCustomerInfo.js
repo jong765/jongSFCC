@@ -15,7 +15,8 @@
  *   @input postalCode: String
  *   @input state : String
  *   @input mobilePhone : String
- *   @output responseObject : Object
+ *   @output success : Boolean
+ *   @output errorMessage : String
  */
 
 var UpdateCustomerInfoService = require('../service/UpdateCustomerInfoService');
@@ -26,8 +27,9 @@ var logger = require('dw/system/Logger').getLogger("loyaltyplus-error", "UpdateC
 
 function execute(args) {
 	var responseObject = run(args.externalCustomerId, args.newEmailAddress, args.firstName, args.lastName, args.birthDate, args.shoppingPreference, args.addressLine1, args.addressLine2, args.city, args.postalCode, args.state, args.mobilePhone);
-    args.responseObject = responseObject;
-    return result.responseObject ? PIPELET_NEXT : PIPELET_ERROR;
+    args.success = responseObject.success;
+    args.errorMessage = responseObject.errorMessage;
+    return responseObject.success ? PIPELET_NEXT : PIPELET_ERROR;
 }
 
 function run(externalCustomerId, newEmailAddress, firstName, lastName, birthDate, shoppingPreference, addressLine1, addressLine2, city, postalCode, state, mobilePhone) {
@@ -44,7 +46,7 @@ function run(externalCustomerId, newEmailAddress, firstName, lastName, birthDate
                               errorMessage : null};
         } else {
         	responseObject = {success : false,
-  				  			  errorMessage : null};
+  				  			  errorMessage : result.errorMessage};
         }
     } catch (e) {
         var exception = e;

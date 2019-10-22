@@ -11,12 +11,12 @@ var logger = require('dw/system/Logger').getLogger("loyaltyplus-test", "Test.js"
 
 function run() {
 	//var response = enrollCustomer();
-	var response = updateCustomerInfo();
+	//var response = updateCustomerInfo();
 	//var response = lookupCustomer();
 	//var response = showCustomer();
 	//var response = checkIn();
 	//var response = completeProfile();
-	//var response = purchase();
+	var response = purchase();
 	//var response = returnn();
 	//var response = recordCheckInEvent();
 	//var response = likeProduct();
@@ -32,12 +32,20 @@ function run() {
 	return true;
 }
 
+function purchase() {
+	var purchase = require('../event/Purchase');
+	var externalCustomerId = "98574038"; //jkupdt36@pacsun.com
+	var orderNo = "70039626";
+	var response = purchase.run(externalCustomerId, orderNo);
+	return response;
+}
+
 function updateCustomerInfo() {
-	var externalCustomerId = 95508188;
-	var newEmailAddress = "jkupdt42@pacsun.com";
+	var externalCustomerId = 94856660;
+	var newEmailAddress = null;
 	var firstName = "Jong"; 
 	var lastName = "Kim";
-	var birthDate = "12-07";
+	var birthDate = "1209";
 	var shoppingPreference = "Both";
 	var addressLine1 = "3030 Softwind way";
 	var addressLine2 = null;
@@ -52,41 +60,17 @@ function updateCustomerInfo() {
 
 function showCustomer() {
 	var showCustomer = require('../customerRequest/ShowCustomer');
-	var externalCustomerId = "93301125";
+	var externalCustomerId = "98574038"; //jkupdt36@pacsun.com
 	var response = showCustomer.run(externalCustomerId);
-	return response;
-}
-
-
-function lookupCustomer() {
-	var lookupCustomer = require('../customerRequest/LookupCustomer');
-	var emailAddress = "jktest427@pacsun.com";
-	var response = lookupCustomer.run(emailAddress);
-	return response;
-}
-
-function returnn() {
-	var returnn = require('../event/Return');
-	var lpExternalCustomerId = "98574038";
-	var orderNo = "70037929";
-	var response = returnn.run(lpExternalCustomerId, orderNo);
-	return response;
-}
-
-function purchase() {
-	var purchase = require('../event/Purchase');
-	var lpExternalCustomerId = "98574038";
-	var orderNo = "70039529";
-	var response = purchase.run(lpExternalCustomerId, orderNo);
 	return response;
 }
 
 function enrollCustomer() {
 	var enrollCustomer = require('../customerRequest/EnrollCustomer');
-	var emailAddress = "jktest39@pacsun.com";
+	var emailAddress = " ";
 	var firstName = "Jong"
 	var lastName = "Kim";
-	var birthDate = "04-17";
+	var birthDate = "0717";
 	var shoppingPreference = "Both";
 	var addressLine1 = "3450 E Miraloma Ave";
 	var addressLine2 = null;
@@ -99,6 +83,21 @@ function enrollCustomer() {
 			addressLine1, addressLine2, city, postalCode, state, mobilePhone, marketingId);
 
     return response;
+}
+
+function lookupCustomer() {
+	var lookupCustomer = require('../customerRequest/LookupCustomer');
+	var emailAddress = "jktest42@pacsun.com";
+	var response = lookupCustomer.run(emailAddress);
+	return response;
+}
+
+function returnn() {
+	var returnn = require('../event/Return');
+	var lpExternalCustomerId = "98574038";
+	var orderNo = "70037929";
+	var response = returnn.run(lpExternalCustomerId, orderNo);
+	return response;
 }
 
 function completeProfile() {
