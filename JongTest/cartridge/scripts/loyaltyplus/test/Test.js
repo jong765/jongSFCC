@@ -11,12 +11,15 @@ var logger = require('dw/system/Logger').getLogger("loyaltyplus-test", "Test.js"
 
 function run() {
 	//var response = enrollCustomer();
+	//var response = pauseCustomer();
+	var response = reactivateCustomer();
 	//var response = updateCustomerInfo();
 	//var response = lookupCustomer();
 	//var response = showCustomer();
 	//var response = checkIn();
 	//var response = completeProfile();
-	var response = purchase();
+	//var response = purchase();
+	//var response = rejectPurchase();
 	//var response = returnn();
 	//var response = recordCheckInEvent();
 	//var response = likeProduct();
@@ -32,10 +35,32 @@ function run() {
 	return true;
 }
 
+function reactivateCustomer() {
+	var reactivateCustomer = require('../customerRequest/ReactivateCustomer');
+	var externalCustomerId = "93301125"; //jktest20@pacsun.com
+	var response = reactivateCustomer.run(externalCustomerId);
+	return response;
+}
+
+function pauseCustomer() {
+	var pauseCustomer = require('../customerRequest/PauseCustomer');
+	var externalCustomerId = "93301125"; //jktest20@pacsun.com
+	var response = pauseCustomer.run(externalCustomerId);
+	return response;
+}
+
+function rejectPurchase() {
+	var rejectPurchase = require('../event/RejectPurchase');
+	var externalCustomerId = "93301125"; //jktest20@pacsun.com
+	var orderNo = "70039325";
+	var response = rejectPurchase.run(externalCustomerId, orderNo);
+	return response;
+}
+
 function purchase() {
 	var purchase = require('../event/Purchase');
 	var externalCustomerId = "98574038"; //jkupdt36@pacsun.com
-	var orderNo = "70039626";
+	var orderNo = "70039627";
 	var response = purchase.run(externalCustomerId, orderNo);
 	return response;
 }

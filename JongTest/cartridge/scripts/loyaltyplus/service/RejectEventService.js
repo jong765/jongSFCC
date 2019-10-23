@@ -25,7 +25,7 @@ function getRequestParam(externalCustomerId, eventType, eventId) {
     var requestParam = {uuid : CustomPreference.ACCOUNT_ID};
     if (externalCustomerId) requestParam.external_customer_id = externalCustomerId;
     if (eventType) requestParam.event_type = eventType;
-    if (eventId) requestParam.event_Id = eventId;
+    if (eventId) requestParam.event_id = eventId;
     requestParam.sig = Util.getSignature(requestParam);
     
     return requestParam;
