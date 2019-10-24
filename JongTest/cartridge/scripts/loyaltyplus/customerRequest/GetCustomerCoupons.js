@@ -1,43 +1,47 @@
 /********************************************************************************************
- *  RetrieveCoupons.js
+ *  GetCustomerCoupons.js
  * 
  *  Retrieve customer coupons.
  *
- *   @input lpExtCustomerId : String
- *   @output responseObject : Object
+ *   @input externalCustomerId : String
+ *   @output success : Boolean
+ *   @output coupons : Object
+ *   @output totalRewards : Number
  */
 
 var CustomerCouponsService = require('../service/CustomerCouponsService');
 var Util = require('../util/Util');
-var logger = require('dw/system/Logger').getLogger("loyaltyplus-error", "RetrieveCoupons.js");
+var logger = require('dw/system/Logger').getLogger("loyaltyplus-error", "GetCustomerCoupons.js");
 
 function execute(args) {
-	var responseObject = run(args.lpExtCustomerId);
+	var responseObject = run(args.externalCustomerId);
 	args.responseObject = responseObject;
     return responseObject.success ? PIPELET_NEXT : PIPELET_ERROR;
 }
 
-function run(lpExtCustomerId) {
+function run(externalCustomerId) {
     var responseObject = {};
     try {
-        var validationResult = Util.validateRequiredParams({'lpExtCustomerId':lpExtCustomerId});
+        var validationResult = Util.validateRequiredParams({'externalCustomerId':externalCustomerId});
         if (!validationResult.success) {
             return validationResult;
         }
-        var result = CustomerCouponsService.run(lpExtCustomerId).object;
-        var coupons = result.data;
-        if (coupons) {
-            responseObject = {success : result.success,
-                              coupons : coupons,
-                              totalRewards : getTotalRewards(coupons)};
+        var result = CustomerCouponsService.run(externalCustomerId);
+        if (result.object) {
+            responseObject = {success : result.object.success,
+                              coupons : result.object.data,
+                              totalRewards : getTotalRewards(result.object.data),
+                              errorMessage : null};
         } else {
-            responseObject = {success : false};
+            responseObject = {success : false,
+            		          errorMessage : result.errorMessage};
         }
     } catch (e) {
         var exception = e;
         var errMessage = exception.message + "\n" + exception.stack;
         logger.error(errMessage);
-        responseObject = {success : false};
+        responseObject = {success : false,
+		                  errorMessage : errMessage};
     }
     logger.debug("responseObject: " + JSON.stringify(responseObject));
     return responseObject;

@@ -43,7 +43,8 @@ var EventType = {
 	COMPLETE_PROFILE		:	"complete_profile",
 	LIKE_A_PRODUCT			:	"like_a_product",
 	PURCHASE				:	"purchase",
-	RETURN					:	"return"
+	RETURN					:	"return",
+	REVIEW                  :   "review"
 };
 
 var Constant = {

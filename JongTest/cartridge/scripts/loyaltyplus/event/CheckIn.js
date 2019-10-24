@@ -3,10 +3,12 @@
  * 
  *  Take care of processes when customer checks in.
  *
- *   @input lpExternalCustomerId : String
- *   @input enrollmentDate : String
+ *   @input externalCustomerId : String
  *   @input marketingId : String
- *   @output responseObject : Object
+ *   @output success : Boolean
+ *   @output points : Number
+ *   @output eventId : String
+ *   @output errorMessage : String
  */
 
 var GetCustomerEvents = require('../customerRequest/GetCustomerEvents');
@@ -18,54 +20,49 @@ var DateUtil = require('../util/DateUtil');
 var logger = require('dw/system/Logger').getLogger("loyaltyplus-error", "CheckIn.js");
 
 function execute(args) {
-	var responseObject = run(args.lpExternalCustomerId, args.enrollmentDate, args.marketingId);
-    args.responseObject = responseObject;
-    return result.responseObject ? PIPELET_NEXT : PIPELET_ERROR;
+	var responseObject = run(args.externalCustomerId, args.marketingId);
+    args.success = responseObject.success;
+    args.points = responseObject.points;
+    args.eventId = responseObject.eventId;
+    args.errorMessage = responseObject.errorMessage;
+    return responseObject.success ? PIPELET_NEXT : PIPELET_ERROR;
 }
 
-function run(lpExternalCustomerId, enrollmentDate, marketingId) {
+function run(externalCustomerId, marketingId) {
     var responseObject = {};
     try {
-        var validationResult = Util.validateRequiredParams({'lpExternalCustomerId':lpExternalCustomerId, 
-        	'enrollmentDate':enrollmentDate});
+        var validationResult = Util.validateRequiredParams({'externalCustomerId':externalCustomerId});
         if (!validationResult.success) {
             return validationResult;
         }
+        var eventType = EventType.CHECK_IN;
         // Check in if 7 days passed since last check in and enrollment date
-        if (over7DaysSinceEnrollmentDate(enrollmentDate) && over7DaysSinceLastCheckIn(lpExternalCustomerId)) {
-        	responseObject = recordEvent(lpExternalCustomerId, marketingId);
-        } else {
-        	responseObject = {success : true};
-        }
+        //if (over7DaysSinceEnrollmentDate(enrollmentDate) && over7DaysSinceLastCheckIn(externalCustomerId)) {
+        	var result = RecordEventService.run(new RecordRequestParam(externalCustomerId, eventType, marketingId));
+        	if (result.object) {
+                responseObject = {success : result.object.success,
+                				  points : result.object.data.points,
+                                  eventId : result.object.data.id,
+                                  errorMessage : result.object.data.message};
+            } else {
+                responseObject = {success : false,
+                		          points : null,
+                		          eventId : null,
+                		          errorMessage : result.errorMessage};
+            }
+        //} else {
+        //	responseObject = {success : true};
+        //}
     } catch (e) {
         var exception = e;
         var errMessage = exception.message + "\n" + exception.stack;
         logger.error(errMessage);
-        responseObject = {success : false};
+        responseObject = {success : false,
+        		          points : null,
+        		          eventId : null,
+                          errorMessage : errMessage};
     }
     logger.debug("responseObject: " + JSON.stringify(responseObject));
-    return responseObject;
-}
-
-function recordEvent(lpExternalCustomerId, marketingId) {
-    var responseObject = {};
-    var type = EventType.CHECK_IN;
-    try {
-        var result = RecordEventService.run(new RecordRequestParam(lpExternalCustomerId, type, marketingId)).object;
-        var data = result.data;
-        if (data) {
-            responseObject = {success : result.success,
-                              points : data.points,
-                              eventId : data.id};
-        } else {
-            responseObject = {success : false};
-        }
-    } catch (e) {
-        var exception = e;
-        var errMessage = exception.message + "\n" + exception.stack;
-        logger.error(errMessage);
-        responseObject = {success : false};
-    }
     return responseObject;
 }
 

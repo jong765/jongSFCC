@@ -9,13 +9,16 @@ var Util = require('../util/Util');
 var DateUtil = require('../util/DateUtil');
 var logger = require('dw/system/Logger').getLogger("loyaltyplus-test", "Test.js");
 
+var externalCustomerId = "75587003"; //jktest1@pacsun.com
+
 function run() {
+	//var response = getCustomerCoupons();
 	//var response = enrollCustomer();
 	//var response = pauseCustomer();
-	var response = reactivateCustomer();
+	//var response = reactivateCustomer();
 	//var response = updateCustomerInfo();
 	//var response = lookupCustomer();
-	//var response = showCustomer();
+	var response = showCustomer();
 	//var response = checkIn();
 	//var response = completeProfile();
 	//var response = purchase();
@@ -23,6 +26,7 @@ function run() {
 	//var response = returnn();
 	//var response = recordCheckInEvent();
 	//var response = likeProduct();
+	//var response = postReview();
 	//var response = getCustomerCheckInEvents();
 	//var response = updateShoppingPreference();
 	//var response = updatePreferredStore();
@@ -33,6 +37,43 @@ function run() {
 
 	logResponse(response);
 	return true;
+}
+
+function showCustomer() {
+	var showCustomer = require('../customerRequest/ShowCustomer');
+	var response = showCustomer.run(externalCustomerId);
+	return response;
+}
+
+function postReview() {
+	var marketingId = "DSK";
+	var postReview = require('../event/PostReview');
+	var response = postReview.run(externalCustomerId, marketingId);
+	return response;
+}
+
+function likeProduct() {
+	var externalCustomerId = "87464141"; //jktest3@pacsun.com
+	var marketingId = "DSK";
+	var LikeProduct = require('../event/LikeProduct');
+	var response = LikeProduct.run(externalCustomerId, marketingId);
+	return response;
+}
+
+function checkIn() {
+	var externalCustomerId = "75803173"; //jktest2@pacsun.com
+	var enrollmentDate = "2019-10-02T16:07:21-07:00";
+	var marketingId = "DSK";
+	var checkIn = require('../event/CheckIn');
+	var response = checkIn.run(externalCustomerId, marketingId);
+	return response;
+}
+
+function getCustomerCoupons() {
+	var getCustomerCoupons = require('../customerRequest/GetCustomerCoupons');
+	var externalCustomerId = "75803173";
+	var response = getCustomerCoupons.run(externalCustomerId);
+	return response;
 }
 
 function reactivateCustomer() {
@@ -83,13 +124,6 @@ function updateCustomerInfo() {
 	return response;
 }
 
-function showCustomer() {
-	var showCustomer = require('../customerRequest/ShowCustomer');
-	var externalCustomerId = "98574038"; //jkupdt36@pacsun.com
-	var response = showCustomer.run(externalCustomerId);
-	return response;
-}
-
 function enrollCustomer() {
 	var enrollCustomer = require('../customerRequest/EnrollCustomer');
 	var emailAddress = " ";
@@ -136,23 +170,6 @@ function completeProfile() {
 	var marketingId = "DSK";
 	var completeProfile = require('../event/CompleteProfile');
 	var response = completeProfile.run(lpExternalCustomerId, emailAddress, firstName, lastName, birthDate, postalCode, shoppingPreference, marketingId);
-	return response;
-}
-
-function likeProduct() {
-	var lpExternalCustomerId = "94387328"; //jktest25@pacsun.com
-	var marketingId = "DSK";
-	var LikeProduct = require('../event/LikeProduct');
-	var response = LikeProduct.run(lpExternalCustomerId, marketingId);
-	return response;
-}
-
-function checkIn() {
-	var lpExternalCustomerId = "94387328"; //jktest25@pacsun.com
-	var enrollmentDate = "2019-10-02T16:07:21-07:00";
-	var marketingId = "DSK";
-	var checkIn = require('../event/CheckIn');
-	var response = checkIn.run(lpExternalCustomerId, enrollmentDate, marketingId);
 	return response;
 }
 

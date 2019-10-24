@@ -9,20 +9,20 @@ var Util = require('../util/Util');
 var UrlPath = require('../util/LoyaltyPlusConstants').UrlPath;
 var CustomPreference = require('../util/LoyaltyPlusConstants').CustomPreference;
 
-exports.run = function (lpExternalCustomerId) {
+exports.run = function (externalCustomerId) {
     var data = {
         urlPath       : UrlPath.CUSTOMER_COUPONS,
         requestMethod : 'GET',
-        requestParam  : getRequestParam(lpExternalCustomerId)
+        requestParam  : getRequestParam(externalCustomerId)
     };
 
     var result = Util.callService(data);
     return result;
 };
 
-function getRequestParam (lpExternalCustomerId) {
+function getRequestParam (externalCustomerId) {
 	var requestParam = {uuid : CustomPreference.ACCOUNT_ID};
-    if (lpExternalCustomerId) requestParam.external_customer_id = lpExternalCustomerId;
+    requestParam.external_customer_id = externalCustomerId;
     requestParam.sig = Util.getSignature(requestParam);
     
     return requestParam;
