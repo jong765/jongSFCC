@@ -9,7 +9,7 @@ var Util = require('../util/Util');
 var DateUtil = require('../util/DateUtil');
 var logger = require('dw/system/Logger').getLogger("loyaltyplus-test", "Test.js");
 
-var externalCustomerId = "75587003"; //jktest1@pacsun.com
+var externalCustomerId = "20191025143847"; //jktest1@pacsun.com
 
 function run() {
 	//var response = getCustomerCoupons();

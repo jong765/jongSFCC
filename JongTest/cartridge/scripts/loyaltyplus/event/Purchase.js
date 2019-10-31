@@ -4,6 +4,7 @@
  *  Record loyalty plus purchase event.
  * 
  *   @input externalCustomerId : String
+ *   @input orderNo : String
  *   @output success : Boolean
  *   @output points : Number
  *   @output eventId : String
@@ -55,7 +56,7 @@ function run(externalCustomerId, orderNo) {
         var errMessage = exception.message + "\n" + exception.stack;
         logger.error(errMessage);
         responseObject = {success : false,
-                          errorMessage : errMessage}
+                          errorMessage : errMessage};
     }
     logger.debug("responseObject: " + JSON.stringify(responseObject));
     return responseObject;

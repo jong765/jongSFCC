@@ -57,7 +57,7 @@ function run(externalCustomerId) {
         if (!validationResult.success) {
             return validationResult;
         }
-        var include = "detail, coupons, member_attributes, points_expiration_schedule, purchase_stats, tier_stats";
+        var include = "detail, coupons, member_attributes, points_expiration_schedule, punchcards, purchase_stats, reward_groups, tier_stats";
         var result = CustomerShowService.run(externalCustomerId, include);
         if (result.object) {
         	var data = result.object.data;
