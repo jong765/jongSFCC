@@ -17,8 +17,8 @@ function Address() {
 Address.prototype = 
 {
 	setAddressLine1 : function(value){
-		if (!empty(value))
-			this.addressLine1 = value;
+		if (value == null) value = "";
+		this.addressLine1 = value;
 	},
 
 	getAddressLine1 : function(){
@@ -26,8 +26,8 @@ Address.prototype =
 	},
 
 	setAddressLine2 : function(value){
-		if (!empty(value))
-			this.addressLine2 = value;
+		if (value == null) value = "";
+		this.addressLine2 = value;
 	},
 		
 	getAddressLine2 : function(){

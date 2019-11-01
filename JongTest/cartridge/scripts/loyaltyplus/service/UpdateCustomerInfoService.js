@@ -1,7 +1,7 @@
 /**
  *  UpdateCustomerInfoService.js
  * 
- *  Change external customer id or personal information of a member.
+ *  Update the customer details of a customer
  */
 'use strict';
 
@@ -28,7 +28,6 @@ function getRequestParam(customerInfo) {
     if (customerInfo.firstName != "undefined") requestParam.first_name = ifnull(customerInfo.firstName);
     if (customerInfo.lastName != "undefined") requestParam.last_name = ifnull(customerInfo.lastName);
     if (customerInfo.birthDate != "undefined") requestParam.birthdate = ifnull(customerInfo.birthDate);
-    if (customerInfo.shoppingPreference != "undefined")	requestParam["custom_attributes[shopping_preference]"] = ifnull(customerInfo.shoppingPreference);
     if (customerInfo.mobilePhone != "undefined") requestParam.mobile_phone = ifnull(customerInfo.mobilePhone);
     if (customerInfo.address != "undefined") {
     	var address = customerInfo.address;
@@ -38,7 +37,23 @@ function getRequestParam(customerInfo) {
     	if (address.postalCode != "undefined") requestParam.postal_code = ifnull(address.postalCode);
     	if (address.state != "undefined") requestParam.state = ifnull(address.state);
     }
-    requestParam.sig = Util.getSignature(requestParam);
+    
+    if (customerInfo.memberAttributes.length > 0) {
+    	var signatureParam = Util.copyObject(requestParam);
+	    var customAttributeSignatureParamString = "custom_attributes";
+		if (customerInfo.acceptedTermsConditions != "undefined") {
+			requestParam["custom_attributes[accepted_terms_and_conditions]"] = customerInfo.acceptedTermsConditions;
+			customAttributeSignatureParamString += "accepted_terms_and_conditions" + customerInfo.acceptedTermsConditions;
+		}
+		if (customerInfo.shoppingPreference != "undefined") {
+			requestParam["custom_attributes[shopping_preference]"] = customerInfo.shoppingPreference;
+			customAttributeSignatureParamString += "shopping_preference" + ifnull(customerInfo.shoppingPreference);
+		}
+		signatureParam[customAttributeSignatureParamString] = "";
+		requestParam.sig = Util.getSignature(signatureParam);
+	} else {
+		requestParam.sig = Util.getSignature(requestParam);
+	}
     
 	logger.debug("customerInfo: " + JSON.stringify(customerInfo));
     return requestParam;

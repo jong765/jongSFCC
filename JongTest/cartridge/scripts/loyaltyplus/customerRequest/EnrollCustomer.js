@@ -15,6 +15,7 @@
  *   @input state : String
  *   @input mobilePhone : String
  *   @input marketingId : String
+ *   @input acceptedTermsConditions : Boolean
  *   @output success : String
  *   @output data : Object
  *   @output errorMessage: String
@@ -29,7 +30,8 @@ var logger = require('dw/system/Logger').getLogger("loyaltyplus-error", "EnrollC
 
 function execute(args) {
     var response = run(args.emailAddress, args.firstName, args.lastName, args.birthDate, args.shoppingPreference, 
-        args.addressLine1, args.addressLine2, args.city, args.postalCode, args.state, args.mobilePhone, args.marketingId);
+        args.addressLine1, args.addressLine2, args.city, args.postalCode, args.state, args.mobilePhone, args.marketingId,
+        args.acceptedTermsConditions);
     args.success = response.success;
     args.data = response.data;
     args.errorMessage = response.errorMessage;
@@ -37,7 +39,8 @@ function execute(args) {
 }
 
 function run(emailAddress, firstName, lastName, birthDate, shoppingPreference, 
-    addressLine1, addressLine2, city, postalCode, state, mobilePhone, marketingId) {
+    addressLine1, addressLine2, city, postalCode, state, mobilePhone, marketingId, 
+    acceptedTermsConditions) {
     var response = {};
     try {
         var validationResult = Util.validateRequiredParams({'emailAddress':emailAddress.trim()});
@@ -45,7 +48,7 @@ function run(emailAddress, firstName, lastName, birthDate, shoppingPreference,
             return validationResult;
         }
         var customerInfo = getCustomerInfo(emailAddress, firstName, lastName, birthDate, shoppingPreference, 
-        	    addressLine1, addressLine2, city, postalCode, state, mobilePhone);
+        	    addressLine1, addressLine2, city, postalCode, state, mobilePhone, acceptedTermsConditions);
         var result = CustomerEnrollService.run(customerInfo, marketingId);
         if (result.object) {
             response = {success : result.object.success,
@@ -69,7 +72,7 @@ function run(emailAddress, firstName, lastName, birthDate, shoppingPreference,
 }
 
 function getCustomerInfo(emailAddress, firstName, lastName, birthDate, shoppingPreference, 
-	    addressLine1, addressLine2, city, postalCode, state, mobilePhone) {
+	    addressLine1, addressLine2, city, postalCode, state, mobilePhone, acceptedTermsConditions) {
 	var customerInfo = new CustomerInfo();
 	customerInfo.setEmailAddress(emailAddress);
 	customerInfo.setFirstName(firstName);
@@ -86,6 +89,7 @@ function getCustomerInfo(emailAddress, firstName, lastName, birthDate, shoppingP
 		customerInfo.setAddress(address);
 	}
 	customerInfo.setMobilePhone(mobilePhone);
+	customerInfo.setAcceptedTermsConditions(acceptedTermsConditions);
 	return customerInfo;
 }
 

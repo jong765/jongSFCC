@@ -10,6 +10,7 @@
  *          coupons
  *          detail
  *          member_attributes
+ *          punchcards
  *      	purchase_stats
  *			reward_stats
  *			rewards

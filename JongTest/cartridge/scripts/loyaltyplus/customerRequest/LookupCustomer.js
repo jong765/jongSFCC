@@ -67,6 +67,7 @@ function run(emailAddress) {
         var errMessage = exception.message + "\n" + exception.stack;
         logger.error(errMessage);
         response = {success : false,
+        		    data : null,
         		    errorMessage : errMessage};
     }
     logger.debug("response: " + JSON.stringify(response));

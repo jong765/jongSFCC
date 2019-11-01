@@ -15,6 +15,8 @@ function CustomerInfo() {
 	this.birthDate = "undefined";
 	this.mobilePhone = "undefined";
 	this.shoppingPreference = "undefined";
+	this.acceptedTermsConditions = "undefined";
+	this.memberAttributes = [];
 }
 
 CustomerInfo.prototype = 
@@ -92,12 +94,25 @@ CustomerInfo.prototype =
 	},
 	
 	setShoppingPreference : function(value){
-		if (!empty(value))
+		if (!empty(value)) {
 			this.shoppingPreference = value;
+			this.memberAttributes.push("shoppingPreference");
+		}
 	},
 
 	getShoppingPreference : function(){
 		return this.shoppingPreference;
+	},
+	
+	setAcceptedTermsConditions : function(value) {
+		if (!empty(value) && value == true) {// update only if it is true
+			this.acceptedTermsConditions = "true";
+			this.memberAttributes.push("acceptedTermsConditions");
+		}
+	},
+	
+	getAcceptedTermsConditions : function(){
+		return this.acceptedTermsConditions;
 	}
 }
 

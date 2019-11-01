@@ -26,6 +26,7 @@ exports.run = function (customerInfo, marketingId) {
 function getRequestParam(customerInfo, marketingId) {
 	logger.debug("customerInfo: " + JSON.stringify(customerInfo));
 	var requestParam = {uuid:CustomPreference.ACCOUNT_ID};
+	var signatureParam = null;
 	if (customerInfo.emailAddress != "undefined") 
 		requestParam.email = customerInfo.emailAddress;
 	if (customerInfo.firstName != "undefined") 
@@ -34,8 +35,6 @@ function getRequestParam(customerInfo, marketingId) {
 		requestParam.last_name = customerInfo.lastName;
 	if (customerInfo.birthDate != "undefined") 
 		requestParam.birthdate = customerInfo.birthDate;
-	if (customerInfo.shoppingPreference != "undefined") 
-		requestParam["custom_attributes[shopping_preference]"] = customerInfo.shoppingPreference;
 	if (customerInfo.address != "undefined") {
 		if (customerInfo.address.addressLine1 != "undefined") 
 			requestParam.address_line_1 = customerInfo.address.addressLine1;
@@ -54,7 +53,23 @@ function getRequestParam(customerInfo, marketingId) {
 		requestParam.sub_channel = Util.getSubChannel(marketingId);
 	requestParam.channel = Constant.CHANNEL;
 	requestParam.last_visit_date = DateUtil.getCurrentDateString("yyyy-MM-dd'T'HH:MM:ss-HH:MM");
-	requestParam.sig = Util.getSignature(requestParam);
+	
+	if (customerInfo.memberAttributes.length > 0) {
+		var signatureParam = Util.copyObject(requestParam);
+		var customAttributeSignatureParamString = "custom_attributes";
+		if (customerInfo.acceptedTermsConditions != "undefined") {
+			requestParam["custom_attributes[accepted_terms_and_conditions]"] = customerInfo.acceptedTermsConditions;
+			customAttributeSignatureParamString += "accepted_terms_and_conditions" + customerInfo.acceptedTermsConditions;
+		}
+		if (customerInfo.shoppingPreference != "undefined") {
+			requestParam["custom_attributes[shopping_preference]"] = customerInfo.shoppingPreference;
+			customAttributeSignatureParamString += "shopping_preference" + customerInfo.shoppingPreference;
+		}
+		signatureParam[customAttributeSignatureParamString] = "";
+	    requestParam.sig = Util.getSignature(signatureParam);
+	} else {
+		requestParam.sig = Util.getSignature(requestParam);
+	}
 
 	logger.debug("requestParam: " + JSON.stringify(requestParam));
     return requestParam;

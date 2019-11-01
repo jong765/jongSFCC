@@ -1,10 +1,9 @@
 /********************************************************************************************
  *  UpdateCustomerInfo.js
  * 
- *  Change external customer id or personal information of a member.
+ *  Update the customer details of a customer.
  *
  *   @input externalCustomerId : String
- *   @input newEmailAddress : String
  *   @input firstName : String
  *   @input lastName : String
  *   @input birthDate : String
@@ -15,6 +14,9 @@
  *   @input postalCode: String
  *   @input state : String
  *   @input mobilePhone : String
+ *   @input acceptedTermsConditions : Boolean
+ *   @input newEmailAddress : String
+ *      If present (not null), change email address of the customer.
  *   @output success : Boolean
  *   @output errorMessage : String
  */
@@ -26,43 +28,46 @@ var Util = require('../util/Util');
 var logger = require('dw/system/Logger').getLogger("loyaltyplus-error", "UpdateCustomerInfo.js");
 
 function execute(args) {
-	var responseObject = run(args.externalCustomerId, args.newEmailAddress, args.firstName, args.lastName, args.birthDate, args.shoppingPreference, args.addressLine1, args.addressLine2, args.city, args.postalCode, args.state, args.mobilePhone);
-    args.success = responseObject.success;
-    args.errorMessage = responseObject.errorMessage;
-    return responseObject.success ? PIPELET_NEXT : PIPELET_ERROR;
+	var response = run(args.externalCustomerId, args.firstName, args.lastName, args.birthDate, args.shoppingPreference, args.addressLine1, args.addressLine2, 
+			args.city, args.postalCode, args.state, args.mobilePhone, args.acceptedTermsConditions, args.newEmailAddress);
+    args.success = response.success;
+    args.errorMessage = response.errorMessage;
+    return response.success ? PIPELET_NEXT : PIPELET_ERROR;
 }
 
-function run(externalCustomerId, newEmailAddress, firstName, lastName, birthDate, shoppingPreference, addressLine1, addressLine2, city, postalCode, state, mobilePhone) {
-    var responseObject = {};
+function run(externalCustomerId, firstName, lastName, birthDate, shoppingPreference, addressLine1, addressLine2, city, postalCode, 
+		state, mobilePhone, acceptedTermsConditions, newEmailAddress) {
+    var response = {};
     try {
         var validationResult = Util.validateRequiredParams({'externalCustomerId':externalCustomerId});
         if (!validationResult.success) {
             return validationResult;
         }
-        var customerInfo = getCustomerInfo(externalCustomerId, newEmailAddress, firstName, lastName, birthDate, shoppingPreference, addressLine1, addressLine2, city, postalCode, state, mobilePhone);
+        var customerInfo = getCustomerInfo(externalCustomerId, newEmailAddress, firstName, lastName, birthDate, shoppingPreference, 
+        		addressLine1, addressLine2, city, postalCode, state, mobilePhone, acceptedTermsConditions, newEmailAddress);
         var result = UpdateCustomerInfoService.run(customerInfo);
         if (result.object) {
-        	responseObject = {success : result.object.success,
-                              errorMessage : null};
+        	response = {success : result.object.success,
+                        errorMessage : null};
         } else {
-        	responseObject = {success : false,
-  				  			  errorMessage : result.errorMessage};
+        	response = {success : false,
+  				  		errorMessage : result.errorMessage};
         }
     } catch (e) {
         var exception = e;
         var errMessage = exception.message + "\n" + exception.stack;
         logger.error(errMessage);
-        responseObject = {success : false,
-		                  errorMessage : errMessage};
+        response = {success : false,
+		            errorMessage : errMessage};
     }
-    logger.debug("responseObject: " + JSON.stringify(responseObject));
-    return responseObject;
+    logger.debug("response: " + JSON.stringify(response));
+    return response;
 }
 
-function getCustomerInfo(externalCustomerId, newEmailAddress, firstName, lastName, birthDate, shoppingPreference, addressLine1, addressLine2, city, postalCode, state, mobilePhone) {
+function getCustomerInfo(externalCustomerId, newEmailAddress, firstName, lastName, birthDate, shoppingPreference, addressLine1, 
+		addressLine2, city, postalCode, state, mobilePhone, acceptedTermsConditions, newEmailAddress) {
 	var customerInfo = new CustomerInfo();
 	customerInfo.setExternalCustomerId(externalCustomerId);
-	customerInfo.setNewEmailAddress(newEmailAddress);
 	customerInfo.setFirstName(firstName);
 	customerInfo.setLastName(lastName);
 	customerInfo.setBirthDate(birthDate);
@@ -77,6 +82,8 @@ function getCustomerInfo(externalCustomerId, newEmailAddress, firstName, lastNam
 		customerInfo.setAddress(address);
 	}
 	customerInfo.setMobilePhone(mobilePhone);
+	customerInfo.setAcceptedTermsConditions(acceptedTermsConditions);
+	customerInfo.setNewEmailAddress(newEmailAddress);
 	return customerInfo;
 }
 

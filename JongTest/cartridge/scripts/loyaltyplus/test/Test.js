@@ -9,17 +9,18 @@ var Util = require('../util/Util');
 var DateUtil = require('../util/DateUtil');
 var logger = require('dw/system/Logger').getLogger("loyaltyplus-test", "Test.js");
 
-var externalCustomerId = "20191025143847"; //jktest1@pacsun.com
-var emailAddress = "jktest47@pacsun.com";
+var externalCustomerId = "93301125"; //jktest20@pacsun.com
+var emailAddress = "jktest54@pacsun.com";
 
 function run() {
 	//var response = lookupCustomer();
-	//var response = enrollCustomer();
-	var response = showCustomer();
+	var response = enrollCustomer();
+	//var response = showCustomer();
+	//var response = updateCustomerInfo();
+	//var response = getCustomerEvents();
 	//var response = getCustomerCoupons();
 	//var response = pauseCustomer();
 	//var response = reactivateCustomer();
-	//var response = updateCustomerInfo();
 	//var response = checkIn();
 	//var response = completeProfile();
 	//var response = purchase();
@@ -28,7 +29,6 @@ function run() {
 	//var response = recordCheckInEvent();
 	//var response = likeProduct();
 	//var response = postReview();
-	//var response = getCustomerCheckInEvents();
 	//var response = updateShoppingPreference();
 	//var response = updatePreferredStore();
 	//var response = getSignature();
@@ -42,7 +42,7 @@ function run() {
 
 function showCustomer() {
 	var showCustomer = require('../customerRequest/ShowCustomer');
-	var include = "detail,coupons";
+	var include = "coupons,member_attributes";
 	var response = showCustomer.run(externalCustomerId, include);
 	return response;
 }
@@ -58,7 +58,7 @@ function enrollCustomer() {
 	var firstName = "Jong"
 	var lastName = "Kim";
 	var birthDate = "0717";
-	var shoppingPreference = "Both";
+	var shoppingPreference = null;
 	var addressLine1 = "3450 E Miraloma Ave";
 	var addressLine2 = null;
 	var city = "Anaheim";
@@ -66,10 +66,42 @@ function enrollCustomer() {
 	var state = "CA";
 	var mobilePhone = "1112223333";
 	var marketingId = "DSK";
+	var acceptedTermsConditions = null;
 	var response = enrollCustomer.run(emailAddress, firstName, lastName, birthDate, shoppingPreference,
-			addressLine1, addressLine2, city, postalCode, state, mobilePhone, marketingId);
+			addressLine1, addressLine2, city, postalCode, state, mobilePhone, marketingId, acceptedTermsConditions);
 
     return response;
+}
+
+function updateCustomerInfo() {
+	var firstName = "Jong"; 
+	var lastName = "Kim";
+	var birthDate = "1209";
+	var shoppingPreference = "Male";
+	var addressLine1 = "3030 Softwind way";
+	var addressLine2 = null;
+	var city = "Torrance";
+	var postalCode = "90506";
+	var state = "CA";
+	var mobilePhone = "3373373347";
+	var acceptedTermsConditions = false;
+	var newEmailAddress = null;
+	var updateCustomerInfo = require('../customerRequest/UpdateCustomerInfo');
+	var response = updateCustomerInfo.run(externalCustomerId, firstName, lastName, birthDate, shoppingPreference, addressLine1, addressLine2, city, 
+			postalCode, state, mobilePhone, acceptedTermsConditions, newEmailAddress);
+	return response;
+}
+
+function getCustomerEvents() {
+	var getCustomerEvents = require('../customerRequest/GetCustomerEvents');
+	var eventType = null;
+	var afterDate = null;
+	var beforeDate = null;
+	var dateFilter = null;
+	var pageNumber = null;
+	var entriesPerPage = null;
+	var response = getCustomerEvents.run(externalCustomerId, eventType, afterDate, beforeDate, dateFilter, pageNumber, entriesPerPage);
+	return response;
 }
 
 function postReview() {
@@ -133,24 +165,6 @@ function purchase() {
 	return response;
 }
 
-function updateCustomerInfo() {
-	var externalCustomerId = 94856660;
-	var newEmailAddress = null;
-	var firstName = "Jong"; 
-	var lastName = "Kim";
-	var birthDate = "1209";
-	var shoppingPreference = "Both";
-	var addressLine1 = "3030 Softwind way";
-	var addressLine2 = null;
-	var city = "Torrance";
-	var postalCode = "90506";
-	var state = "CA";
-	var mobilePhone = "3373373347";
-	var updateCustomerInfo = require('../customerRequest/UpdateCustomerInfo');
-	var response = updateCustomerInfo.run(externalCustomerId, newEmailAddress, firstName, lastName, birthDate, shoppingPreference, addressLine1, addressLine2, city, postalCode, state, mobilePhone);
-	return response;
-}
-
 function returnn() {
 	var returnn = require('../event/Return');
 	var lpExternalCustomerId = "98574038";
@@ -176,16 +190,6 @@ function completeProfile() {
 function formatDate() {
 	var sevenDaysAgo = DateUtil.formatDate(DateUtil.addDays(new Date(), -7), "yyyy-MM-dd'T'HH:MM:ss");
 	return sevenDaysAgo;
-}
-
-function getCustomerCheckInEvents() {
-	var getCustomerEvents = require('../customerRequest/GetCustomerEvents');
-	var lpExternalCustomerId = "93301125"; //jktest20@pacsun.com
-	var eventType = "checkin";
-	var dateFilter = "created_at";
-	var afterDate = DateUtil.formatDate(DateUtil.addDays(new Date(), -7), "yyyy-MM-dd'T'HH:MM:ss");
-	var response = getCustomerEvents.run(lpExternalCustomerId, eventType, dateFilter, afterDate, null, null);
-	return response;
 }
 
 function formatDateString() {
