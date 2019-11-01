@@ -6,8 +6,6 @@
 'use strict';
 
 var Util = {};
-var StringUtils = require('dw/util/StringUtils');
-var Calendar = require('dw/util/Calendar');
 var logger = require('dw/system/Logger').getLogger("loyaltyplus-error", "Util.js");
 
 Util.callService = function(data) {
@@ -22,7 +20,7 @@ Util.callService = function(data) {
 }
 
 Util.getSignature = function(params) {
-    var CustomPreference = require('../util/LoyaltyPlusConstants').CustomPreference;
+	var CustomPreference = require('../util/LoyaltyPlusConstants').CustomPreference;
     var MessageDigest = require('dw/crypto/MessageDigest');
     var Encoding = require('dw/crypto/Encoding');
     var Bytes = require('dw/util/Bytes');
@@ -51,13 +49,18 @@ Util.getSignature = function(params) {
 }
 
 Util.validateRequiredParams = function(params) {
-    var propertyArray = Object.keys(params);
-    for (var i=0; i<propertyArray.length; i++){
-        if (empty(params[propertyArray[i]])) {
-            return {success : false, errorMessage : propertyArray[i] + " is required."}
-        }
-    }
-    return {success : true};
+	var CustomPreference = require('../util/LoyaltyPlusConstants').CustomPreference;
+	if (CustomPreference.LP_ENABLED) {
+	    var propertyArray = Object.keys(params);
+	    for (var i=0; i<propertyArray.length; i++){
+	        if (empty(params[propertyArray[i]])) {
+	            return {success : false, errorMessage : propertyArray[i] + " is required."};
+	        }
+	    }
+	    return {success : true};
+	} else {
+		return {success : false, errorMessage : "ERROR : LoyaltyPlus is disabled."};
+	}
 }
 
 Util.copyObject = function(mainObj) {

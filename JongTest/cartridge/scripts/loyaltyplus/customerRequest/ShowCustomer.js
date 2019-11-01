@@ -4,21 +4,26 @@
  *  Get customer information.
  *
  *   @input externalCustomerId : String
+ *   @input include : String
+ *      Possible values:
+ *          badges
+ *          coupons
+ *          detail
+ *          member_attributes
+ *      	purchase_stats
+ *			reward_stats
+ *			rewards
+ *			reward_groups
+ *			offers
+ *			redemption_limits
+ *			tier_stats
+ *			referrals
+ *			identities
+ *			points_expiration_schedule
+ *      Note: To include more than one of these, use a comma-separated list, for
+ *            example: detail,coupons,reward_stats
  *   @output success : Boolean
- *   @output emailAddress : String
- *   @output name : String
- *   @output firstName : String
- *   @output lastName : String
- *   @output addressLine1 : String
- *   @output addressLine2 : String
- *   @output balance : Number
- *   @output status : String
- *   @output shoppingPreference : String
- *   @output tierName : String
- *   @output tierExpirationDate : String
- *   @output pointsNeededForNextTier : String
- *   @output code : String
- *   @output message : String
+ *   @output data : String
  *   @output errorMessage : String
  */
 'use strict';
@@ -28,59 +33,28 @@ var Util = require('../util/Util');
 var logger = require('dw/system/Logger').getLogger("loyaltyplus-error", "ShowCustomer.js");
 
 function execute(args) {
-    var response = run(args.externalCustomerId);
+    var response = run(args.externalCustomerId, args.include);
     args.success = response.success;
-    args.emailAddress = response.emailAddress;
-    args.name = response.name;
-    args.firstName = response.firstName;
-    args.lastName = response.lastName;
-    args.addressLine1 = response.addressLine1;
-    args.addressLine2 = response.addressLine2;
-    args.balance = response.balance;
-    args.status = response.status;
-    args.shoppingPreference = response.shoppingPreference;
-    args.tierName = response.tierName;
-    args.tierExpirationDate = response.tierExpirationDate;
-    args.tierJoinDate = response.tierJoinDate;
-    args.pointsNeededForNextTier = response.pointsNeededForNextTier;
-    args.pointsNeededToKeepCurrentTier = response.pointsNeededToKeepCurrentTier;
-    args.code = response.code;
-    args.message = response.message;
+    args.data = response.data;
     args.errorMessage = response.errorMessage;
     return response.success ? PIPELET_NEXT : PIPELET_ERROR;
 }
 
-function run(externalCustomerId) {
+function run(externalCustomerId, include) {
     var response = {};
     try {
-        var validationResult = Util.validateRequiredParams({'externalCustomerId':externalCustomerId});
+        var validationResult = Util.validateRequiredParams({'externalCustomerId':externalCustomerId, 'include':include});
         if (!validationResult.success) {
             return validationResult;
         }
-        var include = "detail, coupons, member_attributes, points_expiration_schedule, punchcards, purchase_stats, reward_groups, tier_stats";
         var result = CustomerShowService.run(externalCustomerId, include);
         if (result.object) {
-        	var data = result.object.data;
             response = {success : result.object.success,
-                        emailAddress : data.email,
-                        name : data.name,
-                        firstName : data.first_name,
-                        lastName : data.last_name,
-                        addressLine1 : data.address_line_1,
-                        addressLine2 : data.address_line_2,
-                        balance : data.balance,
-                        status : data.status,
-                        shoppingPreference : data.member_attributes? data.member_attributes.shopping_preference : null,
-                        tierName : data.top_tier_name,
-                        tierExpirationDate : data.top_tier_expiration_date,
-                        tierJoinDate : data.top_tier_join_date,
-                        pointsNeededForNextTier : data.actions_needed_for_next_tier,
-                        pointsNeededToKeepCurrentTier : data.actions_needed_to_keep_tier,
-                        code : data.code,
-                        message : data.message,
+                        data : result.object.data,
                         errorMessage : result.errorMessage};
         } else {
             response = {success : false,
+            		    data : null,
                         errorMessage : result.errorMessage};
         }
     } catch (e) {
@@ -88,6 +62,7 @@ function run(externalCustomerId) {
         var errMessage = exception.message + "\n" + exception.stack;
         logger.error(errMessage);
         response = {success : false,
+        		    data : null,
         		    errorMessage : errMessage};
     }
     logger.debug("response: " + JSON.stringify(response));

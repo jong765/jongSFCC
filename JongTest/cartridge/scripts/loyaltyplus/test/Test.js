@@ -10,15 +10,16 @@ var DateUtil = require('../util/DateUtil');
 var logger = require('dw/system/Logger').getLogger("loyaltyplus-test", "Test.js");
 
 var externalCustomerId = "20191025143847"; //jktest1@pacsun.com
+var emailAddress = "jktest47@pacsun.com";
 
 function run() {
-	//var response = getCustomerCoupons();
+	//var response = lookupCustomer();
 	//var response = enrollCustomer();
+	var response = showCustomer();
+	//var response = getCustomerCoupons();
 	//var response = pauseCustomer();
 	//var response = reactivateCustomer();
 	//var response = updateCustomerInfo();
-	//var response = lookupCustomer();
-	var response = showCustomer();
 	//var response = checkIn();
 	//var response = completeProfile();
 	//var response = purchase();
@@ -41,8 +42,34 @@ function run() {
 
 function showCustomer() {
 	var showCustomer = require('../customerRequest/ShowCustomer');
-	var response = showCustomer.run(externalCustomerId);
+	var include = "detail,coupons";
+	var response = showCustomer.run(externalCustomerId, include);
 	return response;
+}
+
+function lookupCustomer() {
+	var lookupCustomer = require('../customerRequest/LookupCustomer');
+	var response = lookupCustomer.run(emailAddress);
+	return response;
+}
+
+function enrollCustomer() {
+	var enrollCustomer = require('../customerRequest/EnrollCustomer');
+	var firstName = "Jong"
+	var lastName = "Kim";
+	var birthDate = "0717";
+	var shoppingPreference = "Both";
+	var addressLine1 = "3450 E Miraloma Ave";
+	var addressLine2 = null;
+	var city = "Anaheim";
+	var postalCode = "92806";
+	var state = "CA";
+	var mobilePhone = "1112223333";
+	var marketingId = "DSK";
+	var response = enrollCustomer.run(emailAddress, firstName, lastName, birthDate, shoppingPreference,
+			addressLine1, addressLine2, city, postalCode, state, mobilePhone, marketingId);
+
+    return response;
 }
 
 function postReview() {
@@ -121,33 +148,6 @@ function updateCustomerInfo() {
 	var mobilePhone = "3373373347";
 	var updateCustomerInfo = require('../customerRequest/UpdateCustomerInfo');
 	var response = updateCustomerInfo.run(externalCustomerId, newEmailAddress, firstName, lastName, birthDate, shoppingPreference, addressLine1, addressLine2, city, postalCode, state, mobilePhone);
-	return response;
-}
-
-function enrollCustomer() {
-	var enrollCustomer = require('../customerRequest/EnrollCustomer');
-	var emailAddress = " ";
-	var firstName = "Jong"
-	var lastName = "Kim";
-	var birthDate = "0717";
-	var shoppingPreference = "Both";
-	var addressLine1 = "3450 E Miraloma Ave";
-	var addressLine2 = null;
-	var city = "Anaheim";
-	var postalCode = "92806";
-	var state = "CA";
-	var mobilePhone = "1112223333";
-	var marketingId = "DSK";
-	var response = enrollCustomer.run(emailAddress, firstName, lastName, birthDate, shoppingPreference,
-			addressLine1, addressLine2, city, postalCode, state, mobilePhone, marketingId);
-
-    return response;
-}
-
-function lookupCustomer() {
-	var lookupCustomer = require('../customerRequest/LookupCustomer');
-	var emailAddress = "jktest42@pacsun.com";
-	var response = lookupCustomer.run(emailAddress);
 	return response;
 }
 

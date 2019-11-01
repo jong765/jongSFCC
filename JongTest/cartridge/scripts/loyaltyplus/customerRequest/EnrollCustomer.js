@@ -16,7 +16,7 @@
  *   @input mobilePhone : String
  *   @input marketingId : String
  *   @output success : String
- *   @output externalCustomerId : String
+ *   @output data : Object
  *   @output errorMessage: String
  */
 'use strict';
@@ -28,17 +28,17 @@ var Util = require('../util/Util');
 var logger = require('dw/system/Logger').getLogger("loyaltyplus-error", "EnrollCustomer.js");
 
 function execute(args) {
-    var responseObject = run(args.emailAddress, args.firstName, args.lastName, args.birthDate, args.shoppingPreference, 
+    var response = run(args.emailAddress, args.firstName, args.lastName, args.birthDate, args.shoppingPreference, 
         args.addressLine1, args.addressLine2, args.city, args.postalCode, args.state, args.mobilePhone, args.marketingId);
-    args.success = responseObject.success;
-    args.externalCustomerId = responseObject.externalCustomerId;
-    args.errorMessage = responseObject.errorMessage;
-    return responseObject.success ? PIPELET_NEXT : PIPELET_ERROR;
+    args.success = response.success;
+    args.data = response.data;
+    args.errorMessage = response.errorMessage;
+    return response.success ? PIPELET_NEXT : PIPELET_ERROR;
 }
 
 function run(emailAddress, firstName, lastName, birthDate, shoppingPreference, 
     addressLine1, addressLine2, city, postalCode, state, mobilePhone, marketingId) {
-    var responseObject = {};
+    var response = {};
     try {
         var validationResult = Util.validateRequiredParams({'emailAddress':emailAddress.trim()});
         if (!validationResult.success) {
@@ -48,25 +48,24 @@ function run(emailAddress, firstName, lastName, birthDate, shoppingPreference,
         	    addressLine1, addressLine2, city, postalCode, state, mobilePhone);
         var result = CustomerEnrollService.run(customerInfo, marketingId);
         if (result.object) {
-            responseObject = {success : result.object.success,
-            		          externalCustomerId : result.object.data.external_customer_id,
-                              errorCode : result.object.data.code,
-                              errorMessage : result.object.data.message};
+            response = {success : result.object.success,
+            		    data : result.object.data,
+                        errorMessage : null};
         } else {
-            responseObject = {success : false,
-            		          externalCustomerId : null,
-            				  errorMessage : result.errorMessage};
+            response = {success : false,
+            		    data : null,
+            			errorMessage : result.errorMessage};
         }
     } catch (e) {
         var exception = e;
         var errMessage = exception.message + "\n" + exception.stack;
         logger.error(errMessage);
-        responseObject = {success : false,
-        		          externalCustomerId : null,
-        		          errorMessage : errMessage};
+        response = {success : false,
+        		    data : null,
+        		    errorMessage : errMessage};
     }
-    logger.debug("responseObject: " + JSON.stringify(responseObject));
-    return responseObject;
+    logger.debug("response: " + JSON.stringify(response));
+    return response;
 }
 
 function getCustomerInfo(emailAddress, firstName, lastName, birthDate, shoppingPreference, 

@@ -2,12 +2,13 @@
  *  LookupCustomer.js
  *  
  *  Search for customer by email address.
+ *  Error if duplicate customer email addresses are found.
  *
  *   @input emailAddress : String
- *   @output customerFound : Boolean
- *   @output externalCustomerId : String
- *   @output duplicateEmailsFound : Boolean
  *   @output success : Boolean
+ *   @output customerFound : Boolean
+ *   @output duplicateEmailsFound : Boolean
+ *   @output data : Object
  *   @output errorMessage : String
  */
 'use strict';
@@ -17,17 +18,17 @@ var Util = require('../util/Util');
 var logger = require('dw/system/Logger').getLogger("loyaltyplus-error", "LookupCustomer.js");
 
 function execute(args) {
-	var responseObject = run(args.emailAddress);
-    args.customerFound = responseObject.customerFound? responseObject.customerFound : null;
-    args.externalCustomerId = responseObject.externalCustomerId? responseObject.lpExternalCustomerId : null;
-    args.duplicateEmailsFound = responseObject.duplicateEmailsFound? responseObject.duplicateEmailsFound : null;
-    args.success = responseObject.success;
-    args.errorMessage = responseObject.errorMessage;
-    return responseObject.success ? PIPELET_NEXT : PIPELET_ERROR;
+	var response = run(args.emailAddress);
+    args.success = response.success;
+    args.customerFound = response.customerFound;
+    args.duplicateEmailsFound = response.duplicateEmailsFound;
+    args.data = response.data;
+    args.errorMessage = response.errorMessage;
+    return response.success ? PIPELET_NEXT : PIPELET_ERROR;
 }
 
 function run(emailAddress) {
-    var responseObject = {};
+    var response = {};
     try {
         var validationResult = Util.validateRequiredParams({'emailAddress':emailAddress});
         if (!validationResult.success) {
@@ -35,39 +36,41 @@ function run(emailAddress) {
         }
         var result = CustomerSearchService.run(emailAddress);
         if (result.object) {
-	        if (result.object.data.length > 1) {  // duplicate emails found
-	            responseObject = {success : false,
-	                              customerFound : false,
-	                              duplicateEmailsFound : true};
+	        if (result.object.data.length > 1) {  // Error if duplicate email addresses found.
+	            response = {success : false,
+	                        customerFound : false,
+	                        duplicateEmailsFound : true,
+	                        data : null,
+	                        errorMessage : "Error: Duplicate emails found."};
 	        } else {
 	            var data = result.object.data[0];
 	            if (data) {
-	                responseObject = {success : result.object.success,
-	                                  customerFound : true,
-	                                  externalCustomerId : data.external_customer_id,
-	                                  status : data.status,
-	                                  duplicateEmailsFound : false,
-	                                  errorMessage : result.object.data.message};
+	                response = {success : result.object.success,
+	                            customerFound : true,
+	                            duplicateEmailsFound : false,
+	                            data : data,
+	                            errorMessage : result.errorMessage};
 	            } else {
-	                responseObject = {success : result.object.success,
-	                                  customerFound : false,
-	                                  duplicateEmailsFound : false,
-	                                  errorMessage : result.errorMessage};
+	                response = {success : result.object.success,
+	                            customerFound : false,
+	                            duplicateEmailsFound : false,
+	                            data : null,
+	                            errorMessage : result.errorMessage};
 	            }
 	        }
         } else {
-        	responseObject = {success : false,
-  				              errorMessage : result.errorMessage};
+        	response = {success : false,
+  				        errorMessage : result.errorMessage};
         }   
     } catch (e) {
         var exception = e;
         var errMessage = exception.message + "\n" + exception.stack;
         logger.error(errMessage);
-        responseObject = {success : false,
-        		          errorMessage : errMessage};
+        response = {success : false,
+        		    errorMessage : errMessage};
     }
-    logger.debug("responseObject: " + JSON.stringify(responseObject));
-    return responseObject;
+    logger.debug("response: " + JSON.stringify(response));
+    return response;
 }
 
 module.exports = {
