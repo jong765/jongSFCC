@@ -9,15 +9,16 @@ var Util = require('../util/Util');
 var DateUtil = require('../util/DateUtil');
 var logger = require('dw/system/Logger').getLogger("loyaltyplus-test", "Test.js");
 
-var externalCustomerId = "93301125"; //jktest20@pacsun.com
+var externalCustomerId = "84804765"; //jktest20@pacsun.com
 var emailAddress = "jktest54@pacsun.com";
 
 function run() {
 	//var response = lookupCustomer();
-	var response = enrollCustomer();
+	//var response = enrollCustomer();
 	//var response = showCustomer();
 	//var response = updateCustomerInfo();
 	//var response = getCustomerEvents();
+	//var response = getCustomerPointRuleGroups();
 	//var response = getCustomerCoupons();
 	//var response = pauseCustomer();
 	//var response = reactivateCustomer();
@@ -27,7 +28,7 @@ function run() {
 	//var response = rejectPurchase();
 	//var response = returnn();
 	//var response = recordCheckInEvent();
-	//var response = likeProduct();
+	var response = likeProduct();
 	//var response = postReview();
 	//var response = updateShoppingPreference();
 	//var response = updatePreferredStore();
@@ -38,6 +39,12 @@ function run() {
 
 	logResponse(response);
 	return true;
+}
+
+function getCustomerPointRuleGroups() {
+	var getCustomerPointRuleGroups = require('../customerRequest/GetCustomerPointRuleGroups');
+	var response = getCustomerPointRuleGroups.run(externalCustomerId);
+	return response;
 }
 
 function showCustomer() {
@@ -112,7 +119,6 @@ function postReview() {
 }
 
 function likeProduct() {
-	var externalCustomerId = "87464141"; //jktest3@pacsun.com
 	var marketingId = "DSK";
 	var LikeProduct = require('../event/LikeProduct');
 	var response = LikeProduct.run(externalCustomerId, marketingId);
