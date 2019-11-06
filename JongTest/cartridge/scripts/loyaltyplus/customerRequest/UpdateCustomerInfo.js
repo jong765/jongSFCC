@@ -18,12 +18,14 @@
  *   @input newEmailAddress : String
  *      If present (not null), change email address of the customer.
  *   @output success : Boolean
+ *   @output data : Object
  *   @output errorMessage : String
  */
 
 var UpdateCustomerInfoService = require('../service/UpdateCustomerInfoService');
 var CustomerInfo = require('../model/CustomerInfo');
 var Address = require('../model/Address');
+var LpResponse = require('../model/LpResponse');
 var Util = require('../util/Util');
 var logger = require('dw/system/Logger').getLogger("loyaltyplus-error", "UpdateCustomerInfo.js");
 
@@ -31,6 +33,7 @@ function execute(args) {
 	var response = run(args.externalCustomerId, args.firstName, args.lastName, args.birthDate, args.shoppingPreference, args.addressLine1, args.addressLine2, 
 			args.city, args.postalCode, args.state, args.mobilePhone, args.acceptedTermsConditions, args.newEmailAddress);
     args.success = response.success;
+    args.data = response.data;
     args.errorMessage = response.errorMessage;
     return response.success ? PIPELET_NEXT : PIPELET_ERROR;
 }
@@ -47,18 +50,15 @@ function run(externalCustomerId, firstName, lastName, birthDate, shoppingPrefere
         		addressLine1, addressLine2, city, postalCode, state, mobilePhone, acceptedTermsConditions, newEmailAddress);
         var result = UpdateCustomerInfoService.run(customerInfo);
         if (result.object) {
-        	response = {success : result.object.success,
-                        errorMessage : null};
+        	response = new LpResponse(result.object.success, null, null);
         } else {
-        	response = {success : false,
-  				  		errorMessage : result.errorMessage};
+        	response = new LpResponse(false, null, result.errorMessage);
         }
     } catch (e) {
         var exception = e;
         var errMessage = exception.message + "\n" + exception.stack;
         logger.error(errMessage);
-        response = {success : false,
-		            errorMessage : errMessage};
+        response = new LpResponse(false, null, errMessage);
     }
     logger.debug("response: " + JSON.stringify(response));
     return response;

@@ -30,6 +30,7 @@
 'use strict';
 
 var CustomerShowService = require('../service/CustomerShowService');
+var LpResponse = require('../model/LpResponse');
 var Util = require('../util/Util');
 var logger = require('dw/system/Logger').getLogger("loyaltyplus-error", "ShowCustomer.js");
 
@@ -50,21 +51,15 @@ function run(externalCustomerId, include) {
         }
         var result = CustomerShowService.run(externalCustomerId, include);
         if (result.object) {
-            response = {success : result.object.success,
-                        data : result.object.data,
-                        errorMessage : result.errorMessage};
+        	response = new LpResponse(result.object.success, result.object.data, result.errorMessage);
         } else {
-            response = {success : false,
-            		    data : null,
-                        errorMessage : result.errorMessage};
+        	response = new LpResponse(false, null, result.errorMessage);
         }
     } catch (e) {
         var exception = e;
         var errMessage = exception.message + "\n" + exception.stack;
         logger.error(errMessage);
-        response = {success : false,
-        		    data : null,
-        		    errorMessage : errMessage};
+        response = new LpResponse(false, null, errMessage);
     }
     logger.debug("response: " + JSON.stringify(response));
     return response;

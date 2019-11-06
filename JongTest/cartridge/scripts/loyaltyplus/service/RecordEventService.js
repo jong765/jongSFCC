@@ -60,7 +60,7 @@ function getRequestParam(recordRequestParam) {
             requestParam["products[" + i + "][product_id]"] = productLineItem.productID;
             requestParam["products[" + i + "][quantity]"] = productLineItem.quantity.value;
             var product = ProductMgr.getProduct(productLineItem.productID);
-            var productCategory = getProductCategory(product);
+            var productCategory = product.custom.classCode;
             if (product.brand != null) {
             	requestParam["products[" + i + "][brands]"] = product.brand;
             }
@@ -87,16 +87,4 @@ function getRequestParam(recordRequestParam) {
     } 
 
     return requestParam;
-}
-
-function getProductCategory(product) {
-	var categoryName = null;
-	try {
-		categoryName = product.getVariationModel().getMaster().classificationCategory.displayName;
-	} catch(e) {
-		var exception = e;
-        var errMessage = exception.message + "\n" + exception.stack;
-		logger.error("Error getting category name for the productId " + productId);
-	}
-	return categoryName;
 }

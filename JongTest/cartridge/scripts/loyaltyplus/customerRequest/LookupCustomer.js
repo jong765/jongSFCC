@@ -14,6 +14,7 @@
 'use strict';
 
 var CustomerSearchService = require('../service/CustomerSearchService');
+var LpResponse = require('../model/LpResponse');
 var Util = require('../util/Util');
 var logger = require('dw/system/Logger').getLogger("loyaltyplus-error", "LookupCustomer.js");
 
@@ -37,38 +38,29 @@ function run(emailAddress) {
         var result = CustomerSearchService.run(emailAddress);
         if (result.object) {
 	        if (result.object.data.length > 1) {  // Error if duplicate email addresses found.
-	            response = {success : false,
-	                        customerFound : false,
-	                        duplicateEmailsFound : true,
-	                        data : null,
-	                        errorMessage : "Error: Duplicate emails found."};
+	        	response = new LpResponse(false, null, "Error: Duplicate emails found.");
+	        	response.customerFound = false;
+	        	response.duplicateEmailsFound = true;
 	        } else {
 	            var data = result.object.data[0];
 	            if (data) {
-	                response = {success : result.object.success,
-	                            customerFound : true,
-	                            duplicateEmailsFound : false,
-	                            data : data,
-	                            errorMessage : result.errorMessage};
+	            	response = new LpResponse(result.object.success, data, result.errorMessage);
+	            	response.customerFound = true;
+	            	response.duplicateEmailsFound = false;
 	            } else {
-	                response = {success : result.object.success,
-	                            customerFound : false,
-	                            duplicateEmailsFound : false,
-	                            data : null,
-	                            errorMessage : result.errorMessage};
+	            	response = new LpResponse(result.object.success, null, result.errorMessage);
+	            	response.customerFound = false;
+	            	response.duplicateEmailsFound = false;
 	            }
 	        }
         } else {
-        	response = {success : false,
-  				        errorMessage : result.errorMessage};
+        	response = new LpResponse(false, null, result.errorMessage);
         }   
     } catch (e) {
         var exception = e;
         var errMessage = exception.message + "\n" + exception.stack;
         logger.error(errMessage);
-        response = {success : false,
-        		    data : null,
-        		    errorMessage : errMessage};
+        response = new LpResponse(false, null, errMessage);
     }
     logger.debug("response: " + JSON.stringify(response));
     return response;

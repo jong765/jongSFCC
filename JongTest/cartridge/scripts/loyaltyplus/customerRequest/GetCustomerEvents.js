@@ -22,6 +22,7 @@
  */
 
 var CustomerEventsService = require('../service/CustomerEventsService');
+var LpResponse = require('../model/LpResponse');
 var Util = require('../util/Util');
 var logger = require('dw/system/Logger').getLogger("loyaltyplus-error", "GetCustomerEvents.js");
 
@@ -43,21 +44,15 @@ function run(externalCustomerId, eventType, afterDate, beforeDate, dateFilter, p
         var result = CustomerEventsService.run(externalCustomerId, eventType, afterDate, beforeDate, dateFilter, pageNumber, entriesPerPage).object;
         var data = result.data;
         if (data) {
-            response = {success : result.success,
-                        data : data,
-                        errorMessage : result.errorMessage};
+        	response = new LpResponse(result.success, data, result.errorMessage);
         } else {
-            response = {success : false,
-            		    data : null,
-            		    errorMessage : result.errorMessage};
+        	response = new LpResponse(false, null, result.errorMessage);
         }
     } catch (e) {
         var exception = e;
         var errMessage = exception.message + "\n" + exception.stack;
         logger.error(errMessage);
-        response = {success : false,
-        		    data : null,
-        		    errorMessage : errMessage};
+        response = new LpResponse(false, null, errMessage);
     }
     logger.debug("response: " + JSON.stringify(response));
     return response;

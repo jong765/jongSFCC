@@ -5,23 +5,26 @@
  *
  *   @output externalCustomerId : String
  *   @output success : Boolean
+ *   @output data : Object
  *   @output errorMessage : String
  */
 'use strict';
 
 var CustomerPauseService = require('../service/CustomerPauseService');
+var LpResponse = require('../model/LpResponse');
 var Util = require('../util/Util');
 var logger = require('dw/system/Logger').getLogger("loyaltyplus-error", "PauseCustomer.js");
 
 function execute(args) {
-	var responseObject = run(args.externalCustomerId);
-    args.success = responseObject.success;
-    args.errorMessage = responseObject.errorMessage;
-    return responseObject.success ? PIPELET_NEXT : PIPELET_ERROR;
+	var response = run(args.externalCustomerId);
+    args.success = response.success;
+    args.data = response.data;
+    args.errorMessage = response.errorMessage;
+    return response.success ? PIPELET_NEXT : PIPELET_ERROR;
 }
 
 function run(externalCustomerId) {
-    var responseObject = {};
+    var response = {};
     try {
         var validationResult = Util.validateRequiredParams({'externalCustomerId':externalCustomerId});
         if (!validationResult.success) {
@@ -29,21 +32,18 @@ function run(externalCustomerId) {
         }
         var result = CustomerPauseService.run(externalCustomerId);
         if (result.object) {
-        	responseObject = {success : result.object.success,
-                              errorMessage : null};
+        	response = new LpResponse(result.object.success, result.object.data, null);
         } else {
-        	responseObject = {success : false,
-  				  			  errorMessage : result.errorMessage};
+        	response = new LpResponse(false, null, result.errorMessage);
         }  
     } catch (e) {
         var exception = e;
         var errMessage = exception.message + "\n" + exception.stack;
         logger.error(errMessage);
-        responseObject = {success : false,
-        		          errorMessage : errMessage};
+        response = new LpResponse(false, null, errMessage);
     }
-    logger.debug("responseObject: " + JSON.stringify(responseObject));
-    return responseObject;
+    logger.debug("response: " + JSON.stringify(response));
+    return response;
 }
 
 module.exports = {

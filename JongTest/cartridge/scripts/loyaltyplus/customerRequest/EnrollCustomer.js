@@ -25,6 +25,7 @@
 var CustomerEnrollService = require('../service/CustomerEnrollService');
 var CustomerInfo = require('../model/CustomerInfo');
 var Address = require('../model/Address');
+var LpResponse = require('../model/LpResponse');
 var Util = require('../util/Util');
 var logger = require('dw/system/Logger').getLogger("loyaltyplus-error", "EnrollCustomer.js");
 
@@ -51,21 +52,15 @@ function run(emailAddress, firstName, lastName, birthDate, shoppingPreference,
         	    addressLine1, addressLine2, city, postalCode, state, mobilePhone, acceptedTermsConditions);
         var result = CustomerEnrollService.run(customerInfo, marketingId);
         if (result.object) {
-            response = {success : result.object.success,
-            		    data : result.object.data,
-                        errorMessage : null};
+        	response = new LpResponse(result.object.success, result.object.data, result.errorMessage);
         } else {
-            response = {success : false,
-            		    data : null,
-            			errorMessage : result.errorMessage};
+        	response = new LpResponse(false, null, result.errorMessage);
         }
     } catch (e) {
         var exception = e;
         var errMessage = exception.message + "\n" + exception.stack;
         logger.error(errMessage);
-        response = {success : false,
-        		    data : null,
-        		    errorMessage : errMessage};
+        response = new LpResponse(false, null, errMessage);
     }
     logger.debug("response: " + JSON.stringify(response));
     return response;

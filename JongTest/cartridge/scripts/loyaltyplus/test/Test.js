@@ -9,15 +9,16 @@ var Util = require('../util/Util');
 var DateUtil = require('../util/DateUtil');
 var logger = require('dw/system/Logger').getLogger("loyaltyplus-test", "Test.js");
 
-var externalCustomerId = "84804765"; //jktest20@pacsun.com
-var emailAddress = "jktest54@pacsun.com";
+var externalCustomerId = "94387328";
+var emailAddress = "jktest25@pacsun.com";
 
 function run() {
 	//var response = lookupCustomer();
 	//var response = enrollCustomer();
 	//var response = showCustomer();
+	//var response = useCoupon();
 	//var response = updateCustomerInfo();
-	//var response = getCustomerEvents();
+	var response = getCustomerEvents();
 	//var response = getCustomerPointRuleGroups();
 	//var response = getCustomerCoupons();
 	//var response = pauseCustomer();
@@ -28,7 +29,7 @@ function run() {
 	//var response = rejectPurchase();
 	//var response = returnn();
 	//var response = recordCheckInEvent();
-	var response = likeProduct();
+	//var response = likeProduct();
 	//var response = postReview();
 	//var response = updateShoppingPreference();
 	//var response = updatePreferredStore();
@@ -36,9 +37,29 @@ function run() {
 	//var response = testDate();
 	//var response = formatDate();
 	//var response = getDifferenceInDays();
+	//var response = getProduct();
 
 	logResponse(response);
 	return true;
+}
+
+function getCustomerEvents() {
+	var getCustomerEvents = require('../customerRequest/GetCustomerEvents');
+	var eventType = null;
+	var afterDate = null;
+	var beforeDate = null;
+	var dateFilter = null;
+	var pageNumber = null;
+	var entriesPerPage = null;
+	var response = getCustomerEvents.run(externalCustomerId, eventType, afterDate, beforeDate, dateFilter, pageNumber, entriesPerPage);
+	return response;
+}
+
+function useCoupon() {
+	var useCoupon = require('../rewards/UseCoupon');
+	var code = "LPBirthday15_185653379325184025";
+	var response = useCoupon.run(code);
+	return response;
 }
 
 function getCustomerPointRuleGroups() {
@@ -99,18 +120,6 @@ function updateCustomerInfo() {
 	return response;
 }
 
-function getCustomerEvents() {
-	var getCustomerEvents = require('../customerRequest/GetCustomerEvents');
-	var eventType = null;
-	var afterDate = null;
-	var beforeDate = null;
-	var dateFilter = null;
-	var pageNumber = null;
-	var entriesPerPage = null;
-	var response = getCustomerEvents.run(externalCustomerId, eventType, afterDate, beforeDate, dateFilter, pageNumber, entriesPerPage);
-	return response;
-}
-
 function postReview() {
 	var marketingId = "DSK";
 	var postReview = require('../event/PostReview');
@@ -126,8 +135,6 @@ function likeProduct() {
 }
 
 function checkIn() {
-	var externalCustomerId = "75803173"; //jktest2@pacsun.com
-	var enrollmentDate = "2019-10-02T16:07:21-07:00";
 	var marketingId = "DSK";
 	var checkIn = require('../event/CheckIn');
 	var response = checkIn.run(externalCustomerId, marketingId);
@@ -136,52 +143,44 @@ function checkIn() {
 
 function getCustomerCoupons() {
 	var getCustomerCoupons = require('../customerRequest/GetCustomerCoupons');
-	var externalCustomerId = "75803173";
 	var response = getCustomerCoupons.run(externalCustomerId);
 	return response;
 }
 
 function reactivateCustomer() {
 	var reactivateCustomer = require('../customerRequest/ReactivateCustomer');
-	var externalCustomerId = "93301125"; //jktest20@pacsun.com
 	var response = reactivateCustomer.run(externalCustomerId);
 	return response;
 }
 
 function pauseCustomer() {
 	var pauseCustomer = require('../customerRequest/PauseCustomer');
-	var externalCustomerId = "93301125"; //jktest20@pacsun.com
 	var response = pauseCustomer.run(externalCustomerId);
 	return response;
 }
 
 function rejectPurchase() {
 	var rejectPurchase = require('../event/RejectPurchase');
-	var externalCustomerId = "93301125"; //jktest20@pacsun.com
-	var orderNo = "70039325";
+	var orderNo = "70039725";
 	var response = rejectPurchase.run(externalCustomerId, orderNo);
 	return response;
 }
 
 function purchase() {
 	var purchase = require('../event/Purchase');
-	var externalCustomerId = "98574038"; //jkupdt36@pacsun.com
-	var orderNo = "70039627";
+	var orderNo = "70039725";
 	var response = purchase.run(externalCustomerId, orderNo);
 	return response;
 }
 
 function returnn() {
 	var returnn = require('../event/Return');
-	var lpExternalCustomerId = "98574038";
 	var orderNo = "70037929";
 	var response = returnn.run(lpExternalCustomerId, orderNo);
 	return response;
 }
 
 function completeProfile() {
-	var lpExternalCustomerId = "94387328";
-	var emailAddress = "jktest33@pacsun.com";
 	var firstName = "Jong";
 	var lastName = "Kim";
 	var birthDate = "0803";
@@ -237,7 +236,6 @@ function getSignature() {
 
 function updateShoppingPreference() {
 	var updateShoppingPreference = require('../customerRequest/UpdateShoppingPreference');
-	var externalCustomerId = "96132844";
 	var shoppingPreference = "Female";
 
 	var response = updateShoppingPreference.run(externalCustomerId, shoppingPreference);
@@ -246,11 +244,18 @@ function updateShoppingPreference() {
 
 function updatePreferredStore() {
 	var updateShoppingPreference = require('../customerRequest/UpdatePreferredStore');
-	var externalCustomerId = "75587003";
 	var preferredStore = "0010";
 
 	var response = updateShoppingPreference.run(externalCustomerId, preferredStore);
     return response;
+}
+
+function getProduct() {
+	var ProductMgr = require('dw/catalog/ProductMgr');
+	var productId = "8544645";
+	var product = ProductMgr.getProduct(productId);
+	var response = {"classCode":product.custom.classCode};
+	return response;
 }
 
 function logResponse(response) {
