@@ -29,9 +29,9 @@
  */
 'use strict';
 
-var CustomerShowService = require('../service/CustomerShowService');
-var LpResponse = require('../model/LpResponse');
-var Util = require('../util/Util');
+var CustomerShowService = require('../helper/service/CustomerShowService');
+var LpResponse = require('../helper/model/LpResponse');
+var Util = require('../helper/util/Util');
 var logger = require('dw/system/Logger').getLogger("loyaltyplus-error", "ShowCustomer.js");
 
 function execute(args) {

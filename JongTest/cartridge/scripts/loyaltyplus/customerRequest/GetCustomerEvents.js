@@ -21,9 +21,9 @@
  *   @output errorMessage : String
  */
 
-var CustomerEventsService = require('../service/CustomerEventsService');
-var LpResponse = require('../model/LpResponse');
-var Util = require('../util/Util');
+var CustomerEventsService = require('../helper/service/CustomerEventsService');
+var LpResponse = require('../helper/model/LpResponse');
+var Util = require('../helper/util/Util');
 var logger = require('dw/system/Logger').getLogger("loyaltyplus-error", "GetCustomerEvents.js");
 
 function execute(args) {

@@ -1,25 +1,25 @@
 /********************************************************************************************
- *  PauseCustomer.js
- *  
- *  Pause an active customer account.
+ *  GetRedeemedCoupons.js
+ * 
+ *  Retrieve redeemed customer coupons. 
+ *  Used coupons will not be retrieved.
  *
- *   @output externalCustomerId : String
+ *   @input externalCustomerId : String
  *   @output success : Boolean
  *   @output data : Object
  *   @output errorMessage : String
  */
-'use strict';
 
-var CustomerPauseService = require('../helper/service/CustomerPauseService');
+var CustomerOffersService = require('../helper/service/CustomerOffersService');
 var LpResponse = require('../helper/model/LpResponse');
 var Util = require('../helper/util/Util');
-var logger = require('dw/system/Logger').getLogger("loyaltyplus-error", "PauseCustomer.js");
+var logger = require('dw/system/Logger').getLogger("loyaltyplus-error", "GetCustomerOffers.js");
 
 function execute(args) {
 	var response = run(args.externalCustomerId);
-    args.success = response.success;
-    args.data = response.data;
-    args.errorMessage = response.errorMessage;
+	args.success = response.success;
+	args.data = response.data;
+	args.errorMessage = response.errorMessage;
     return response.success ? PIPELET_NEXT : PIPELET_ERROR;
 }
 
@@ -30,12 +30,12 @@ function run(externalCustomerId) {
         if (!validationResult.success) {
             return validationResult;
         }
-        var result = CustomerPauseService.run(externalCustomerId);
+        var result = CustomerOffersService.run(externalCustomerId);
         if (result.object) {
-        	response = new LpResponse(result.object.success, result.object.data, null);
+        	response = new LpResponse(result.object.success, result.object.data, result.errorMessage);
         } else {
         	response = new LpResponse(false, null, result.errorMessage);
-        }  
+        }
     } catch (e) {
         var exception = e;
         var errMessage = exception.message + "\n" + exception.stack;

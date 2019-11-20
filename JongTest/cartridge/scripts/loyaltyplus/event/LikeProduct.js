@@ -4,28 +4,31 @@
  *  Record loyalty plus like_a_product event.
  * 
  *   @input externalCustomerId : String
+ *   @input productId : String
  *   @input marketingId : String
  *   @output success : Boolean
  *   @output data : Object
  *   @output errorMessage : String
  */
 
-var RecordEventService = require('../service/RecordEventService');
-var RecordRequestParam = require('../model/RecordRequestParam');
-var EventType = require('../util/LoyaltyPlusConstants').EventType;
-var Util = require('../util/Util');
-var Constant = require('../util/LoyaltyPlusConstants').Constant;
+var RecordEventService = require('../helper/service/RecordEventService');
+var RecordRequestParam = require('../helper/model/RecordRequestParam');
+var EventType = require('../helper/util/LoyaltyPlusConstants').EventType;
+var LpResponse = require('../helper/model/LpResponse');
+var Util = require('../helper/util/Util');
+var DateUtil = require('../helper/util/DateUtil');
+var Constant = require('../helper/util/LoyaltyPlusConstants').Constant;
 var logger = require('dw/system/Logger').getLogger("loyaltyplus-error", "LikeProduct.js");
 
 function execute(args) {
-	var response = run(args.externalCustomerId, args.marketingId);
+	var response = run(args.externalCustomerId, args.productId, args.marketingId);
 	args.success = response.success;
 	args.data = response.data;
 	args.errorMessage = response.errorMessage;
     return response.success ? PIPELET_NEXT : PIPELET_ERROR;
 }
 
-function run(externalCustomerId, marketingId) {
+function run(externalCustomerId, productId, marketingId) {
     var response = {};
     try {
         var validationResult = {success:false};
@@ -34,26 +37,26 @@ function run(externalCustomerId, marketingId) {
             return validationResult;
         }
         var eventType = EventType.LIKE_A_PRODUCT;
-    	var result = RecordEventService.run(new RecordRequestParam(externalCustomerId, eventType, marketingId));
+        var recordRequestParam = new RecordRequestParam(externalCustomerId, eventType, marketingId);
+        recordRequestParam.setEventId(getEventId(externalCustomerId, productId, eventType));
+    	var result = RecordEventService.run(recordRequestParam);
     	if (result.object) {
-            response = {success : result.object.success,
-    				    data : result.object.data,
-                        errorMessage : result.errorMessage};
+    		response = new LpResponse(result.object.success, result.object.data, result.errorMessage);
         } else {
-            response = {success : false,
-            		    data : null,
-            		    errorMessage : result.errorMessage};
+        	response = new LpResponse(false, null, result.errorMessage);
         }
     } catch (e) {
         var exception = e;
         var errMessage = exception.message + "\n" + exception.stack;
         logger.error(errMessage);
-        response = {success : false,
-		            data : null,
-                    errorMessage : errMessage};
+        response = new LpResponse(false, null, errMessage);
     }
     logger.debug("response: " + JSON.stringify(response));
     return response;
+}
+
+function getEventId(externalCustomerId, productId, eventType) {
+	return externalCustomerId + "_" + eventType + "_" + productId + "_" + DateUtil.formatDate(new Date, "yyyyMMddhhmmss");
 }
 
 module.exports = {

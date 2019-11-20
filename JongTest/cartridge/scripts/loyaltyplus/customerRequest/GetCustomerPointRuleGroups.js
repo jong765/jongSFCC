@@ -9,9 +9,9 @@
  *   @output errorMessage : String
  */
 
-var CustomerPointRuleGroupsService = require('../service/CustomerPointRuleGroupsService');
-var LpResponse = require('../model/LpResponse');
-var Util = require('../util/Util');
+var CustomerPointRuleGroupsService = require('../helper/service/CustomerPointRuleGroupsService');
+var LpResponse = require('../helper/model/LpResponse');
+var Util = require('../helper/util/Util');
 var logger = require('dw/system/Logger').getLogger("loyaltyplus-error", "GetCustomerPointRuleGroups.js");
 
 function execute(args) {

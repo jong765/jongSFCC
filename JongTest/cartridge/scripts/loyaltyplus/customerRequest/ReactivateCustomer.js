@@ -10,9 +10,9 @@
  */
 'use strict';
 
-var CustomerReactivateService = require('../service/CustomerReactivateService');
-var LpResponse = require('../model/LpResponse');
-var Util = require('../util/Util');
+var CustomerReactivateService = require('../helper/service/CustomerReactivateService');
+var LpResponse = require('../helper/model/LpResponse');
+var Util = require('../helper/util/Util');
 var logger = require('dw/system/Logger').getLogger("loyaltyplus-error", "ReactivateCustomer.js");
 
 function execute(args) {

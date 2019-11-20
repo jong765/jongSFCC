@@ -22,11 +22,11 @@
  *   @output errorMessage : String
  */
 
-var UpdateCustomerInfoService = require('../service/UpdateCustomerInfoService');
-var CustomerInfo = require('../model/CustomerInfo');
-var Address = require('../model/Address');
-var LpResponse = require('../model/LpResponse');
-var Util = require('../util/Util');
+var UpdateCustomerInfoService = require('../helper/service/UpdateCustomerInfoService');
+var CustomerInfo = require('../helper/model/CustomerInfo');
+var Address = require('../helper/model/Address');
+var LpResponse = require('../helper/model/LpResponse');
+var Util = require('../helper/util/Util');
 var logger = require('dw/system/Logger').getLogger("loyaltyplus-error", "UpdateCustomerInfo.js");
 
 function execute(args) {

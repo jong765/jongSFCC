@@ -10,12 +10,12 @@
  *   @output errorMessage : String
  */
 
-var GetCustomerEvents = require('../customerRequest/GetCustomerEvents');
-var RecordEventService = require('../service/RecordEventService');
-var RecordRequestParam = require('../model/RecordRequestParam');
-var EventType = require('../util/LoyaltyPlusConstants').EventType;
-var Util = require('../util/Util');
-var DateUtil = require('../util/DateUtil');
+var RecordEventService = require('../helper/service/RecordEventService');
+var RecordRequestParam = require('../helper/model/RecordRequestParam');
+var EventType = require('../helper/util/LoyaltyPlusConstants').EventType;
+var LpResponse = require('../helper/model/LpResponse');
+var Util = require('../helper/util/Util');
+var DateUtil = require('../helper/util/DateUtil');
 var logger = require('dw/system/Logger').getLogger("loyaltyplus-error", "CheckIn.js");
 
 function execute(args) {
@@ -34,26 +34,26 @@ function run(externalCustomerId, marketingId) {
             return validationResult;
         }
         var eventType = EventType.CHECK_IN;
-    	var result = RecordEventService.run(new RecordRequestParam(externalCustomerId, eventType, marketingId));
+        var recordRequestParam = new RecordRequestParam(externalCustomerId, eventType, marketingId);
+        recordRequestParam.setEventId(getEventId(externalCustomerId, eventType));
+    	var result = RecordEventService.run(recordRequestParam);
     	if (result.object) {
-            response = {success : result.object.success,
-            		    data : result.object.data,
-            		    errorMessage : result.errorMessage};
+    		response = new LpResponse(result.object.success, result.object.data, result.errorMessage);
         } else {
-            response = {success : false,
-            		    data : null,
-            		    errorMessage : result.errorMessage};
+        	response = new LpResponse(false, null, result.errorMessage);
         }
     } catch (e) {
         var exception = e;
         var errMessage = exception.message + "\n" + exception.stack;
         logger.error(errMessage);
-        response = {success : false,
-        		    data : null,
-                    errorMessage : errMessage};
+        response = new LpResponse(false, null, errMessage);
     }
     logger.debug("response: " + JSON.stringify(response));
     return response;
+}
+
+function getEventId(externalCustomerId, eventType) {
+	return externalCustomerId + "_" + eventType + "_" + DateUtil.formatDate(new Date, "yyyyMMddhhmmss");
 }
 
 module.exports = {

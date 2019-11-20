@@ -1,10 +1,10 @@
 /********************************************************************************************
- *  UpdateShoppingPreference.js
+ *  UpdateTermsConditions.js
  * 
- *  Update the ShoppingPreference custom attribute of a member.
+ *  Update the accepted terms and conditions custom attribute of a member.
  *
  *   @input lpExternalCustomerId : String
- *   @input shoppingPreference : String
+ *   @input acceptedTermsConditions : Boolean
  *   @output success : Boolean
  *   @output errorMessage : String
  */
@@ -12,23 +12,23 @@
 var UpdateAttributesService = require('../helper/service/UpdateAttributesService');
 var LpResponse = require('../helper/model/LpResponse');
 var Util = require('../helper/util/Util');
-var logger = require('dw/system/Logger').getLogger("loyaltyplus-error", "UpdateShoppingPreference.js");
+var logger = require('dw/system/Logger').getLogger("loyaltyplus-error", "UpdateTermsConditions.js");
 
 function execute(args) {
-	var response = run(args.lpExternalCustomerId, args.shoppingPreference);
+	var response = run(args.lpExternalCustomerId, args.acceptedTermsConditions);
     args.success = response.success;
     args.errorMessage = response.errorMessage;
     return result.response ? PIPELET_NEXT : PIPELET_ERROR;
 }
 
-function run(lpExternalCustomerId, shoppingPreference) {
+function run(lpExternalCustomerId, acceptedTermsConditions) {
     var response = {};
     try {
         var validationResult = Util.validateRequiredParams({'lpExternalCustomerId':lpExternalCustomerId});
         if (!validationResult.success) {
             return validationResult;
         }
-        var result = UpdateAttributesService.run(lpExternalCustomerId, 'replace', '/shopping_preference', shoppingPreference);
+        var result = UpdateAttributesService.run(lpExternalCustomerId, 'replace', '/accepted_terms_and_conditions', acceptedTermsConditions);
         if (result.object) {
     		response = new LpResponse(result.object.success, null, result.errorMessage);
         } else {

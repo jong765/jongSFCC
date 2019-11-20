@@ -5,22 +5,29 @@
  *
  * @module controllers/Test
  */
-var Util = require('../util/Util');
-var DateUtil = require('../util/DateUtil');
+var OrderMgr = require('dw/order/OrderMgr');
+var Util = require('../helper/util/Util');
+var DateUtil = require('../helper/util/DateUtil');
 var logger = require('dw/system/Logger').getLogger("loyaltyplus-test", "Test.js");
 
-var externalCustomerId = "94387328";
-var emailAddress = "jktest25@pacsun.com";
+var externalCustomerId = "87464141";
+var emailAddress = "jktest3@pacsun.com";
+var shoppingPreference = "Both";
+var acceptedTermsConditions = true;
+var preferredStore = "0055";
+var order = OrderMgr.getOrder("70039825");
 
 function run() {
+	//var response = calculateProformaPoints();
+	//var response = updateCoupon();
+	var response = GetCustomerOffers();
+	//var response = GetRedeemedCustomerCoupons();
 	//var response = lookupCustomer();
 	//var response = enrollCustomer();
 	//var response = showCustomer();
-	//var response = useCoupon();
 	//var response = updateCustomerInfo();
-	var response = getCustomerEvents();
+	//var response = getCustomerEvents();
 	//var response = getCustomerPointRuleGroups();
-	//var response = getCustomerCoupons();
 	//var response = pauseCustomer();
 	//var response = reactivateCustomer();
 	//var response = checkIn();
@@ -32,15 +39,45 @@ function run() {
 	//var response = likeProduct();
 	//var response = postReview();
 	//var response = updateShoppingPreference();
+	//var response = updateTermsConditions();
 	//var response = updatePreferredStore();
 	//var response = getSignature();
 	//var response = testDate();
 	//var response = formatDate();
-	//var response = getDifferenceInDays();
 	//var response = getProduct();
 
 	logResponse(response);
 	return true;
+}
+
+function calculateProformaPoints() {
+	var calculateProformaPoints = require('../rewards/CalculateProformaPoints');
+	var response = calculateProformaPoints.run(order);
+	return response;
+}
+
+function GetCustomerOffers() {
+	var getCustomerOffers = require('../rewards/GetCustomerOffers');
+	var response = getCustomerOffers.run(externalCustomerId);
+	return response;
+}
+
+function GetRedeemedCustomerCoupons() {
+	var getRedeemedCoupons = require('../rewards/GetRedeemedCustomerCoupons');
+	var response = getRedeemedCoupons.run(externalCustomerId);
+	return response;
+}
+
+function formatDate() {
+	//var response = DateUtil.formatDate(new Date, "yyyy-MM-dd'T'HH:MM:ss");
+	var response = DateUtil.formatDate(new Date, "yyyyMMddhhmmss");
+	return response;
+}
+
+function lookupCustomer() {
+	var lookupCustomer = require('../customerRequest/LookupCustomer');
+	var response = lookupCustomer.run(emailAddress);
+	return response;
 }
 
 function getCustomerEvents() {
@@ -55,10 +92,11 @@ function getCustomerEvents() {
 	return response;
 }
 
-function useCoupon() {
-	var useCoupon = require('../rewards/UseCoupon');
-	var code = "LPBirthday15_185653379325184025";
-	var response = useCoupon.run(code);
+function updateCoupon() {
+	var updateCoupon = require('../rewards/UpdateCoupon');
+	var code = "LPReward10_13269016126181398563";
+	var status = "used";
+	var response = updateCoupon.run(code, status);
 	return response;
 }
 
@@ -72,12 +110,6 @@ function showCustomer() {
 	var showCustomer = require('../customerRequest/ShowCustomer');
 	var include = "coupons,member_attributes";
 	var response = showCustomer.run(externalCustomerId, include);
-	return response;
-}
-
-function lookupCustomer() {
-	var lookupCustomer = require('../customerRequest/LookupCustomer');
-	var response = lookupCustomer.run(emailAddress);
 	return response;
 }
 
@@ -128,9 +160,10 @@ function postReview() {
 }
 
 function likeProduct() {
+	var productId = "8872234";
 	var marketingId = "DSK";
 	var LikeProduct = require('../event/LikeProduct');
-	var response = LikeProduct.run(externalCustomerId, marketingId);
+	var response = LikeProduct.run(externalCustomerId, productId, marketingId);
 	return response;
 }
 
@@ -138,12 +171,6 @@ function checkIn() {
 	var marketingId = "DSK";
 	var checkIn = require('../event/CheckIn');
 	var response = checkIn.run(externalCustomerId, marketingId);
-	return response;
-}
-
-function getCustomerCoupons() {
-	var getCustomerCoupons = require('../customerRequest/GetCustomerCoupons');
-	var response = getCustomerCoupons.run(externalCustomerId);
 	return response;
 }
 
@@ -161,21 +188,21 @@ function pauseCustomer() {
 
 function rejectPurchase() {
 	var rejectPurchase = require('../event/RejectPurchase');
-	var orderNo = "70039725";
+	var orderNo = "70039826";
 	var response = rejectPurchase.run(externalCustomerId, orderNo);
 	return response;
 }
 
 function purchase() {
 	var purchase = require('../event/Purchase');
-	var orderNo = "70039725";
+	var orderNo = "70039826";
 	var response = purchase.run(externalCustomerId, orderNo);
 	return response;
 }
 
 function returnn() {
 	var returnn = require('../event/Return');
-	var orderNo = "70037929";
+	var orderNo = "70039826";
 	var response = returnn.run(lpExternalCustomerId, orderNo);
 	return response;
 }
@@ -192,25 +219,11 @@ function completeProfile() {
 	return response;
 }
 
-function formatDate() {
-	var sevenDaysAgo = DateUtil.formatDate(DateUtil.addDays(new Date(), -7), "yyyy-MM-dd'T'HH:MM:ss");
-	return sevenDaysAgo;
-}
-
 function formatDateString() {
 	var dateString = "2019-10-04T16:07:21-0700";
 	//var dateString = "2019/10/04 16:07:21-0700";
 	var dateFormat = "MM/dd/yyyy HH:MM:ss";
 	var response = DateUtil.formatDate(dateString, dateFormat);
-	return response;
-}
-
-function getDifferenceInDays() {
-	//var dateFormat = "yyyy-MM-dd'T'HH:MM:ss-HH:MM";
-	//var dateFormat = "yyyy-MM-dd'T'HH:MM:ss.SSS"; HH:mm:ss
-	var dateString1 = "2019-10-04T16:07:21-0700";
-	var date2 = new Date();
-	var response = DateUtil.getDifferenceInDays(dateString1, date2);
 	return response;
 }
 
@@ -236,15 +249,20 @@ function getSignature() {
 
 function updateShoppingPreference() {
 	var updateShoppingPreference = require('../customerRequest/UpdateShoppingPreference');
-	var shoppingPreference = "Female";
 
 	var response = updateShoppingPreference.run(externalCustomerId, shoppingPreference);
     return response;
 }
 
+function updateTermsConditions() {
+	var updateTermsConditions = require('../customerRequest/UpdateTermsConditions');
+
+	var response = updateTermsConditions.run(externalCustomerId, acceptedTermsConditions);
+    return response;
+}
+
 function updatePreferredStore() {
 	var updateShoppingPreference = require('../customerRequest/UpdatePreferredStore');
-	var preferredStore = "0010";
 
 	var response = updateShoppingPreference.run(externalCustomerId, preferredStore);
     return response;
