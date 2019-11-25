@@ -1,11 +1,44 @@
 'use strict'
 
+/**
+ * Controller : Test
+ *
+ * @module controllers/Test
+ */
 var OrderMgr = require('dw/order/OrderMgr');
-var JK_DateUtil = require('JongTest/cartridge/scripts/js/JK_DateUtil.js');
+var ProductMgr = require('dw/catalog/ProductMgr');
+var PromotionMgr = require('dw/campaign/PromotionMgr');
+var logger = require('dw/system/Logger').getLogger("jk-test", "Test.js");
 
-function execute(args)
-{
-	var currentDate = JK_DateUtil.getCurrentDate("yyyy-mm-dd'T'hh:mm:ss");
+function run() {
+	var response = getProductPromotion();
 	
-	return PIPELET_NEXT;
+	logResponse(response);
+	return true;
 }
+
+function logResponse(response) {
+	logger.debug("response: " + JSON.stringify(response));
+	return;
+}
+
+function getProductPromotion() {
+	var response = null;
+	var product = ProductMgr.getProduct("0703468680174");
+	var promotions = PromotionMgr.getActivePromotions().getProductPromotions(product);
+	var currentPromotion = null;
+	var previousStartDate = null;
+	for (var i in promotions) {
+		var promotion = promotions[i];
+		if (promotion.active && promotion.promotionClass == "PRODUCT") {
+			if (currentPromotion == null || promotion.startDate > previousStartDate) {
+				var currentPromotion = promotion;
+				previousStartDate = promotion.startDate;
+			}
+		}
+	}
+	return currentPromotion;
+}
+
+module.exports.run = run;
+

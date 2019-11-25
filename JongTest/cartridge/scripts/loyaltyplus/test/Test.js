@@ -20,8 +20,8 @@ var order = OrderMgr.getOrder("70039825");
 function run() {
 	//var response = calculateProformaPoints();
 	//var response = updateCoupon();
-	var response = GetCustomerOffers();
-	//var response = GetRedeemedCustomerCoupons();
+	//var response = GetCustomerOffers();
+	var response = GetRedeemedCustomerCoupons();
 	//var response = lookupCustomer();
 	//var response = enrollCustomer();
 	//var response = showCustomer();

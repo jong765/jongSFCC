@@ -1,7 +1,7 @@
 /********************************************************************************************
- *  GetCustomerOffers.js
+ *  GetRedeemedCustomerCoupons.js
  * 
- *  Get active promotions, deals and member linked offers.
+ *  Get redeemed customer coupons.
  *
  *   @input externalCustomerId : String
  *   @output success : Boolean
@@ -9,7 +9,7 @@
  *   @output errorMessage : String
  */
 
-var CustomerOffersService = require('../helper/service/CustomerOffersService');
+var CustomerCouponsService = require('../helper/service/CustomerCouponsService');
 var LpRedeemedCouponsResponse = require('../helper/model/LpRedeemedCouponsResponse');
 var Util = require('../helper/util/Util');
 var logger = require('dw/system/Logger').getLogger("loyaltyplus-error", "GetRedeemedCustomerCoupons.js");

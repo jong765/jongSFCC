@@ -1,5 +1,5 @@
 {
     "init": ["./cartridge/scripts/ServiceInit.ds",
-             "./cartridge/scripts/loyaltyplus/init/LoyaltyPlusServiceInit.js",
+             "./cartridge/scripts/loyaltyplus/helper/init/LoyaltyPlusServiceInit.js",
              "./cartridge/scripts/mao/init/MaoHttpServiceInit.ds"]
 }
