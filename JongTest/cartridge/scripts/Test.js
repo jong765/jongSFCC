@@ -12,11 +12,17 @@ var PromotionMgr = require('dw/campaign/PromotionMgr');
 var logger = require('dw/system/Logger').getLogger("jk-test", "Test.js");
 
 function run() {
-	var response = getProductPromotion();
+	//var response = getProductPromotion();
 	
-	logResponse(response);
+	//logResponse(response);
+	var str = "3037 Softwindway \n#2";
+	str = remove_linebreaks(str);
 	return true;
 }
+
+function remove_linebreaks(str ) { 
+    return str.replace( /[\r\n]+/gm, "" ); 
+} 
 
 function logResponse(response) {
 	logger.debug("response: " + JSON.stringify(response));
