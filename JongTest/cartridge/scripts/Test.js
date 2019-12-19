@@ -12,12 +12,33 @@ var PromotionMgr = require('dw/campaign/PromotionMgr');
 var logger = require('dw/system/Logger').getLogger("jk-test", "Test.js");
 
 function run() {
-	//var response = getProductPromotion();
-	
-	//logResponse(response);
-	var str = "3037 Softwindway \n#2";
-	str = remove_linebreaks(str);
+	var productId = "8360513";
+	checkInventory(productId);
 	return true;
+}
+
+function checkCartInventories() {
+	var MaoInventoryCheckerSingletonFactory = require('int_pacsun_api/cartridge/scripts/mao/inventory/CheckCartInventories');
+	var isAvailable;
+	var availabilityAlertStatus = productLineItem.product.availabilityModel.getInventoryRecord().custom.availabilityAlertStatus;
+	if (availabilityAlertStatus && availabilityAlertStatus.equalsIgnoreCase("LIMITED_STOCK")) {
+		var maoInventoryChecker = MaoInventoryCheckerSingletonFactory.getInstance();
+		isAvailable = maoInventoryChecker.check(productLineItem.productID, productLineItem.quantity, pdict.Basket, false);
+	} else if (availabilityAlertStatus && availabilityAlertStatus.equalsIgnoreCase("OUT_OF_STOCK")) {
+		isAvailable = false;
+	}
+}
+
+function checkInventory(productId) {
+	var product = ProductMgr.getProduct(productId);
+	var CheckMaoInventory = require('int_pacsun_api/cartridge/scripts/mao/inventory/CheckInventory');
+    var availabilityAlertStatus = product.getAvailabilityModel().getInventoryRecord().custom.availabilityAlertStatus;
+    var isAvailable;
+    if (availabilityAlertStatus && availabilityAlertStatus.equalsIgnoreCase("LIMITED_STOCK")) {
+        isAvailable = CheckMaoInventory.check(product.ID, quantity, shippingMethodId, false);
+    } else if (availabilityAlertStatus && availabilityAlertStatus.equalsIgnoreCase("OUT_OF_STOCK")) {
+        isAvailable = false;
+    }
 }
 
 function remove_linebreaks(str ) { 
