@@ -9,12 +9,48 @@ var BasketMgr = require('dw/order/BasketMgr');
 var OrderMgr = require('dw/order/OrderMgr');
 var ProductMgr = require('dw/catalog/ProductMgr');
 var PromotionMgr = require('dw/campaign/PromotionMgr');
+var Transaction = require('dw/system/Transaction');
 var logger = require('dw/system/Logger').getLogger("jk-test", "Test.js");
 
-function run() {
-	var productId = "8360513";
-	checkInventory(productId);
+function run(basket, currentForms) {
+	fixMissingShipTo(basket, currentForms);
 	return true;
+}
+
+function getAvailabilityStatus() {
+	
+}
+
+function fixMissingShipTo(basket, currentForms) {
+	Transaction.wrap(function(){
+		var billingAddress = currentForms.billing.billingAddress.addressFields;
+		var shippingAddress = basket.shipments[0].shippingAddress;
+		//if basket ship to address is missing, copy from basket bill to address
+		if (shippingAddress.address1 && shippingAddress.city) {
+			shippingAddress.address1 = billingAddress.address1.value;
+			shippingAddress.address2 = billingAddress.address2? billingAddress.address2.value : ""
+			shippingAddress.city = billingAddress.city.value;
+			shippingAddress.countryCode = billingAddress.country.value;
+			shippingAddress.phone = billingAddress.phone? billingAddress.phone.value : "";
+			shippingAddress.postalCode = billingAddress.postal.value;
+			shippingAddress.stateCode = billingAddress.states.state.htmlValue;
+		}
+		if (shippingAddress.firstName && shippingAddress.lastName) {
+			shippingAddress.firstName = billingAddress.firstName.value;
+			shippingAddress.lastName = billingAddress.lastName.value;
+		}
+	});
+}
+
+function getOrder(orderNumber) {
+	var order = OrderMgr.getOrder(orderNumber);
+	return order;
+}
+
+function isLimitedStock(product) {
+	var CheckInventoryUtil = require('int_pacsun_api/cartridge/scripts/mao/inventory/CheckInventoryUtil');
+	var limitedStock = CheckInventoryUtil.isLimitedStock(product);
+	return limitedStock;
 }
 
 function checkCartInventories() {
