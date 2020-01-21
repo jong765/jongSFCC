@@ -21,7 +21,7 @@ function run(couponCodeList, currentBasket) {
 	var priceAdjustments = currentBasket.priceAdjustments;
 	var totalReward = 0.00;
 	for (var i = 0; i < priceAdjustments.length; i++) {
-		if (priceAdjustments[i].promotionID == Resource.msg('loyalty.promotion.id','loyalty',null)) {
+		if (priceAdjustments[i].promotionID == Resource.msg('loyalty.promotion.id','loyalty',null) + coupon.code) {
 			if (couponCodeList.contains(priceAdjustments[i].custom.loyaltyCouponCode)){
 				basket.removePriceAdjustment(priceAdjustments[i]);
 			} else {

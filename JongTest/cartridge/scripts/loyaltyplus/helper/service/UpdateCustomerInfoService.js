@@ -23,7 +23,9 @@ exports.run = function (customerInfo) {
 
 function getRequestParam(customerInfo) {
     var requestParam = {uuid : CustomPreference.ACCOUNT_ID};
-    requestParam.external_customer_id = customerInfo.externalCustomerId;
+    
+    if (customerInfo.externalCustomerId != "undefined") requestParam.external_customer_id = customerInfo.externalCustomerId;
+    if (customerInfo.emailAddress != "undefined") requestParam.email = customerInfo.emailAddress;
     if (customerInfo.newEmailAddress != "undefined") requestParam.new_email = customerInfo.newEmailAddress;
     if (customerInfo.firstName != "undefined") requestParam.first_name = ifnull(customerInfo.firstName);
     if (customerInfo.lastName != "undefined") requestParam.last_name = ifnull(customerInfo.lastName);

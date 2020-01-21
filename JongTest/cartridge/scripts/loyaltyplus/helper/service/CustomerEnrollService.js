@@ -53,6 +53,7 @@ function getRequestParam(customerInfo, marketingId) {
 		requestParam.sub_channel = Util.getSubChannel(marketingId);
 	requestParam.channel = Constant.CHANNEL;
 	requestParam.last_visit_date = DateUtil.getCurrentDateString("yyyy-MM-dd'T'HH:MM:ss-HH:MM");
+	requestParam.country = "US";
 	
 	if (customerInfo.memberAttributes.length > 0) {
 		var signatureParam = Util.copyObject(requestParam);

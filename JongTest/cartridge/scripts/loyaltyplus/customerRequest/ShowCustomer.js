@@ -2,8 +2,11 @@
  *  ShowCustomer.js
  *  
  *  Get customer information.
+ *  Either externalCustomerId or emailAddress is required. If both are passed, all parameters
+ *  must identify the same customer; otherwise, an error will be returned.
  *
  *   @input externalCustomerId : String
+ *   @input emailAddress : String
  *   @input include : String
  *      Possible values:
  *          badges
@@ -35,21 +38,22 @@ var Util = require('../helper/util/Util');
 var logger = require('dw/system/Logger').getLogger("loyaltyplus-error", "ShowCustomer.js");
 
 function execute(args) {
-    var response = run(args.externalCustomerId, args.include);
+    var response = run(args.externalCustomerId, args.emailAddress, args.include);
     args.success = response.success;
     args.data = response.data;
     args.errorMessage = response.errorMessage;
     return response.success ? PIPELET_NEXT : PIPELET_ERROR;
 }
 
-function run(externalCustomerId, include) {
+function run(externalCustomerId, emailAddress, include) {
     var response = {};
+    var validationResult = {};
     try {
-        var validationResult = Util.validateRequiredParams({'externalCustomerId':externalCustomerId, 'include':include});
+        validationResult.success = !empty(emailAddress) || !empty(externalCustomerId);
         if (!validationResult.success) {
             return validationResult;
         }
-        var result = CustomerShowService.run(externalCustomerId, include);
+        var result = CustomerShowService.run(emailAddress, externalCustomerId, include);
         if (result.object) {
         	response = new LpResponse(result.object.success, result.object.data, result.errorMessage);
         } else {
