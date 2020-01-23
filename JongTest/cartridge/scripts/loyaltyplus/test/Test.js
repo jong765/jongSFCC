@@ -11,22 +11,20 @@ var DateUtil = require('../helper/util/DateUtil');
 var logger = require('dw/system/Logger').getLogger("loyaltyplus-test",
 		"Test.js");
 
-var order = OrderMgr.getOrder("70039825");
-
 function run() {
-	var response = enrollCustomer();
+	// var response = enrollCustomer();
 	// var response = lookupCustomer();
 	// var response = showCustomer();
 	// var response = updateCustomerInfo();
 	// var response = pauseCustomer();
-	// var response = calculateProformaPoints();
-	// var response = updateCoupon();
-	// var response = GetCustomerOffers();
-	// var response = GetRedeemedCustomerCoupons();
+	// var response = reactivateCustomer();
 	// var response = getCustomerEvents();
 	// var response = getCustomerPointRuleGroups();
-	// var response = reactivateCustomer();
-	// var response = checkIn();
+	// var response = GetRedeemedCustomerCoupons();
+	// var response = GetCustomerOffers();
+	// var response = calculateProformaPoints();
+	var response = logIntoLoyalty();
+	// var response = updateCoupon();
 	// var response = completeProfile();
 	// var response = purchase();
 	// var response = rejectPurchase();
@@ -108,21 +106,74 @@ function updateCustomerInfo() {
 	return response;
 }
 
-function calculateProformaPoints() {
-	var calculateProformaPoints = require('../rewards/CalculateProformaPoints');
-	var response = calculateProformaPoints.run(order);
+function pauseCustomer() {
+	var pauseCustomer = require('../customerRequest/PauseCustomer');
+	var externalCustomerId = "93754186";
+	var emailAddress = null;
+	var response = pauseCustomer.run(externalCustomerId, emailAddress);
 	return response;
 }
 
-function GetCustomerOffers() {
-	var getCustomerOffers = require('../rewards/GetCustomerOffers');
-	var response = getCustomerOffers.run(externalCustomerId);
+function reactivateCustomer() {
+	var reactivateCustomer = require('../customerRequest/ReactivateCustomer');
+	var externalCustomerId = null;
+	var emailAddress = "jktest60@pacsun.com";
+	var response = reactivateCustomer.run(externalCustomerId, emailAddress);
+	return response;
+}
+
+function getCustomerEvents() {
+	var getCustomerEvents = require('../customerRequest/GetCustomerEvents');
+	var externalCustomerId = "";
+	var emailAddress = "jktest20@pacsun.com";
+	var eventType = "log_into_loyalty";
+	var afterDate = null;
+	var beforeDate = null;
+	var dateFilter = null;
+	var pageNumber = null;
+	var entriesPerPage = null;
+	var response = getCustomerEvents.run(externalCustomerId, emailAddress,
+			eventType, afterDate, beforeDate, dateFilter, pageNumber,
+			entriesPerPage);
+	return response;
+}
+
+function getCustomerPointRuleGroups() {
+	var getCustomerPointRuleGroups = require('../customerRequest/GetCustomerPointRuleGroups');
+	var externalCustomerId = "93301125";
+	var emailAddress = "";
+	var response = getCustomerPointRuleGroups.run(externalCustomerId, emailAddress);
 	return response;
 }
 
 function GetRedeemedCustomerCoupons() {
 	var getRedeemedCoupons = require('../rewards/GetRedeemedCustomerCoupons');
-	var response = getRedeemedCoupons.run(externalCustomerId);
+	var externalCustomerId = "";
+	var emailAddress = "jktest5@pacsun.com";
+	var response = getRedeemedCoupons.run(externalCustomerId, emailAddress);
+	return response;
+}
+
+function GetCustomerOffers() {
+	var getCustomerOffers = require('../rewards/GetCustomerOffers');
+	var externalCustomerId = "";
+	var emailAddress = "jktest20@pacsun.com";
+	var response = getCustomerOffers.run(externalCustomerId, emailAddress);
+	return response;
+}
+
+function calculateProformaPoints() {
+	var calculateProformaPoints = require('../rewards/CalculateProformaPoints');
+	var order = OrderMgr.getOrder("70040925");
+	var response = calculateProformaPoints.run(order);
+	return response;
+}
+
+function logIntoLoyalty() {
+	var externalCustomerId = "93301125";
+	var marketingId = "DSK";
+	var logIntoLoyalty = require('../event/LogIntoLoyalty');
+	var response = logIntoLoyalty.run(externalCustomerId, marketingId);
 	return response;
 }
 
@@ -132,30 +183,11 @@ function formatDate() {
 	return response;
 }
 
-function getCustomerEvents() {
-	var getCustomerEvents = require('../customerRequest/GetCustomerEvents');
-	var eventType = null;
-	var afterDate = null;
-	var beforeDate = null;
-	var dateFilter = null;
-	var pageNumber = null;
-	var entriesPerPage = null;
-	var response = getCustomerEvents.run(externalCustomerId, eventType,
-			afterDate, beforeDate, dateFilter, pageNumber, entriesPerPage);
-	return response;
-}
-
 function updateCoupon() {
 	var updateCoupon = require('../rewards/UpdateCoupon');
 	var code = "LPReward10_13269016126181398563";
 	var status = "used";
 	var response = updateCoupon.run(code, status);
-	return response;
-}
-
-function getCustomerPointRuleGroups() {
-	var getCustomerPointRuleGroups = require('../customerRequest/GetCustomerPointRuleGroups');
-	var response = getCustomerPointRuleGroups.run(externalCustomerId);
 	return response;
 }
 
@@ -171,25 +203,6 @@ function likeProduct() {
 	var marketingId = "DSK";
 	var LikeProduct = require('../event/LikeProduct');
 	var response = LikeProduct.run(externalCustomerId, productId, marketingId);
-	return response;
-}
-
-function checkIn() {
-	var marketingId = "DSK";
-	var checkIn = require('../event/CheckIn');
-	var response = checkIn.run(externalCustomerId, marketingId);
-	return response;
-}
-
-function reactivateCustomer() {
-	var reactivateCustomer = require('../customerRequest/ReactivateCustomer');
-	var response = reactivateCustomer.run(externalCustomerId);
-	return response;
-}
-
-function pauseCustomer() {
-	var pauseCustomer = require('../customerRequest/PauseCustomer');
-	var response = pauseCustomer.run(externalCustomerId);
 	return response;
 }
 

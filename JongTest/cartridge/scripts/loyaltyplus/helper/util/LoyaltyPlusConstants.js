@@ -38,7 +38,7 @@ var CustomPreference = {
 };
 
 var EventType = {
-	CHECK_IN				:	"log_into_loyalty",
+	LOG_INTO_LOYALTY		:	"log_into_loyalty",
 	COMPLETE_PROFILE		:	"complete_profile",
 	LIKE_A_PRODUCT			:	"like_a_product",
 	PURCHASE				:	"purchase",

@@ -31,7 +31,7 @@ function run(lineItemCtnr) {
         }
         var result = PointsShowService.run('purchase', lineItemCtnr);
         if (result.object) {
-        	response = new LpCalculateProformaPointsResponse(result.object.success, result.object.data, result.errorMessage);
+        	response = new LpCalculateProformaPointsResponse(result.object, result.errorMessage);
         } else {
         	response = new LpCalculateProformaPointsResponse(false, null, result.errorMessage);
         }

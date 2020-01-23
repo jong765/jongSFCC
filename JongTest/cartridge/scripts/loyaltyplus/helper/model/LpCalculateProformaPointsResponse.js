@@ -5,13 +5,13 @@
  */
 'use strict';
 
-function LpCalculateProformaPointsResponse(success, data, errorMessage) {
-	this.success = success;
+function LpCalculateProformaPointsResponse(object, errorMessage) {
+	this.success = object.success;
 	this.points = 0;
 	this.errorMessage = errorMessage;
 	
-	if (success) {
-		this.points = data.rule.ledger[0].points;
+	if (this.success) {
+		this.points = object.points;
 	}
 }
 
