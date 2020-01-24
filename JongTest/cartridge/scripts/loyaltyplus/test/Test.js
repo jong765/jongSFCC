@@ -23,7 +23,10 @@ function run() {
 	// var response = GetRedeemedCustomerCoupons();
 	// var response = GetCustomerOffers();
 	// var response = calculateProformaPoints();
-	var response = logIntoLoyalty();
+	// var response = logIntoLoyalty();
+	// var response = updatePreferredStore();
+	// var response = updateShoppingPreference();
+	 var response = updateTermsConditions();
 	// var response = updateCoupon();
 	// var response = completeProfile();
 	// var response = purchase();
@@ -32,9 +35,6 @@ function run() {
 	// var response = recordCheckInEvent();
 	// var response = likeProduct();
 	// var response = postReview();
-	// var response = updateShoppingPreference();
-	// var response = updateTermsConditions();
-	// var response = updatePreferredStore();
 	// var response = getSignature();
 	// var response = testDate();
 	// var response = formatDate();
@@ -124,8 +124,8 @@ function reactivateCustomer() {
 
 function getCustomerEvents() {
 	var getCustomerEvents = require('../customerRequest/GetCustomerEvents');
-	var externalCustomerId = "";
-	var emailAddress = "jktest20@pacsun.com";
+	var externalCustomerId = "93301125";
+	var emailAddress = "";
 	var eventType = "log_into_loyalty";
 	var afterDate = null;
 	var beforeDate = null;
@@ -174,6 +174,36 @@ function logIntoLoyalty() {
 	var marketingId = "DSK";
 	var logIntoLoyalty = require('../event/LogIntoLoyalty');
 	var response = logIntoLoyalty.run(externalCustomerId, marketingId);
+	return response;
+}
+
+function updatePreferredStore() {
+	var updateShoppingPreference = require('../customerRequest/UpdatePreferredStore');
+	var externalCustomerId = null;
+	var emailAddress = null;
+	var preferredStore = "0015";
+	var response = updateShoppingPreference.run(externalCustomerId, emailAddress,
+			preferredStore);
+	return response;
+}
+
+function updateShoppingPreference() {
+	var updateShoppingPreference = require('../customerRequest/UpdateShoppingPreference');
+	var externalCustomerId = "93301125";
+	var emailAddress = "";
+	var shoppingPreference = "Female";
+	var response = updateShoppingPreference.run(externalCustomerId, emailAddress,
+			shoppingPreference);
+	return response;
+}
+
+function updateTermsConditions() {
+	var updateTermsConditions = require('../customerRequest/UpdateTermsConditions');
+	var externalCustomerId = "93301125";
+	var emailAddress = "";
+	var acceptedTermsConditions = false;
+	var response = updateTermsConditions.run(externalCustomerId, emailAddress,
+			acceptedTermsConditions);
 	return response;
 }
 
@@ -268,30 +298,6 @@ function getSignature() {
 	var signature = Encoding.toHex(encryptor.digestBytes(new Bytes(dataToSign,
 			"UTF-8")));
 	return signature; // 1b9ca3c20db0dc265de93478481ae97f
-}
-
-function updateShoppingPreference() {
-	var updateShoppingPreference = require('../customerRequest/UpdateShoppingPreference');
-
-	var response = updateShoppingPreference.run(externalCustomerId,
-			shoppingPreference);
-	return response;
-}
-
-function updateTermsConditions() {
-	var updateTermsConditions = require('../customerRequest/UpdateTermsConditions');
-
-	var response = updateTermsConditions.run(externalCustomerId,
-			acceptedTermsConditions);
-	return response;
-}
-
-function updatePreferredStore() {
-	var updateShoppingPreference = require('../customerRequest/UpdatePreferredStore');
-
-	var response = updateShoppingPreference.run(externalCustomerId,
-			preferredStore);
-	return response;
 }
 
 function getProduct() {

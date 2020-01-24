@@ -32,6 +32,7 @@ function run(externalCustomerId, emailAddress) {
 		validationResult.success = !empty(externalCustomerId)
 				|| !empty(emailAddress);
 		if (!validationResult.success) {
+			validationResult.errorMessage = "Either externalCustomerId or emailAddress is required.";
 			return validationResult;
 		}
 		var result = CustomerPointRuleGroupsService.run(externalCustomerId,

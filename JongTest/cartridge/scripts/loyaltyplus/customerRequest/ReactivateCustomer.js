@@ -30,9 +30,10 @@ function run(externalCustomerId, emailAddress) {
 	var response = {};
 	var validationResult = {};
 	try {
-		validationResult.success = !empty(emailAddress)
-				|| !empty(externalCustomerId);
+		validationResult.success = !empty(externalCustomerId)
+				|| !empty(emailAddress);
 		if (!validationResult.success) {
+			validationResult.errorMessage = "Either externalCustomerId or emailAddress is required.";
 			return validationResult;
 		}
 		var result = CustomerReactivateService.run(externalCustomerId,

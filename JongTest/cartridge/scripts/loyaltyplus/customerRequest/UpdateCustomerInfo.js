@@ -50,9 +50,10 @@ function run(externalCustomerId, emailAddress, firstName, lastName, birthDate,
 	var response = {};
 	var validationResult = {};
 	try {
-		validationResult.success = !empty(emailAddress)
-				|| !empty(externalCustomerId);
+		validationResult.success = !empty(externalCustomerId)
+				|| !empty(emailAddress);
 		if (!validationResult.success) {
+			validationResult.errorMessage = "Either externalCustomerId or emailAddress is required.";
 			return validationResult;
 		}
 		var customerInfo = getCustomerInfo(externalCustomerId, emailAddress,
