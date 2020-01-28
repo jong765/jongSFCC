@@ -15,7 +15,7 @@ Util.callService = function(data) {
     for(var property in data.requestParam){
         service.addParam(property, data.requestParam[property]);
     }
-    var result = service.call(data);
+    var result = service.setThrowOnError().call(data);
     return result;
 }
 

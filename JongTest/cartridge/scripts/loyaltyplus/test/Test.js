@@ -14,7 +14,7 @@ var logger = require('dw/system/Logger').getLogger("loyaltyplus-test",
 function run() {
 	// var response = enrollCustomer();
 	// var response = lookupCustomer();
-	// var response = showCustomer();
+	var response = showCustomer();
 	// var response = updateCustomerInfo();
 	// var response = pauseCustomer();
 	// var response = reactivateCustomer();
@@ -26,7 +26,7 @@ function run() {
 	// var response = logIntoLoyalty();
 	// var response = updatePreferredStore();
 	// var response = updateShoppingPreference();
-	 var response = updateTermsConditions();
+	// var response = updateTermsConditions();
 	// var response = updateCoupon();
 	// var response = completeProfile();
 	// var response = purchase();
@@ -76,8 +76,8 @@ function lookupCustomer() {
 
 function showCustomer() {
 	var showCustomer = require('../customerRequest/ShowCustomer');
-	var emailAddress = "";
-	var externalCustomerId = "94387328";
+	var emailAddress = "jktest20@pacsun.com";
+	var externalCustomerId = "";
 	var include = "coupons,member_attributes";
 	var response = showCustomer.run(externalCustomerId, emailAddress, include);
 	return response;
