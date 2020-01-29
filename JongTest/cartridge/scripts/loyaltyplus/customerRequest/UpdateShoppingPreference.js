@@ -18,8 +18,7 @@ var logger = require('dw/system/Logger').getLogger("loyaltyplus-error",
 		"UpdateShoppingPreference.js");
 
 function execute(args) {
-	var response = run(args.externalCustomerId, args.emailAddress,
-			args.shoppingPreference);
+	var response = run(args.externalCustomerId, args.emailAddress, args.shoppingPreference);
 	args.success = response.success;
 	args.errorMessage = response.errorMessage;
 	return result.response ? PIPELET_NEXT : PIPELET_ERROR;
@@ -29,18 +28,15 @@ function run(externalCustomerId, emailAddress, shoppingPreference) {
 	var response = {};
 	var validationResult = {};
 	try {
-		validationResult.success = !empty(externalCustomerId)
-				|| !empty(emailAddress);
+		validationResult.success = !empty(externalCustomerId) || !empty(emailAddress);
 		if (!validationResult.success) {
 			validationResult.errorMessage = "Either externalCustomerId or emailAddress is required.";
 			return validationResult;
 		}
-		var result = UpdateAttributesService.run(externalCustomerId,
-				emailAddress, 'replace', '/shopping_preference',
-				shoppingPreference);
+		var result = UpdateAttributesService.run(externalCustomerId, emailAddress, 'replace',
+				'/shopping_preference', shoppingPreference);
 		if (result.object) {
-			response = new LpResponse(result.object.success, null,
-					result.errorMessage);
+			response = new LpResponse(result.object.success, null, result.errorMessage);
 		} else {
 			response = new LpResponse(false, null, result.errorMessage);
 		}

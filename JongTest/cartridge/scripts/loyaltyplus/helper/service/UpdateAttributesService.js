@@ -15,16 +15,14 @@ exports.run = function(externalCustomerId, emailAddress, operation, path, value)
 	var data = {
 		urlPath : UrlPath.UPDATE_ATTRIBUTES,
 		requestMethod : 'GET',
-		requestParam : getRequestParam(externalCustomerId, emailAddress,
-				operation, path, value)
+		requestParam : getRequestParam(externalCustomerId, emailAddress, operation, path, value)
 	};
 
 	var result = Util.callService(data);
 	return result;
 };
 
-function getRequestParam(externalCustomerId, emailAddress, operation, path,
-		value) {
+function getRequestParam(externalCustomerId, emailAddress, operation, path, value) {
 	var requestParam = {
 		uuid : CustomPreference.ACCOUNT_ID
 	};

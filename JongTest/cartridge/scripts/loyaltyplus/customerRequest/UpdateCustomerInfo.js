@@ -29,14 +29,12 @@ var CustomerInfo = require('../helper/model/CustomerInfo');
 var Address = require('../helper/model/Address');
 var LpResponse = require('../helper/model/LpResponse');
 var Util = require('../helper/util/Util');
-var logger = require('dw/system/Logger').getLogger("loyaltyplus-error",
-		"UpdateCustomerInfo.js");
+var logger = require('dw/system/Logger').getLogger("loyaltyplus-error", "UpdateCustomerInfo.js");
 
 function execute(args) {
-	var response = run(args.externalCustomerId, args.emailAddress,
-			args.firstName, args.lastName, args.birthDate, args.addressLine1,
-			args.addressLine2, args.city, args.state, args.postalCode,
-			args.mobilePhone, args.shoppingPreference,
+	var response = run(args.externalCustomerId, args.emailAddress, args.firstName, args.lastName,
+			args.birthDate, args.addressLine1, args.addressLine2, args.city, args.state,
+			args.postalCode, args.mobilePhone, args.shoppingPreference,
 			args.acceptedTermsConditions, args.newEmailAddress);
 	args.success = response.success;
 	args.data = response.data;
@@ -44,23 +42,20 @@ function execute(args) {
 	return response.success ? PIPELET_NEXT : PIPELET_ERROR;
 }
 
-function run(externalCustomerId, emailAddress, firstName, lastName, birthDate,
-		addressLine1, addressLine2, city, state, postalCode, mobilePhone,
-		shoppingPreference, acceptedTermsConditions, newEmailAddress) {
+function run(externalCustomerId, emailAddress, firstName, lastName, birthDate, addressLine1,
+		addressLine2, city, state, postalCode, mobilePhone, shoppingPreference,
+		acceptedTermsConditions, newEmailAddress) {
 	var response = {};
 	var validationResult = {};
 	try {
-		validationResult.success = !empty(externalCustomerId)
-				|| !empty(emailAddress);
+		validationResult.success = !empty(externalCustomerId) || !empty(emailAddress);
 		if (!validationResult.success) {
 			validationResult.errorMessage = "Either externalCustomerId or emailAddress is required.";
 			return validationResult;
 		}
-		var customerInfo = getCustomerInfo(externalCustomerId, emailAddress,
-				newEmailAddress, firstName, lastName, birthDate,
-				shoppingPreference, addressLine1, addressLine2, city, state,
-				postalCode, mobilePhone, acceptedTermsConditions,
-				newEmailAddress);
+		var customerInfo = getCustomerInfo(externalCustomerId, emailAddress, newEmailAddress,
+				firstName, lastName, birthDate, shoppingPreference, addressLine1, addressLine2,
+				city, state, postalCode, mobilePhone, acceptedTermsConditions, newEmailAddress);
 		var result = UpdateCustomerInfoService.run(customerInfo);
 		if (result.object) {
 			response = new LpResponse(result.object.success, result.object.data, null);
@@ -77,10 +72,9 @@ function run(externalCustomerId, emailAddress, firstName, lastName, birthDate,
 	return response;
 }
 
-function getCustomerInfo(externalCustomerId, emailAddress, newEmailAddress,
-		firstName, lastName, birthDate, shoppingPreference, addressLine1,
-		addressLine2, city, state, postalCode, mobilePhone,
-		acceptedTermsConditions, newEmailAddress) {
+function getCustomerInfo(externalCustomerId, emailAddress, newEmailAddress, firstName, lastName,
+		birthDate, shoppingPreference, addressLine1, addressLine2, city, state, postalCode,
+		mobilePhone, acceptedTermsConditions, newEmailAddress) {
 	var customerInfo = new CustomerInfo();
 	customerInfo.setExternalCustomerId(externalCustomerId);
 	customerInfo.setEmailAddress(emailAddress);
@@ -88,8 +82,7 @@ function getCustomerInfo(externalCustomerId, emailAddress, newEmailAddress,
 	customerInfo.setLastName(lastName);
 	customerInfo.setBirthDate(birthDate);
 	customerInfo.setShoppingPreference(shoppingPreference);
-	if (!empty(addressLine1) || !empty(city) || !empty(state)
-			|| !empty(postalCode)) {
+	if (!empty(addressLine1) || !empty(city) || !empty(state) || !empty(postalCode)) {
 		var address = new Address();
 		address.setAddressLine1(addressLine1);
 		address.setAddressLine2(addressLine2);

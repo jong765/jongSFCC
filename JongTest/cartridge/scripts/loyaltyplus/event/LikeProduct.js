@@ -1,14 +1,14 @@
 /**
- *  LikeProduct.js
+ * LikeProduct.js
  * 
- *  Record loyalty plus like_a_product event.
+ * Record loyalty plus like_a_product event.
  * 
- *   @input externalCustomerId : String
- *   @input productId : String
- *   @input marketingId : String
- *   @output success : Boolean
- *   @output data : Object
- *   @output errorMessage : String
+ * @input externalCustomerId : String
+ * @input productId : String
+ * @input marketingId : String
+ * @output success : Boolean
+ * @output data : Object
+ * @output errorMessage : String
  */
 
 var RecordEventService = require('../helper/service/RecordEventService');
@@ -25,41 +25,47 @@ function execute(args) {
 	args.success = response.success;
 	args.data = response.data;
 	args.errorMessage = response.errorMessage;
-    return response.success ? PIPELET_NEXT : PIPELET_ERROR;
+	return response.success ? PIPELET_NEXT : PIPELET_ERROR;
 }
 
 function run(externalCustomerId, productId, marketingId) {
-    var response = {};
-    try {
-        var validationResult = {success:false};
-        validationResult = Util.validateRequiredParams({'externalCustomerId':externalCustomerId});
-        if (!validationResult.success) {
-            return validationResult;
-        }
-        var eventType = EventType.LIKE_A_PRODUCT;
-        var recordRequestParam = new RecordRequestParam(externalCustomerId, eventType, marketingId);
-        recordRequestParam.setEventId(getEventId(externalCustomerId, productId, eventType));
-    	var result = RecordEventService.run(recordRequestParam);
-    	if (result.object) {
-    		response = new LpResponse(result.object.success, result.object.data, result.errorMessage);
-        } else {
-        	response = new LpResponse(false, null, result.errorMessage);
-        }
-    } catch (e) {
-        var exception = e;
-        var errMessage = exception.message + "\n" + exception.stack;
-        logger.error(errMessage);
-        response = new LpResponse(false, null, errMessage);
-    }
-    logger.debug("response: " + JSON.stringify(response));
-    return response;
+	var response = {};
+	try {
+		var validationResult = {
+			success : false
+		};
+		validationResult = Util.validateRequiredParams({
+			'externalCustomerId' : externalCustomerId
+		});
+		if (!validationResult.success) {
+			return validationResult;
+		}
+		var eventType = EventType.LIKE_A_PRODUCT;
+		var recordRequestParam = new RecordRequestParam(externalCustomerId, eventType, marketingId);
+		recordRequestParam.setEventId(getEventId(externalCustomerId, productId, eventType));
+		var result = RecordEventService.run(recordRequestParam);
+		if (result.object) {
+			response = new LpResponse(result.object.success, result.object.data,
+					result.errorMessage);
+		} else {
+			response = new LpResponse(false, null, result.errorMessage);
+		}
+	} catch (e) {
+		var exception = e;
+		var errMessage = exception.message + "\n" + exception.stack;
+		logger.error(errMessage);
+		response = new LpResponse(false, null, errMessage);
+	}
+	logger.debug("response: " + JSON.stringify(response));
+	return response;
 }
 
 function getEventId(externalCustomerId, productId, eventType) {
-	return externalCustomerId + "_" + eventType + "_" + productId + "_" + DateUtil.formatDate(new Date, "yyyyMMddhhmmss");
+	return externalCustomerId + "_" + eventType + "_" + productId + "_"
+			+ DateUtil.formatDate(new Date, "yyyyMMddhhmmss");
 }
 
 module.exports = {
-    'execute': execute,
-    'run': run
+	'execute' : execute,
+	'run' : run
 }

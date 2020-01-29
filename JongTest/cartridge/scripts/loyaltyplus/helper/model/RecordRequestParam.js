@@ -1,7 +1,7 @@
 /**
- *  RecordRequestParam.js
+ * RecordRequestParam.js
  * 
- *  RecordRequestParam object 
+ * RecordRequestParam object
  */
 'use strict';
 
@@ -18,57 +18,56 @@ function RecordRequestParam(externalCustomerId, type, marketingId) {
 		this.marketingId = "undefined";
 }
 
-RecordRequestParam.prototype = 
-{
-	setExternalCustomerId : function(value){
+RecordRequestParam.prototype = {
+	setExternalCustomerId : function(value) {
 		this.externalCustomerId = value;
 	},
 
-	getExternalCustomerId : function(){
+	getExternalCustomerId : function() {
 		return this.externalCustomerId;
 	},
-	
-	setType : function(value){
+
+	setType : function(value) {
 		this.type = value;
 	},
 
-	getType : function(){
+	getType : function() {
 		return this.type;
 	},
-	
-	setValue : function(value){
+
+	setValue : function(value) {
 		this.value = value;
 	},
 
-	getValue : function(){
+	getValue : function() {
 		return this.value;
 	},
-	
-	setEventId : function(value){
+
+	setEventId : function(value) {
 		this.eventId = value;
 	},
 
-	getEventId : function(){
+	getEventId : function() {
 		return this.eventId;
 	},
-		
-	setOriginalEventId : function(value){
+
+	setOriginalEventId : function(value) {
 		this.originalEventId = value;
 	},
 
-	getOriginalEventId : function(){
+	getOriginalEventId : function() {
 		return this.originalEventId;
 	},
-	
-	setMarketingId : function(value){
+
+	setMarketingId : function(value) {
 		this.marketingId = value;
 	},
 
-	getMarketingId : function(){
+	getMarketingId : function() {
 		return this.marketingId;
 	},
-	
-	toString : function(){
+
+	toString : function() {
 		return JSON.stringify(this);
 	}
 }

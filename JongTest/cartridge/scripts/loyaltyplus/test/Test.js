@@ -8,8 +8,7 @@
 var OrderMgr = require('dw/order/OrderMgr');
 var Util = require('../helper/util/Util');
 var DateUtil = require('../helper/util/DateUtil');
-var logger = require('dw/system/Logger').getLogger("loyaltyplus-test",
-		"Test.js");
+var logger = require('dw/system/Logger').getLogger("loyaltyplus-test", "Test.js");
 
 function run() {
 	// var response = enrollCustomer();
@@ -59,9 +58,8 @@ function enrollCustomer() {
 	var shoppingPreference = "Both";
 	var acceptedTermsConditions = true;
 	var marketingId = "DSK";
-	var response = enrollCustomer.run(emailAddress, firstName, lastName,
-			birthDate, addressLine1, addressLine2, city, state, postalCode,
-			mobilePhone, shoppingPreference, marketingId,
+	var response = enrollCustomer.run(emailAddress, firstName, lastName, birthDate, addressLine1,
+			addressLine2, city, state, postalCode, mobilePhone, shoppingPreference, marketingId,
 			acceptedTermsConditions);
 
 	return response;
@@ -99,10 +97,9 @@ function updateCustomerInfo() {
 	var acceptedTermsConditions = false;
 	var newEmailAddress = "jktest59@pacsun.com";
 	var updateCustomerInfo = require('../customerRequest/UpdateCustomerInfo');
-	var response = updateCustomerInfo.run(externalCustomerId, emailAddress,
-			firstName, lastName, birthDate, addressLine1, addressLine2, city,
-			state, postalCode, mobilePhone, shoppingPreference,
-			acceptedTermsConditions, newEmailAddress);
+	var response = updateCustomerInfo.run(externalCustomerId, emailAddress, firstName, lastName,
+			birthDate, addressLine1, addressLine2, city, state, postalCode, mobilePhone,
+			shoppingPreference, acceptedTermsConditions, newEmailAddress);
 	return response;
 }
 
@@ -132,9 +129,8 @@ function getCustomerEvents() {
 	var dateFilter = null;
 	var pageNumber = null;
 	var entriesPerPage = null;
-	var response = getCustomerEvents.run(externalCustomerId, emailAddress,
-			eventType, afterDate, beforeDate, dateFilter, pageNumber,
-			entriesPerPage);
+	var response = getCustomerEvents.run(externalCustomerId, emailAddress, eventType, afterDate,
+			beforeDate, dateFilter, pageNumber, entriesPerPage);
 	return response;
 }
 
@@ -182,8 +178,7 @@ function updatePreferredStore() {
 	var externalCustomerId = null;
 	var emailAddress = null;
 	var preferredStore = "0015";
-	var response = updateShoppingPreference.run(externalCustomerId, emailAddress,
-			preferredStore);
+	var response = updateShoppingPreference.run(externalCustomerId, emailAddress, preferredStore);
 	return response;
 }
 
@@ -265,9 +260,8 @@ function completeProfile() {
 	var shoppingPreference = "Both";
 	var marketingId = "DSK";
 	var completeProfile = require('../event/CompleteProfile');
-	var response = completeProfile.run(lpExternalCustomerId, emailAddress,
-			firstName, lastName, birthDate, postalCode, shoppingPreference,
-			marketingId);
+	var response = completeProfile.run(lpExternalCustomerId, emailAddress, firstName, lastName,
+			birthDate, postalCode, shoppingPreference, marketingId);
 	return response;
 }
 
@@ -295,8 +289,7 @@ function getSignature() {
 
 	var encryptor = new MessageDigest('MD5');
 
-	var signature = Encoding.toHex(encryptor.digestBytes(new Bytes(dataToSign,
-			"UTF-8")));
+	var signature = Encoding.toHex(encryptor.digestBytes(new Bytes(dataToSign, "UTF-8")));
 	return signature; // 1b9ca3c20db0dc265de93478481ae97f
 }
 

@@ -1,7 +1,7 @@
 /**
- *  Util.js
- *  
- *  Utility functions for loyalty plus 	
+ * Util.js
+ * 
+ * Utility functions for loyalty plus
  */
 'use strict';
 

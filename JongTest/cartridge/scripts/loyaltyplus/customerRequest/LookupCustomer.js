@@ -16,8 +16,7 @@
 var CustomerSearchService = require('../helper/service/CustomerSearchService');
 var LpResponse = require('../helper/model/LpResponse');
 var Util = require('../helper/util/Util');
-var logger = require('dw/system/Logger').getLogger("loyaltyplus-error",
-		"LookupCustomer.js");
+var logger = require('dw/system/Logger').getLogger("loyaltyplus-error", "LookupCustomer.js");
 
 function execute(args) {
 	var response = run(args.emailAddress);
@@ -41,21 +40,18 @@ function run(emailAddress) {
 		var result = CustomerSearchService.run(emailAddress);
 		if (result.object) {
 			if (result.object.data.length > 1) { // Error if duplicate email
-													// addresses found.
-				response = new LpResponse(false, null,
-						"Error: Duplicate emails found.");
+				// addresses found.
+				response = new LpResponse(false, null, "Error: Duplicate emails found.");
 				response.customerFound = false;
 				response.duplicateEmailsFound = true;
 			} else {
 				var data = result.object.data[0];
 				if (data) {
-					response = new LpResponse(result.object.success, data,
-							result.errorMessage);
+					response = new LpResponse(result.object.success, data, result.errorMessage);
 					response.customerFound = true;
 					response.duplicateEmailsFound = false;
 				} else {
-					response = new LpResponse(result.object.success, null,
-							result.errorMessage);
+					response = new LpResponse(result.object.success, null, result.errorMessage);
 					response.customerFound = false;
 					response.duplicateEmailsFound = false;
 				}

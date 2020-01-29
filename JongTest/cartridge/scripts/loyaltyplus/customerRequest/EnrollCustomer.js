@@ -27,14 +27,12 @@ var CustomerInfo = require('../helper/model/CustomerInfo');
 var Address = require('../helper/model/Address');
 var LpResponse = require('../helper/model/LpResponse');
 var Util = require('../helper/util/Util');
-var logger = require('dw/system/Logger').getLogger("loyaltyplus-error",
-		"EnrollCustomer.js");
+var logger = require('dw/system/Logger').getLogger("loyaltyplus-error", "EnrollCustomer.js");
 
 function execute(args) {
-	var response = run(args.emailAddress, args.firstName, args.lastName,
-			args.birthDate, args.addressLine1, args.addressLine2, args.city,
-			args.state, args.postalCode, args.mobilePhone,
-			args.shoppingPreference, args.marketingId,
+	var response = run(args.emailAddress, args.firstName, args.lastName, args.birthDate,
+			args.addressLine1, args.addressLine2, args.city, args.state, args.postalCode,
+			args.mobilePhone, args.shoppingPreference, args.marketingId,
 			args.acceptedTermsConditions);
 	args.success = response.success;
 	args.data = response.data;
@@ -42,9 +40,8 @@ function execute(args) {
 	return response.success ? PIPELET_NEXT : PIPELET_ERROR;
 }
 
-function run(emailAddress, firstName, lastName, birthDate, addressLine1,
-		addressLine2, city, state, postalCode, mobilePhone, shoppingPreference,
-		marketingId, acceptedTermsConditions) {
+function run(emailAddress, firstName, lastName, birthDate, addressLine1, addressLine2, city, state,
+		postalCode, mobilePhone, shoppingPreference, marketingId, acceptedTermsConditions) {
 	var response = {};
 	try {
 		var validationResult = Util.validateRequiredParams({
@@ -53,13 +50,13 @@ function run(emailAddress, firstName, lastName, birthDate, addressLine1,
 		if (!validationResult.success) {
 			return validationResult;
 		}
-		var customerInfo = getCustomerInfo(emailAddress, firstName, lastName,
-				birthDate, shoppingPreference, addressLine1, addressLine2,
-				city, postalCode, state, mobilePhone, acceptedTermsConditions);
+		var customerInfo = getCustomerInfo(emailAddress, firstName, lastName, birthDate,
+				shoppingPreference, addressLine1, addressLine2, city, postalCode, state,
+				mobilePhone, acceptedTermsConditions);
 		var result = CustomerEnrollService.run(customerInfo, marketingId);
 		if (result.object) {
-			response = new LpResponse(result.object.success,
-					result.object.data, result.errorMessage);
+			response = new LpResponse(result.object.success, result.object.data,
+					result.errorMessage);
 		} else {
 			response = new LpResponse(false, null, result.errorMessage);
 		}
@@ -73,17 +70,15 @@ function run(emailAddress, firstName, lastName, birthDate, addressLine1,
 	return response;
 }
 
-function getCustomerInfo(emailAddress, firstName, lastName, birthDate,
-		shoppingPreference, addressLine1, addressLine2, city, postalCode,
-		state, mobilePhone, acceptedTermsConditions) {
+function getCustomerInfo(emailAddress, firstName, lastName, birthDate, shoppingPreference,
+		addressLine1, addressLine2, city, postalCode, state, mobilePhone, acceptedTermsConditions) {
 	var customerInfo = new CustomerInfo();
 	customerInfo.setEmailAddress(emailAddress);
 	customerInfo.setFirstName(firstName);
 	customerInfo.setLastName(lastName);
 	customerInfo.setBirthDate(birthDate);
 	customerInfo.setShoppingPreference(shoppingPreference);
-	if (!empty(addressLine1) || !empty(city) || !empty(state)
-			|| !empty(postalCode)) {
+	if (!empty(addressLine1) || !empty(city) || !empty(state) || !empty(postalCode)) {
 		var address = new Address();
 		address.setAddressLine1(addressLine1);
 		address.setAddressLine2(addressLine2);

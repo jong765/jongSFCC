@@ -1,7 +1,7 @@
 /**
- *  CustomerInfo.js
+ * CustomerInfo.js
  * 
- *  CustomerInfo object 
+ * CustomerInfo object
  */
 'use strict';
 
@@ -19,99 +19,98 @@ function CustomerInfo() {
 	this.memberAttributes = [];
 }
 
-CustomerInfo.prototype = 
-{
-	setExternalCustomerId : function(value){
+CustomerInfo.prototype = {
+	setExternalCustomerId : function(value) {
 		if (!empty(value))
 			this.externalCustomerId = value;
 	},
 
-	getExternalCustomerId : function(){
+	getExternalCustomerId : function() {
 		return this.externalCustomerId;
 	},
-	
-	setEmailAddress : function(value){
+
+	setEmailAddress : function(value) {
 		if (value != null && !empty(value.trim()))
 			this.emailAddress = value;
 	},
 
-	getEmailAddress : function(){
+	getEmailAddress : function() {
 		return this.emailAddress;
 	},
-	
-	setNewEmailAddress : function(value){
+
+	setNewEmailAddress : function(value) {
 		if (value != null && !empty(value.trim()))
 			this.newEmailAddress = value.trim();
 	},
 
-	getNewEmailAddress : function(){
+	getNewEmailAddress : function() {
 		return this.newEmailAddress;
 	},
-	
-	setFirstName : function(value){
+
+	setFirstName : function(value) {
 		if (!empty(value))
 			this.firstName = value;
 	},
 
-	getFirstName : function(){
+	getFirstName : function() {
 		return this.firstName;
 	},
-	
-	setLastName : function(value){
+
+	setLastName : function(value) {
 		if (!empty(value))
 			this.lastName = value;
 	},
 
-	getLastName : function(){
+	getLastName : function() {
 		return this.lastName;
 	},
-		
-	setAddress : function(value){
+
+	setAddress : function(value) {
 		if (!empty(value))
 			this.address = value;
 	},
 
-	getAddress : function(){
+	getAddress : function() {
 		return this.address;
 	},
-	
-	setBirthDate : function(value){
+
+	setBirthDate : function(value) {
 		if (!empty(value))
 			this.birthDate = value;
 	},
 
-	getBirthDate : function(){
+	getBirthDate : function() {
 		return this.birthDate;
 	},
-	
-	setMobilePhone : function(value){
+
+	setMobilePhone : function(value) {
 		if (!empty(value))
 			this.mobilePhone = value;
 	},
 
-	getMobilePhone : function(){
+	getMobilePhone : function() {
 		return this.mobilePhone;
 	},
-	
-	setShoppingPreference : function(value){
+
+	setShoppingPreference : function(value) {
 		if (!empty(value)) {
 			this.shoppingPreference = value;
 			this.memberAttributes.push("shoppingPreference");
 		}
 	},
 
-	getShoppingPreference : function(){
+	getShoppingPreference : function() {
 		return this.shoppingPreference;
 	},
-	
+
 	setAcceptedTermsConditions : function(value) {
 		if (!empty(value) && value == true) {// update only if it is true
 			this.acceptedTermsConditions = "true";
 			this.memberAttributes.push("acceptedTermsConditions");
 		}
 	},
-	
-	getAcceptedTermsConditions : function(){
+
+	getAcceptedTermsConditions : function() {
 		return this.acceptedTermsConditions;
 	}
 }

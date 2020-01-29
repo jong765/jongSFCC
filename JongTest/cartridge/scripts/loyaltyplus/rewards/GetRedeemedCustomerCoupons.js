@@ -29,19 +29,16 @@ function run(externalCustomerId, emailAddress) {
 	var response = {};
 	var validationResult = {};
 	try {
-		validationResult.success = !empty(externalCustomerId)
-				|| !empty(emailAddress);
+		validationResult.success = !empty(externalCustomerId) || !empty(emailAddress);
 		if (!validationResult.success) {
 			return validationResult;
 		}
-		var result = CustomerCouponsService.run(externalCustomerId,
-				emailAddress);
+		var result = CustomerCouponsService.run(externalCustomerId, emailAddress);
 		if (result.object) {
-			response = new LpRedeemedCouponsResponse(result.object.success,
-					result.object.data, result.errorMessage);
-		} else {
-			response = new LpRedeemedCouponsResponse(false, null,
+			response = new LpRedeemedCouponsResponse(result.object.success, result.object.data,
 					result.errorMessage);
+		} else {
+			response = new LpRedeemedCouponsResponse(false, null, result.errorMessage);
 		}
 	} catch (e) {
 		var exception = e;

@@ -1,7 +1,7 @@
 /**
- *  LpResponse.js
+ * LpResponse.js
  * 
- *  LpResponse object 
+ * LpResponse object
  */
 'use strict';
 

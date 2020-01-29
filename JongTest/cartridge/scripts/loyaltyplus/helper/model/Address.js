@@ -1,7 +1,7 @@
 /**
- *  Address.js
+ * Address.js
  * 
- *  Address object 
+ * Address object
  */
 'use strict';
 
@@ -14,59 +14,60 @@ function Address() {
 	this.country = "undefined";
 }
 
-Address.prototype = 
-{
-	setAddressLine1 : function(value){
-		if (value == null) value = "";
+Address.prototype = {
+	setAddressLine1 : function(value) {
+		if (value == null)
+			value = "";
 		this.addressLine1 = value;
 	},
 
-	getAddressLine1 : function(){
+	getAddressLine1 : function() {
 		return this.addressLine1;
 	},
 
-	setAddressLine2 : function(value){
-		if (value == null) value = "";
+	setAddressLine2 : function(value) {
+		if (value == null)
+			value = "";
 		this.addressLine2 = value;
 	},
-		
-	getAddressLine2 : function(){
+
+	getAddressLine2 : function() {
 		return this.addressLine2;
 	},
 
-	setCity : function(value){
+	setCity : function(value) {
 		if (!empty(value))
 			this.city = value;
 	},
-		
-	getCity : function(){
+
+	getCity : function() {
 		return this.city;
 	},
 
-	setPostalCode : function(value){
+	setPostalCode : function(value) {
 		if (!empty(value))
 			this.postalCode = value;
 	},
-		
-	getPostalCode : function(){
+
+	getPostalCode : function() {
 		return this.postalCode;
 	},
 
-	setState : function(value){
+	setState : function(value) {
 		if (!empty(value))
 			this.state = value;
 	},
-		
-	getState : function(){
+
+	getState : function() {
 		return this.state;
 	},
 
-	setCountry : function(value){
+	setCountry : function(value) {
 		if (!empty(value))
 			this.country = value;
 	},
-		
-	getCountry : function(){
+
+	getCountry : function() {
 		return this.country;
 	}
 }

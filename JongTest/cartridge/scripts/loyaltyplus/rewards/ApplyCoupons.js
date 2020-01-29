@@ -1,18 +1,19 @@
-/********************************************************************************************
- *  ApplyCoupons.js
+/*******************************************************************************
+ * ApplyCoupons.js
  * 
- *  Apply coupons to the basket.
- *
- *   @input couponList : dw.util.ArrayList   List of coupon objects. code and amount properties are expected in coupon objects.
- *   @input currentBasket : dw.order.Basket
- *   @output success : Boolean
- *   @output priceAdjustment : Number
- *   @output errorMessage : String
+ * Apply coupons to the basket.
+ * 
+ * @input couponList : dw.util.ArrayList List of coupon objects. code and amount
+ *        properties are expected in coupon objects.
+ * @input currentBasket : dw.order.Basket
+ * @output success : Boolean
+ * @output priceAdjustment : Number
+ * @output errorMessage : String
  */
 
 var Resource = require('dw/web/Resource');
 var logger = require('dw/system/Logger').getLogger("loyaltyplus-error", "ApplyCoupons.js");
- 
+
 function execute(args) {
 	var response = run(args.couponList, args.currentBasket);
 	args.success = response.success;
@@ -25,17 +26,18 @@ function run(couponList, currentBasket) {
 	var response = {};
 	try {
 		var subtractNonMerch = 0;
-		for (var i = 0; i < currentBasket.allProductLineItems.length; i++){
-			if (currentBasket.allProductLineItems[i].product.masterProduct.getID() == "GIFTCARD" || currentBasket.allProductLineItems[i].product.masterProduct.getID() == "BOX") {
+		for (var i = 0; i < currentBasket.allProductLineItems.length; i++) {
+			if (currentBasket.allProductLineItems[i].product.masterProduct.getID() == "GIFTCARD"
+					|| currentBasket.allProductLineItems[i].product.masterProduct.getID() == "BOX") {
 				subtractNonMerch += currentBasket.allProductLineItems[i].price.decimalValue;
 			}
 		}
 		var cartTotal = currentBasket.adjustedMerchandizeTotalPrice.decimalValue;
 		cartTotal = (cartTotal - subtractNonMerch).toFixed(2);
-		
+
 		var rewardTotal = getRewardTotal(couponList);
-		
-		if(rewardTotal <= cartTotal) {
+
+		if (rewardTotal <= cartTotal) {
 			createPriceAdjustments(couponList, currentBasket, rewardTotal);
 			response.success = true;
 			response.priceAdjustment = rewardTotal;
@@ -43,14 +45,19 @@ function run(couponList, currentBasket) {
 		} else {
 			response.success = false;
 			response.priceAdjustment = 0.00;
-			response.errorMessage = "Reward total amount " + rewardTotal + " exceeds the cart total amount " + cartTotal;
+			response.errorMessage = "Reward total amount " + rewardTotal
+					+ " exceeds the cart total amount " + cartTotal;
 		}
 	} catch (e) {
-        var exception = e;
-        var errMessage = exception.message + "\n" + exception.stack;
-        logger.error(errMessage);
-        response = {success:false, priceAdjustment:0.00, errorMessage:null};
-    }
+		var exception = e;
+		var errMessage = exception.message + "\n" + exception.stack;
+		logger.error(errMessage);
+		response = {
+			success : false,
+			priceAdjustment : 0.00,
+			errorMessage : null
+		};
+	}
 	return response;
 }
 
@@ -69,9 +76,12 @@ function createPriceAdjustments(couponList, basket, rewardTotal) {
 	var counter = 0;
 	while (couponIter.hasNext()) {
 		var coupon = couponIter.next();
-		var newPriceAdjustment = basket.createPriceAdjustment(Resource.msg('loyalty.promotion.id','loyalty',null) + coupon.code);
-		newPriceAdjustment.setPriceValue(coupon.amount * -1); 
-		newPriceAdjustment.setLineItemText(Resource.msg('loyalty.promotion.description','loyalty',null));
+		var newPriceAdjustment = basket.createPriceAdjustment(Resource.msg('loyalty.promotion.id',
+				'loyalty', null)
+				+ coupon.code);
+		newPriceAdjustment.setPriceValue(coupon.amount * -1);
+		newPriceAdjustment.setLineItemText(Resource.msg('loyalty.promotion.description', 'loyalty',
+				null));
 		newPriceAdjustment.custom.loyaltyCouponCode = coupon.code;
 	}
 	newPriceAdjustment.updateTax(0);
@@ -80,6 +90,6 @@ function createPriceAdjustments(couponList, basket, rewardTotal) {
 }
 
 module.exports = {
-	'execute': execute,
-	'run': run
+	'execute' : execute,
+	'run' : run
 }

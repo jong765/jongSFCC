@@ -8,15 +8,13 @@
 var Util = require('../util/Util');
 var UrlPath = require('../util/LoyaltyPlusConstants').UrlPath;
 var CustomPreference = require('../util/LoyaltyPlusConstants').CustomPreference;
-var logger = require('dw/system/Logger').getLogger("loyaltyplus-error",
-		"CustomerShowService.js");
+var logger = require('dw/system/Logger').getLogger("loyaltyplus-error", "CustomerShowService.js");
 
 exports.run = function(emailAddress, externalCustomerId, include) {
 	var data = {
 		urlPath : UrlPath.CUSTOMER_SHOW,
 		requestMethod : 'GET',
-		requestParam : getRequestParam(emailAddress, externalCustomerId,
-				include)
+		requestParam : getRequestParam(emailAddress, externalCustomerId, include)
 	};
 
 	var result = Util.callService(data);

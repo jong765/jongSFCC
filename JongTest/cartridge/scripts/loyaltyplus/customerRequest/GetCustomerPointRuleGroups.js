@@ -29,14 +29,12 @@ function run(externalCustomerId, emailAddress) {
 	var response = {};
 	var validationResult = {};
 	try {
-		validationResult.success = !empty(externalCustomerId)
-				|| !empty(emailAddress);
+		validationResult.success = !empty(externalCustomerId) || !empty(emailAddress);
 		if (!validationResult.success) {
 			validationResult.errorMessage = "Either externalCustomerId or emailAddress is required.";
 			return validationResult;
 		}
-		var result = CustomerPointRuleGroupsService.run(externalCustomerId,
-				emailAddress).object;
+		var result = CustomerPointRuleGroupsService.run(externalCustomerId, emailAddress).object;
 		var data = result.data;
 		if (data) {
 			response = new LpResponse(result.success, data, result.errorMessage);

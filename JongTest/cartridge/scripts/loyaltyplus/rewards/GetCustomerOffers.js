@@ -14,8 +14,7 @@
 var CustomerOffersService = require('../helper/service/CustomerOffersService');
 var LpResponse = require('../helper/model/LpResponse');
 var Util = require('../helper/util/Util');
-var logger = require('dw/system/Logger').getLogger("loyaltyplus-error",
-		"GetCustomerOffers.js");
+var logger = require('dw/system/Logger').getLogger("loyaltyplus-error", "GetCustomerOffers.js");
 
 function execute(args) {
 	var response = run(args.externalCustomerId, args.emailAddress);
@@ -29,15 +28,14 @@ function run(externalCustomerId, emailAddress) {
 	var response = {};
 	var validationResult = {};
 	try {
-		validationResult.success = !empty(externalCustomerId)
-				|| !empty(emailAddress);
+		validationResult.success = !empty(externalCustomerId) || !empty(emailAddress);
 		if (!validationResult.success) {
 			return validationResult;
 		}
 		var result = CustomerOffersService.run(externalCustomerId, emailAddress);
 		if (result.object) {
-			response = new LpResponse(result.object.success,
-					result.object.data, result.errorMessage);
+			response = new LpResponse(result.object.success, result.object.data,
+					result.errorMessage);
 		} else {
 			response = new LpResponse(false, null, result.errorMessage);
 		}

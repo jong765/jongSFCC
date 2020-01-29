@@ -14,12 +14,10 @@
 var UpdateAttributesService = require('../helper/service/UpdateAttributesService');
 var LpResponse = require('../helper/model/LpResponse');
 var Util = require('../helper/util/Util');
-var logger = require('dw/system/Logger').getLogger("loyaltyplus-error",
-		"UpdatePreferredStore.js");
+var logger = require('dw/system/Logger').getLogger("loyaltyplus-error", "UpdatePreferredStore.js");
 
 function execute(args) {
-	var response = run(args.externalCustomerId, args.emailAddress,
-			args.preferredStore);
+	var response = run(args.externalCustomerId, args.emailAddress, args.preferredStore);
 	args.success = response.success;
 	args.errorMessage = response.errorMessage;
 	return result.response ? PIPELET_NEXT : PIPELET_ERROR;
@@ -29,17 +27,15 @@ function run(externalCustomerId, emailAddress, preferredStore) {
 	var response = {};
 	var validationResult = {};
 	try {
-		validationResult.success = !empty(externalCustomerId)
-				|| !empty(emailAddress);
+		validationResult.success = !empty(externalCustomerId) || !empty(emailAddress);
 		if (!validationResult.success) {
 			validationResult.errorMessage = "Either externalCustomerId or emailAddress is required.";
 			return validationResult;
 		}
-		var result = UpdateAttributesService.run(externalCustomerId, emailAddress,
-				'replace', '/pref_store', preferredStore);
+		var result = UpdateAttributesService.run(externalCustomerId, emailAddress, 'replace',
+				'/pref_store', preferredStore);
 		if (result.object) {
-			response = new LpResponse(result.object.success, null,
-					result.errorMessage);
+			response = new LpResponse(result.object.success, null, result.errorMessage);
 		} else {
 			response = new LpResponse(false, null, result.errorMessage);
 		}
