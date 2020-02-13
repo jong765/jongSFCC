@@ -2,7 +2,7 @@
 
 /**
  * Controller : Test
- *
+ * 
  * @module controllers/Test
  */
 var BasketMgr = require('dw/order/BasketMgr');
@@ -10,22 +10,38 @@ var OrderMgr = require('dw/order/OrderMgr');
 var ProductMgr = require('dw/catalog/ProductMgr');
 var PromotionMgr = require('dw/campaign/PromotionMgr');
 var Transaction = require('dw/system/Transaction');
+var SFTPClient = require('dw/net/SFTPClient');
 var logger = require('dw/system/Logger').getLogger("jk-test", "Test.js");
 
-function run(basket, currentForms) {
-	fixMissingShipTo(basket, currentForms);
+function run() {
+	ftpKey();
 	return true;
 }
 
-function getAvailabilityStatus() {
-	
+function ftpKey() {
+	var sftpClient = new SFTPClient();
+	var keyAlias = "exttransfer2.pacsun.com";
+	var hostName = "exttransfer2.pacsun.com";
+	var userName = "dwavail_alert";
+	sftpClient.setIdentity(dw.crypto.KeyRef(keyAlias));
+
+	var sftpConnectionStatus = sftpClient.connect(hostName, userName, "");
+
+	try {
+	    var fileuploadstatu = true;
+	} catch (e) {}
+
+	finally {
+		sftpClient.disconnect();
+	}
 }
 
 function fixMissingShipTo(basket, currentForms) {
 	Transaction.wrap(function(){
 		var billingAddress = currentForms.billing.billingAddress.addressFields;
 		var shippingAddress = basket.shipments[0].shippingAddress;
-		//if basket ship to address is missing, copy from basket bill to address
+		// if basket ship to address is missing, copy from basket bill to
+		// address
 		if (shippingAddress.address1 && shippingAddress.city) {
 			shippingAddress.address1 = billingAddress.address1.value;
 			shippingAddress.address2 = billingAddress.address2? billingAddress.address2.value : ""
