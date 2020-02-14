@@ -28,7 +28,7 @@ function ftpKey() {
 	var sftpConnectionStatus = sftpClient.connect(hostName, userName, "");
 
 	try {
-	    var fileuploadstatu = true;
+	    var fileuploadstatus = true;
 	} catch (e) {}
 
 	finally {
