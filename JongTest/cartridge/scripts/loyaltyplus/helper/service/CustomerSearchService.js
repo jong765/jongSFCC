@@ -6,13 +6,11 @@
 'use strict';
 
 var Util = require('../util/Util');
-var UrlPath = require('../util/LoyaltyPlusConstants').UrlPath;
-var CustomPreference = require('../util/LoyaltyPlusConstants').CustomPreference;
 var logger = require('dw/system/Logger').getLogger("loyaltyplus-error", "CustomerSearchService.js");
 
 exports.run = function(emailAddress, lastName, phone, address1, postalCode, entriesPerPage, page) {
 	var data = {
-		urlPath : UrlPath.CUSTOMER_SEARCH,
+		urlPath : require('../util/LoyaltyPlusConstants').UrlPath.CUSTOMER_SEARCH,
 		requestMethod : 'GET',
 		requestParam : getRequestParam(emailAddress, lastName, phone, address1, postalCode,
 				entriesPerPage, page)
@@ -24,7 +22,7 @@ exports.run = function(emailAddress, lastName, phone, address1, postalCode, entr
 
 function getRequestParam(emailAddress, lastName, phone, address1, postalCode, entriesPerPage, page) {
 	var requestParam = {
-		uuid : CustomPreference.ACCOUNT_ID
+		uuid : require('../util/LoyaltyPlusConstants').CustomPreference.ACCOUNT_ID
 	};
 	if (emailAddress)
 		requestParam.email = emailAddress;

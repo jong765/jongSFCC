@@ -18,9 +18,6 @@
  */
 'use strict';
 
-var CustomerShowService = require('../helper/service/CustomerShowService');
-var LpResponse = require('../helper/model/LpResponse');
-var Util = require('../helper/util/Util');
 var logger = require('dw/system/Logger').getLogger("loyaltyplus-error", "ShowCustomer.js");
 
 function execute(args) {
@@ -32,6 +29,7 @@ function execute(args) {
 }
 
 function run(externalCustomerId, emailAddress, include) {
+	var LpResponse = require('../helper/model/LpResponse');
 	var response = {};
 	var validationResult = {};
 	try {
@@ -40,7 +38,7 @@ function run(externalCustomerId, emailAddress, include) {
 			validationResult.errorMessage = "Either externalCustomerId or emailAddress is required.";
 			return validationResult;
 		}
-		var result = CustomerShowService.run(emailAddress, externalCustomerId, include);
+		var result = require('../helper/service/CustomerShowService').run(emailAddress, externalCustomerId, include);
 		if (result.object) {
 			response = new LpResponse(result.object.success, result.object.data,
 					result.errorMessage);

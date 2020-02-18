@@ -6,14 +6,12 @@
 'use strict';
 
 var Util = require('../util/Util');
-var UrlPath = require('../util/LoyaltyPlusConstants').UrlPath;
-var CustomPreference = require('../util/LoyaltyPlusConstants').CustomPreference;
 var logger = require('dw/system/Logger').getLogger("loyaltyplus-error",
 		"UpdateCustomerInfoService.js");
 
 exports.run = function(customerInfo) {
 	var data = {
-		urlPath : UrlPath.UPDATE_CUSTOMER_INFO,
+		urlPath : require('../util/LoyaltyPlusConstants').UrlPath.UPDATE_CUSTOMER_INFO,
 		requestMethod : 'GET',
 		requestParam : getRequestParam(customerInfo)
 	};
@@ -24,7 +22,7 @@ exports.run = function(customerInfo) {
 
 function getRequestParam(customerInfo) {
 	var requestParam = {
-		uuid : CustomPreference.ACCOUNT_ID
+		uuid : require('../util/LoyaltyPlusConstants').CustomPreference.ACCOUNT_ID
 	};
 
 	if (customerInfo.externalCustomerId != "undefined")

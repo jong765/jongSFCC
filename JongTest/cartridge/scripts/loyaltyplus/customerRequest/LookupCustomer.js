@@ -13,9 +13,6 @@
  */
 'use strict';
 
-var CustomerSearchService = require('../helper/service/CustomerSearchService');
-var LpResponse = require('../helper/model/LpResponse');
-var Util = require('../helper/util/Util');
 var logger = require('dw/system/Logger').getLogger("loyaltyplus-error", "LookupCustomer.js");
 
 function execute(args) {
@@ -29,15 +26,16 @@ function execute(args) {
 }
 
 function run(emailAddress) {
+	var LpResponse = require('../helper/model/LpResponse');
 	var response = {};
 	try {
-		var validationResult = Util.validateRequiredParams({
+		var validationResult = require('../helper/util/Util').validateRequiredParams({
 			'emailAddress' : emailAddress
 		});
 		if (!validationResult.success) {
 			return validationResult;
 		}
-		var result = CustomerSearchService.run(emailAddress);
+		var result = require('../helper/service/CustomerSearchService').run(emailAddress);
 		if (result.object) {
 			if (result.object.data.length > 1) { // Error if duplicate email
 				// addresses found.

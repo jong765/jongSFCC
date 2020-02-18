@@ -24,11 +24,6 @@
  * @output errorMessage : String
  */
 
-var UpdateCustomerInfoService = require('../helper/service/UpdateCustomerInfoService');
-var CustomerInfo = require('../helper/model/CustomerInfo');
-var Address = require('../helper/model/Address');
-var LpResponse = require('../helper/model/LpResponse');
-var Util = require('../helper/util/Util');
 var logger = require('dw/system/Logger').getLogger("loyaltyplus-error", "UpdateCustomerInfo.js");
 
 function execute(args) {
@@ -45,6 +40,7 @@ function execute(args) {
 function run(externalCustomerId, emailAddress, firstName, lastName, birthDate, addressLine1,
 		addressLine2, city, state, postalCode, mobilePhone, shoppingPreference,
 		acceptedTermsConditions, newEmailAddress) {
+	var LpResponse = require('../helper/model/LpResponse');
 	var response = {};
 	var validationResult = {};
 	try {
@@ -56,7 +52,7 @@ function run(externalCustomerId, emailAddress, firstName, lastName, birthDate, a
 		var customerInfo = getCustomerInfo(externalCustomerId, emailAddress, newEmailAddress,
 				firstName, lastName, birthDate, shoppingPreference, addressLine1, addressLine2,
 				city, state, postalCode, mobilePhone, acceptedTermsConditions, newEmailAddress);
-		var result = UpdateCustomerInfoService.run(customerInfo);
+		var result = require('../helper/service/UpdateCustomerInfoService').run(customerInfo);
 		if (result.object) {
 			response = new LpResponse(result.object.success, result.object.data, null);
 		} else {
@@ -75,6 +71,7 @@ function run(externalCustomerId, emailAddress, firstName, lastName, birthDate, a
 function getCustomerInfo(externalCustomerId, emailAddress, newEmailAddress, firstName, lastName,
 		birthDate, shoppingPreference, addressLine1, addressLine2, city, state, postalCode,
 		mobilePhone, acceptedTermsConditions, newEmailAddress) {
+	var CustomerInfo = require('../helper/model/CustomerInfo');
 	var customerInfo = new CustomerInfo();
 	customerInfo.setExternalCustomerId(externalCustomerId);
 	customerInfo.setEmailAddress(emailAddress);
@@ -83,6 +80,7 @@ function getCustomerInfo(externalCustomerId, emailAddress, newEmailAddress, firs
 	customerInfo.setBirthDate(birthDate);
 	customerInfo.setShoppingPreference(shoppingPreference);
 	if (!empty(addressLine1) || !empty(city) || !empty(state) || !empty(postalCode)) {
+		var Address = require('../helper/model/Address');
 		var address = new Address();
 		address.setAddressLine1(addressLine1);
 		address.setAddressLine2(addressLine2);

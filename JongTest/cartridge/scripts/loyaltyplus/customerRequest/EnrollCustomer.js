@@ -22,11 +22,6 @@
  */
 'use strict';
 
-var CustomerEnrollService = require('../helper/service/CustomerEnrollService');
-var CustomerInfo = require('../helper/model/CustomerInfo');
-var Address = require('../helper/model/Address');
-var LpResponse = require('../helper/model/LpResponse');
-var Util = require('../helper/util/Util');
 var logger = require('dw/system/Logger').getLogger("loyaltyplus-error", "EnrollCustomer.js");
 
 function execute(args) {
@@ -42,9 +37,10 @@ function execute(args) {
 
 function run(emailAddress, firstName, lastName, birthDate, addressLine1, addressLine2, city, state,
 		postalCode, mobilePhone, shoppingPreference, marketingId, acceptedTermsConditions) {
+	var LpResponse = require('../helper/model/LpResponse');
 	var response = {};
 	try {
-		var validationResult = Util.validateRequiredParams({
+		var validationResult = require('../helper/util/Util').validateRequiredParams({
 			'emailAddress' : emailAddress.trim()
 		});
 		if (!validationResult.success) {
@@ -53,7 +49,7 @@ function run(emailAddress, firstName, lastName, birthDate, addressLine1, address
 		var customerInfo = getCustomerInfo(emailAddress, firstName, lastName, birthDate,
 				shoppingPreference, addressLine1, addressLine2, city, postalCode, state,
 				mobilePhone, acceptedTermsConditions);
-		var result = CustomerEnrollService.run(customerInfo, marketingId);
+		var result = require('../helper/service/CustomerEnrollService').run(customerInfo, marketingId);
 		if (result.object) {
 			response = new LpResponse(result.object.success, result.object.data,
 					result.errorMessage);
@@ -72,6 +68,7 @@ function run(emailAddress, firstName, lastName, birthDate, addressLine1, address
 
 function getCustomerInfo(emailAddress, firstName, lastName, birthDate, shoppingPreference,
 		addressLine1, addressLine2, city, postalCode, state, mobilePhone, acceptedTermsConditions) {
+	var CustomerInfo = require('../helper/model/CustomerInfo');
 	var customerInfo = new CustomerInfo();
 	customerInfo.setEmailAddress(emailAddress);
 	customerInfo.setFirstName(firstName);
@@ -79,6 +76,7 @@ function getCustomerInfo(emailAddress, firstName, lastName, birthDate, shoppingP
 	customerInfo.setBirthDate(birthDate);
 	customerInfo.setShoppingPreference(shoppingPreference);
 	if (!empty(addressLine1) || !empty(city) || !empty(state) || !empty(postalCode)) {
+		var Address = require('../helper/model/Address');
 		var address = new Address();
 		address.setAddressLine1(addressLine1);
 		address.setAddressLine2(addressLine2);
