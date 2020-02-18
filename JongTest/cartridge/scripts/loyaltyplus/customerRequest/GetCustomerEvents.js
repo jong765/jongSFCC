@@ -20,9 +20,6 @@
  * @output errorMessage : String
  */
 
-var CustomerEventsService = require('../helper/service/CustomerEventsService');
-var LpResponse = require('../helper/model/LpResponse');
-var Util = require('../helper/util/Util');
 var logger = require('dw/system/Logger').getLogger("loyaltyplus-error", "GetCustomerEvents.js");
 
 function execute(args) {
@@ -36,6 +33,7 @@ function execute(args) {
 
 function run(externalCustomerId, emailAddress, eventType, afterDate, beforeDate, dateFilter,
 		pageNumber, entriesPerPage) {
+	var LpResponse = require('../helper/model/LpResponse');
 	var response = {};
 	var validationResult = {};
 	try {
@@ -44,7 +42,7 @@ function run(externalCustomerId, emailAddress, eventType, afterDate, beforeDate,
 			validationResult.errorMessage = "Either externalCustomerId or emailAddress is required.";
 			return validationResult;
 		}
-		var result = CustomerEventsService.run(externalCustomerId, emailAddress, eventType,
+		var result = require('../helper/service/CustomerEventsService').run(externalCustomerId, emailAddress, eventType,
 				afterDate, beforeDate, dateFilter, pageNumber, entriesPerPage).object;
 		var data = result.data;
 		if (data) {

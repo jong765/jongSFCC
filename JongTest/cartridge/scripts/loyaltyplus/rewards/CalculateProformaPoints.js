@@ -9,9 +9,6 @@
  * @output errorMessage : String
  */
 
-var PointsShowService = require('../helper/service/PointsShowService');
-var LpCalculateProformaPointsResponse = require('../helper/model/LpCalculateProformaPointsResponse');
-var Util = require('../helper/util/Util');
 var logger = require('dw/system/Logger').getLogger("loyaltyplus-error",
 		"CalculateProformaPoints.js");
 
@@ -24,15 +21,16 @@ function execute(args) {
 }
 
 function run(lineItemCtnr) {
+	var LpCalculateProformaPointsResponse = require('../helper/model/LpCalculateProformaPointsResponse');
 	var response = {};
 	try {
-		var validationResult = Util.validateRequiredParams({
+		var validationResult = require('../helper/util/Util').validateRequiredParams({
 			'lineItemCtnr' : lineItemCtnr
 		});
 		if (!validationResult.success) {
 			return validationResult;
 		}
-		var result = PointsShowService.run('purchase', lineItemCtnr);
+		var result = require('../helper/service/PointsShowService').run('purchase', lineItemCtnr);
 		if (result.object) {
 			response = new LpCalculateProformaPointsResponse(result.object, result.errorMessage);
 		} else {

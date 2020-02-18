@@ -6,14 +6,12 @@
 'use strict';
 
 var Util = require('../util/Util');
-var UrlPath = require('../util/LoyaltyPlusConstants').UrlPath;
-var CustomPreference = require('../util/LoyaltyPlusConstants').CustomPreference;
 var logger = require('dw/system/Logger').getLogger("loyaltyplus-error", "CustomerEventsService.js");
 
 exports.run = function(externalCustomerId, emailAddress, eventType, afterDate, beforeDate,
 		dateFilter, pageNumber, entriesPerPage) {
 	var data = {
-		urlPath : UrlPath.CUSTOMER_EVENTS,
+		urlPath : require('../util/LoyaltyPlusConstants').UrlPath.CUSTOMER_EVENTS,
 		requestMethod : 'GET',
 		requestParam : getRequestParam(externalCustomerId, emailAddress, eventType, afterDate,
 				beforeDate, dateFilter, pageNumber, entriesPerPage)
@@ -26,7 +24,7 @@ exports.run = function(externalCustomerId, emailAddress, eventType, afterDate, b
 function getRequestParam(externalCustomerId, emailAddress, eventType, afterDate, beforeDate,
 		dateFilter, pageNumber, entriesPerPage) {
 	var requestParam = {
-		uuid : CustomPreference.ACCOUNT_ID
+		uuid : require('../util/LoyaltyPlusConstants').CustomPreference.ACCOUNT_ID
 	};
 	if (externalCustomerId)
 		requestParam.external_customer_id = externalCustomerId;

@@ -14,10 +14,10 @@ function run() {
 	//var response = enrollCustomer();
 	// var response = lookupCustomer();
 	// var response = showCustomer();
-	var response = updateCustomerInfo();
+	// var response = updateCustomerInfo();
 	// var response = pauseCustomer();
 	// var response = reactivateCustomer();
-	// var response = getCustomerEvents();
+	 var response = getCustomerEvents();
 	// var response = getCustomerPointRuleGroups();
 	// var response = GetRedeemedCustomerCoupons();
 	// var response = GetCustomerOffers();

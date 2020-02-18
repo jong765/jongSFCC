@@ -5,14 +5,11 @@
  */
 'use strict';
 
-var ProductMgr = require('dw/catalog/ProductMgr');
 var Util = require('../util/Util');
-var UrlPath = require('../util/LoyaltyPlusConstants').UrlPath;
-var CustomPreference = require('../util/LoyaltyPlusConstants').CustomPreference;
 
 exports.run = function(type, lineItemCtnr) {
 	var data = {
-		urlPath : UrlPath.POINTS_SHOW,
+		urlPath : require('../util/LoyaltyPlusConstants').UrlPath.POINTS_SHOW,
 		requestMethod : 'GET',
 		requestParam : getRequestParam(type, lineItemCtnr)
 	};
@@ -23,7 +20,7 @@ exports.run = function(type, lineItemCtnr) {
 
 function getRequestParam(type, lineItemCtnr) {
 	var requestParam = {
-		uuid : CustomPreference.ACCOUNT_ID
+		uuid : require('../util/LoyaltyPlusConstants').CustomPreference.ACCOUNT_ID
 	};
 	var signatureParam = null;
 
@@ -41,7 +38,7 @@ function getRequestParam(type, lineItemCtnr) {
 		requestParam["products[" + i + "][price]"] = productLineItem.price.value;
 		requestParam["products[" + i + "][product_id]"] = productLineItem.productID;
 		requestParam["products[" + i + "][quantity]"] = productLineItem.quantity.value;
-		var product = ProductMgr.getProduct(productLineItem.productID);
+		var product = require('dw/catalog/ProductMgr').getProduct(productLineItem.productID);
 		var productCategory = product.custom.classCode;
 		if (product.brand != null) {
 			requestParam["products[" + i + "][brands]"] = product.brand;
