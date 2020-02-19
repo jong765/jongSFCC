@@ -14,8 +14,47 @@ var SFTPClient = require('dw/net/SFTPClient');
 var logger = require('dw/system/Logger').getLogger("jk-test", "Test.js");
 
 function run() {
-	ftpKey();
+	var postalCode = "92806";
+	var currentRequest = null;
+	var maxDistance = 30;
+	var nearestStoreMap = searchStores(postalCode, currentRequest, maxDistance);
+	iterateEntries(nearestStoreMap);
 	return true;
+}
+
+function iterateEntries(hashMap) {
+	var iterator = hashMap.entrySet().iterator();
+	while (iterator.hasNext()) {
+		try {
+			var entry = iterator.next();
+			var key = entry.getKey();
+			var value = entry.getValue();
+	        var test = 1;
+		}
+		catch (e) {
+
+		}
+	}
+}
+
+function searchStores(postalCode, currentRequest, maxDistance) {
+    var nearestStoreMap = null;
+    var distanceUnit = dw.system.Site.getCurrent().getCustomPreferenceValue('storeLookupUnit').value;
+
+    if (maxDistance === null) {
+        maxDistance = dw.system.Site.getCurrent().getCustomPreferenceValue('storeLookupMaxDistance').value;
+    }
+
+    if (postalCode) {
+        var countryCode = dw.system.Site.getCurrent().getCustomPreferenceValue('countryCode').value;
+        nearestStoreMap = dw.catalog.StoreMgr.searchStoresByPostalCode(countryCode, postalCode, distanceUnit, maxDistance);
+    } else {
+        var latitude = currentRequest.geolocation.latitude;
+        var longitude = currentRequest.geolocation.longitude;
+        nearestStoreMap = dw.catalog.StoreMgr.searchStoresByCoordinates(latitude, longitude, distanceUnit, maxDistance);
+    }
+
+    return nearestStoreMap;
 }
 
 function ftpKey() {

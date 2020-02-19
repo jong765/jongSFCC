@@ -8,6 +8,21 @@ function execute(args) {
     return PIPELET_NEXT;
 }
 
+function iterateEntries(hashMap) {
+	var iterator = hashMap.entrySet().iterator();
+	while (iterator.hasNext()) {
+		try {
+			var entry = iterator.next();
+			var key = entry.getKey();
+			var value = entry.getValue();
+	        var test = 1;
+		}
+		catch (e) {
+
+		}
+	}
+}
+
 function iterateValues(hashMap) {
 	var values = hashMap.values();
 	for (var value in values) {
