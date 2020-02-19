@@ -11,9 +11,6 @@
  * @output errorMessage : String
  */
 
-var CustomerCouponsService = require('../helper/service/CustomerCouponsService');
-var LpRedeemedCouponsResponse = require('../helper/model/LpRedeemedCouponsResponse');
-var Util = require('../helper/util/Util');
 var logger = require('dw/system/Logger').getLogger("loyaltyplus-error",
 		"GetRedeemedCustomerCoupons.js");
 
@@ -26,6 +23,7 @@ function execute(args) {
 }
 
 function run(externalCustomerId, emailAddress) {
+	var LpRedeemedCouponsResponse = require('../helper/model/LpRedeemedCouponsResponse');
 	var response = {};
 	var validationResult = {};
 	try {
@@ -33,7 +31,7 @@ function run(externalCustomerId, emailAddress) {
 		if (!validationResult.success) {
 			return validationResult;
 		}
-		var result = CustomerCouponsService.run(externalCustomerId, emailAddress);
+		var result = require('../helper/service/CustomerCouponsService').run(externalCustomerId, emailAddress);
 		if (result.object) {
 			response = new LpRedeemedCouponsResponse(result.object.success, result.object.data,
 					result.errorMessage);

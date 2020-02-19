@@ -6,12 +6,10 @@
 'use strict';
 
 var Util = require('../util/Util');
-var UrlPath = require('../util/LoyaltyPlusConstants').UrlPath;
-var CustomPreference = require('../util/LoyaltyPlusConstants').CustomPreference;
 
 exports.run = function(externalCustomerId, emailAddress) {
 	var data = {
-		urlPath : UrlPath.CUSTOMER_COUPONS,
+		urlPath : require('../util/LoyaltyPlusConstants').UrlPath.CUSTOMER_COUPONS,
 		requestMethod : 'GET',
 		requestParam : getRequestParam(externalCustomerId, emailAddress)
 	};
@@ -22,7 +20,7 @@ exports.run = function(externalCustomerId, emailAddress) {
 
 function getRequestParam(externalCustomerId, emailAddress) {
 	var requestParam = {
-		uuid : CustomPreference.ACCOUNT_ID
+		uuid : require('../util/LoyaltyPlusConstants').CustomPreference.ACCOUNT_ID
 	};
 	if (externalCustomerId)
 		requestParam.external_customer_id = externalCustomerId;

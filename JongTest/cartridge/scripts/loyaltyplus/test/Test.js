@@ -17,8 +17,8 @@ function run() {
 	// var response = updateCustomerInfo();
 	// var response = pauseCustomer();
 	// var response = reactivateCustomer();
-	 var response = getCustomerEvents();
-	// var response = getCustomerPointRuleGroups();
+	// var response = getCustomerEvents();
+	 var response = getCustomerPointRuleGroups();
 	// var response = GetRedeemedCustomerCoupons();
 	// var response = GetCustomerOffers();
 	// var response = calculateProformaPoints();
@@ -145,7 +145,7 @@ function getCustomerPointRuleGroups() {
 function GetRedeemedCustomerCoupons() {
 	var getRedeemedCoupons = require('../rewards/GetRedeemedCustomerCoupons');
 	var externalCustomerId = "";
-	var emailAddress = "jktest5@pacsun.com";
+	var emailAddress = "jktest1@pacsun.com";
 	var response = getRedeemedCoupons.run(externalCustomerId, emailAddress);
 	return response;
 }

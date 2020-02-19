@@ -11,9 +11,6 @@
  * @output errorMessage : String
  */
 
-var CustomerPointRuleGroupsService = require('../helper/service/CustomerPointRuleGroupsService');
-var LpResponse = require('../helper/model/LpResponse');
-var Util = require('../helper/util/Util');
 var logger = require('dw/system/Logger').getLogger("loyaltyplus-error",
 		"GetCustomerPointRuleGroups.js");
 
@@ -26,6 +23,7 @@ function execute(args) {
 }
 
 function run(externalCustomerId, emailAddress) {
+	var LpResponse = require('../helper/model/LpResponse');
 	var response = {};
 	var validationResult = {};
 	try {
@@ -34,7 +32,7 @@ function run(externalCustomerId, emailAddress) {
 			validationResult.errorMessage = "Either externalCustomerId or emailAddress is required.";
 			return validationResult;
 		}
-		var result = CustomerPointRuleGroupsService.run(externalCustomerId, emailAddress).object;
+		var result = require('../helper/service/CustomerPointRuleGroupsService').run(externalCustomerId, emailAddress).object;
 		var data = result.data;
 		if (data) {
 			response = new LpResponse(result.success, data, result.errorMessage);
