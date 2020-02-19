@@ -10,12 +10,6 @@
  * @output errorMessage : String
  */
 
-var RecordEventService = require('../helper/service/RecordEventService');
-var RecordRequestParam = require('../helper/model/RecordRequestParam');
-var EventType = require('../helper/util/LoyaltyPlusConstants').EventType;
-var OrderMgr = require('dw/order/OrderMgr');
-var LpResponse = require('../helper/model/LpResponse');
-var Util = require('../helper/util/Util');
 var logger = require('dw/system/Logger').getLogger("loyaltyplus-error", "Purchase.js");
 
 function execute(args) {
@@ -27,25 +21,27 @@ function execute(args) {
 }
 
 function run(externalCustomerId, orderNo) {
+	var RecordRequestParam = require('../helper/model/RecordRequestParam');
+	var LpResponse = require('../helper/model/LpResponse');
 	var response = {};
-	var type = EventType.PURCHASE;
+	var type = require('../helper/util/LoyaltyPlusConstants').EventType.PURCHASE;
 	try {
 		var validationResult = {
 			success : false
 		};
-		validationResult = Util.validateRequiredParams({
+		validationResult = require('../helper/util/Util').validateRequiredParams({
 			'externalCustomerId' : externalCustomerId,
 			'orderNo' : orderNo
 		});
 		if (!validationResult.success) {
 			return validationResult;
 		}
-		var order = OrderMgr.getOrder(orderNo);
+		var order = require('dw/order/OrderMgr').getOrder(orderNo);
 		var recordRequestParam = new RecordRequestParam(externalCustomerId, type,
 				order.custom.marketingId);
 		recordRequestParam.setValue(order.adjustedMerchandizeTotalNetPrice.value);
 		recordRequestParam.setEventId(order.orderNo);
-		var result = RecordEventService.run(recordRequestParam);
+		var result = require('../helper/service/RecordEventService').run(recordRequestParam);
 		if (result.object) {
 			response = new LpResponse(result.object.success, result.object.data,
 					result.errorMessage);

@@ -11,13 +11,6 @@
  * @output errorMessage : String
  */
 
-var RecordEventService = require('../helper/service/RecordEventService');
-var RecordRequestParam = require('../helper/model/RecordRequestParam');
-var EventType = require('../helper/util/LoyaltyPlusConstants').EventType;
-var LpResponse = require('../helper/model/LpResponse');
-var Util = require('../helper/util/Util');
-var DateUtil = require('../helper/util/DateUtil');
-var Constant = require('../helper/util/LoyaltyPlusConstants').Constant;
 var logger = require('dw/system/Logger').getLogger("loyaltyplus-error", "LikeProduct.js");
 
 function execute(args) {
@@ -29,21 +22,23 @@ function execute(args) {
 }
 
 function run(externalCustomerId, productId, marketingId) {
+	var RecordRequestParam = require('../helper/model/RecordRequestParam');
+	var LpResponse = require('../helper/model/LpResponse');
 	var response = {};
 	try {
 		var validationResult = {
 			success : false
 		};
-		validationResult = Util.validateRequiredParams({
+		validationResult = require('../helper/util/Util').validateRequiredParams({
 			'externalCustomerId' : externalCustomerId
 		});
 		if (!validationResult.success) {
 			return validationResult;
 		}
-		var eventType = EventType.LIKE_A_PRODUCT;
+		var eventType = require('../helper/util/LoyaltyPlusConstants').EventType.LIKE_A_PRODUCT;
 		var recordRequestParam = new RecordRequestParam(externalCustomerId, eventType, marketingId);
 		recordRequestParam.setEventId(getEventId(externalCustomerId, productId, eventType));
-		var result = RecordEventService.run(recordRequestParam);
+		var result = require('../helper/service/RecordEventService').run(recordRequestParam);
 		if (result.object) {
 			response = new LpResponse(result.object.success, result.object.data,
 					result.errorMessage);
@@ -62,7 +57,7 @@ function run(externalCustomerId, productId, marketingId) {
 
 function getEventId(externalCustomerId, productId, eventType) {
 	return externalCustomerId + "_" + eventType + "_" + productId + "_"
-			+ DateUtil.formatDate(new Date, "yyyyMMddhhmmss");
+			+ require('../helper/util/DateUtil').formatDate(new Date, "yyyyMMddhhmmss");
 }
 
 module.exports = {

@@ -10,11 +10,6 @@
  * @output errorMessage : String
  */
 
-var RejectEventService = require('../helper/service/RejectEventService');
-var EventType = require('../helper/util/LoyaltyPlusConstants').EventType;
-var OrderMgr = require('dw/order/OrderMgr');
-var LpResponse = require('../helper/model/LpResponse');
-var Util = require('../helper/util/Util');
 var logger = require('dw/system/Logger').getLogger("loyaltyplus-error", "RejectPurchase.js");
 
 function execute(args) {
@@ -26,21 +21,22 @@ function execute(args) {
 }
 
 function run(externalCustomerId, orderNo) {
+	var LpResponse = require('../helper/model/LpResponse');
+	var eventType = require('../helper/util/LoyaltyPlusConstants').EventType.PURCHASE;
 	var response = {};
-	var eventType = EventType.PURCHASE;
 	try {
 		var validationResult = {
 			success : false
 		};
-		validationResult = Util.validateRequiredParams({
+		validationResult = require('../helper/util/Util').validateRequiredParams({
 			'externalCustomerId' : externalCustomerId,
 			'orderNo' : orderNo
 		});
 		if (!validationResult.success) {
 			return validationResult;
 		}
-		var order = OrderMgr.getOrder(orderNo);
-		var result = RejectEventService.run(externalCustomerId, eventType, orderNo);
+		var order = require('dw/order/OrderMgr').getOrder(orderNo);
+		var result = require('../helper/service/RejectEventService').run(externalCustomerId, eventType, orderNo);
 		if (result.object) {
 			response = new LpResponse(result.object.success, result.object.data,
 					result.errorMessage);

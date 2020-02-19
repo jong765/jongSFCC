@@ -18,7 +18,7 @@ function run() {
 	// var response = pauseCustomer();
 	// var response = reactivateCustomer();
 	// var response = getCustomerEvents();
-	 var response = getCustomerPointRuleGroups();
+	// var response = getCustomerPointRuleGroups();
 	// var response = GetRedeemedCustomerCoupons();
 	// var response = GetCustomerOffers();
 	// var response = calculateProformaPoints();
@@ -29,7 +29,7 @@ function run() {
 	// var response = updateCoupon();
 	// var response = completeProfile();
 	// var response = purchase();
-	// var response = rejectPurchase();
+	 var response = rejectPurchase();
 	// var response = returnn();
 	// var response = recordCheckInEvent();
 	// var response = likeProduct();
@@ -224,6 +224,7 @@ function postReview() {
 }
 
 function likeProduct() {
+	var externalCustomerId = "93301125";
 	var productId = "8872234";
 	var marketingId = "DSK";
 	var LikeProduct = require('../event/LikeProduct');
@@ -233,14 +234,16 @@ function likeProduct() {
 
 function rejectPurchase() {
 	var rejectPurchase = require('../event/RejectPurchase');
-	var orderNo = "70039826";
+	var externalCustomerId = "93301125";
+	var orderNo = "70041126";
 	var response = rejectPurchase.run(externalCustomerId, orderNo);
 	return response;
 }
 
 function purchase() {
 	var purchase = require('../event/Purchase');
-	var orderNo = "70039826";
+	var externalCustomerId = "93301125";
+	var orderNo = "70041126";
 	var response = purchase.run(externalCustomerId, orderNo);
 	return response;
 }

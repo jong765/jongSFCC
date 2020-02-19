@@ -10,12 +10,6 @@
  * @output errorMessage : String
  */
 
-var RecordEventService = require('../helper/service/RecordEventService');
-var RecordRequestParam = require('../helper/model/RecordRequestParam');
-var EventType = require('../helper/util/LoyaltyPlusConstants').EventType;
-var LpResponse = require('../helper/model/LpResponse');
-var Util = require('../helper/util/Util');
-var DateUtil = require('../helper/util/DateUtil');
 var logger = require('dw/system/Logger').getLogger("loyaltyplus-error", "LogIntoLoyalty.js");
 
 function execute(args) {
@@ -27,18 +21,20 @@ function execute(args) {
 }
 
 function run(externalCustomerId, marketingId) {
+	var RecordRequestParam = require('../helper/model/RecordRequestParam');
+	var LpResponse = require('../helper/model/LpResponse');
 	var response = {};
 	try {
-		var validationResult = Util.validateRequiredParams({
+		var validationResult = require('../helper/util/Util').validateRequiredParams({
 			'externalCustomerId' : externalCustomerId
 		});
 		if (!validationResult.success) {
 			return validationResult;
 		}
-		var eventType = EventType.LOG_INTO_LOYALTY;
+		var eventType = require('../helper/util/LoyaltyPlusConstants').EventType.LOG_INTO_LOYALTY;
 		var recordRequestParam = new RecordRequestParam(externalCustomerId, eventType, marketingId);
 		recordRequestParam.setEventId(getEventId(externalCustomerId, eventType));
-		var result = RecordEventService.run(recordRequestParam);
+		var result = require('../helper/service/RecordEventService').run(recordRequestParam);
 		if (result.object) {
 			response = new LpResponse(result.object.success, result.object.data,
 					result.errorMessage);
@@ -57,7 +53,7 @@ function run(externalCustomerId, marketingId) {
 
 function getEventId(externalCustomerId, eventType) {
 	return externalCustomerId + "_" + eventType + "_"
-			+ DateUtil.formatDate(new Date, "yyyyMMddhhmmss");
+			+ require('../helper/util/DateUtil').formatDate(new Date, "yyyyMMddhhmmss");
 }
 
 module.exports = {

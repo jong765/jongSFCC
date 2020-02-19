@@ -5,17 +5,12 @@
  */
 'use strict';
 
-var OrderMgr = require('dw/order/OrderMgr');
-var ProductMgr = require('dw/catalog/ProductMgr');
 var Util = require('../util/Util');
-var UrlPath = require('../util/LoyaltyPlusConstants').UrlPath;
-var CustomPreference = require('../util/LoyaltyPlusConstants').CustomPreference;
-var Constant = require('../util/LoyaltyPlusConstants').Constant;
 var logger = require('dw/system/Logger').getLogger("loyaltyplus-error", "RecordEventService.js");
 
 exports.run = function(recordRequestParam) {
 	var data = {
-		urlPath : UrlPath.RECORD,
+		urlPath : require('../util/LoyaltyPlusConstants').UrlPath.RECORD,
 		requestMethod : 'GET',
 		requestParam : getRequestParam(recordRequestParam)
 	};
@@ -27,7 +22,7 @@ exports.run = function(recordRequestParam) {
 function getRequestParam(recordRequestParam) {
 	logger.debug("recordRequestParam: " + recordRequestParam.toString());
 	var requestParam = {
-		uuid : CustomPreference.ACCOUNT_ID
+		uuid : require('../util/LoyaltyPlusConstants').CustomPreference.ACCOUNT_ID
 	};
 	var signatureParam = null;
 
@@ -47,12 +42,12 @@ function getRequestParam(recordRequestParam) {
 	if (recordRequestParam.value != "undefined")
 		requestParam.value = recordRequestParam.value;
 
-	requestParam.channel = Constant.CHANNEL;
+	requestParam.channel = require('../util/LoyaltyPlusConstants').Constant.CHANNEL;
 
 	if (recordRequestParam.type.equalsIgnoreCase("Purchase")) {
 		signatureParam = Util.copyObject(requestParam);
 		var orderNo = recordRequestParam.getEventId();
-		var order = OrderMgr.getOrder(orderNo);
+		var order = require('dw/order/OrderMgr').getOrder(orderNo);
 		var productLineItems = order.getProductLineItems();
 		var parameterString = "";
 		var counter = 1;
@@ -61,7 +56,7 @@ function getRequestParam(recordRequestParam) {
 			requestParam["products[" + i + "][price]"] = productLineItem.price.value;
 			requestParam["products[" + i + "][product_id]"] = productLineItem.productID;
 			requestParam["products[" + i + "][quantity]"] = productLineItem.quantity.value;
-			var product = ProductMgr.getProduct(productLineItem.productID);
+			var product = require('dw/catalog/ProductMgr').getProduct(productLineItem.productID);
 			var productCategory = product.custom.classCode;
 			if (product.brand != null) {
 				requestParam["products[" + i + "][brands]"] = product.brand;
