@@ -1,11 +1,11 @@
 /**
- * LpRedeemedCouponsResponse.js
+ * RedeemedCouponsResponse.js
  * 
- * LpRedeemedCouponsResponse object
+ * RedeemedCouponsResponse object
  */
 'use strict';
 
-function LpRedeemedCouponsResponse(success, data, errorMessage) {
+function RedeemedCouponsResponse(success, data, errorMessage) {
 	this.success = success;
 	this.coupons = [];
 	this.errorMessage = errorMessage;
@@ -25,4 +25,4 @@ function LpRedeemedCouponsResponse(success, data, errorMessage) {
 	}
 }
 
-module.exports = LpRedeemedCouponsResponse;
+module.exports = RedeemedCouponsResponse;

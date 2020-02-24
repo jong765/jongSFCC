@@ -19,7 +19,7 @@ function run() {
 	// var response = reactivateCustomer();
 	// var response = getCustomerEvents();
 	// var response = getCustomerPointRuleGroups();
-	// var response = GetRedeemedCustomerCoupons();
+	 var response = GetRedeemedCustomerCoupons();
 	// var response = GetCustomerOffers();
 	// var response = calculateProformaPoints();
 	// var response = logIntoLoyalty();
@@ -29,7 +29,7 @@ function run() {
 	// var response = updateCoupon();
 	// var response = completeProfile();
 	// var response = purchase();
-	 var response = rejectPurchase();
+	// var response = rejectPurchase();
 	// var response = returnn();
 	// var response = recordCheckInEvent();
 	// var response = likeProduct();

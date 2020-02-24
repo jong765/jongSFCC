@@ -23,7 +23,7 @@ function execute(args) {
 }
 
 function run(externalCustomerId, emailAddress) {
-	var LpRedeemedCouponsResponse = require('../helper/model/LpRedeemedCouponsResponse');
+	var RedeemedCouponsResponse = require('../helper/model/RedeemedCouponsResponse');
 	var response = {};
 	var validationResult = {};
 	try {
@@ -33,16 +33,16 @@ function run(externalCustomerId, emailAddress) {
 		}
 		var result = require('../helper/service/CustomerCouponsService').run(externalCustomerId, emailAddress);
 		if (result.object) {
-			response = new LpRedeemedCouponsResponse(result.object.success, result.object.data,
+			response = new RedeemedCouponsResponse(result.object.success, result.object.data,
 					result.errorMessage);
 		} else {
-			response = new LpRedeemedCouponsResponse(false, null, result.errorMessage);
+			response = new RedeemedCouponsResponse(false, null, result.errorMessage);
 		}
 	} catch (e) {
 		var exception = e;
 		var errMessage = exception.message + "\n" + exception.stack;
 		logger.error(errMessage);
-		response = new LpRedeemedCouponsResponse(false, null, errMessage);
+		response = new RedeemedCouponsResponse(false, null, errMessage);
 	}
 	logger.debug("response: " + JSON.stringify(response));
 	return response;

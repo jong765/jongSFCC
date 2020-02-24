@@ -14,9 +14,9 @@ var SFTPClient = require('dw/net/SFTPClient');
 var logger = require('dw/system/Logger').getLogger("jk-test", "Test.js");
 
 function run() {
-	var postalCode = "92806";
+	var postalCode = "92503";
 	var currentRequest = null;
-	var maxDistance = 30;
+	var maxDistance = 70;
 	var nearestStoreMap = searchStores(postalCode, currentRequest, maxDistance);
 	iterateEntries(nearestStoreMap);
 	return true;

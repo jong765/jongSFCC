@@ -21,7 +21,7 @@ function execute(args) {
 }
 
 function run(lineItemCtnr) {
-	var LpCalculateProformaPointsResponse = require('../helper/model/LpCalculateProformaPointsResponse');
+	var CalculateProformaPointsResponse = require('../helper/model/CalculateProformaPointsResponse');
 	var response = {};
 	try {
 		var validationResult = require('../helper/util/Util').validateRequiredParams({
@@ -32,15 +32,15 @@ function run(lineItemCtnr) {
 		}
 		var result = require('../helper/service/PointsShowService').run('purchase', lineItemCtnr);
 		if (result.object) {
-			response = new LpCalculateProformaPointsResponse(result.object, result.errorMessage);
+			response = new CalculateProformaPointsResponse(result.object, result.errorMessage);
 		} else {
-			response = new LpCalculateProformaPointsResponse(false, null, result.errorMessage);
+			response = new CalculateProformaPointsResponse(false, null, result.errorMessage);
 		}
 	} catch (e) {
 		var exception = e;
 		var errMessage = exception.message + "\n" + exception.stack;
 		logger.error(errMessage);
-		response = new LpCalculateProformaPointsResponse(false, null, errMessage);
+		response = new CalculateProformaPointsResponse(false, null, errMessage);
 	}
 	logger.debug("response: " + JSON.stringify(response));
 	return response;

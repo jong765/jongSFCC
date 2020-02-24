@@ -29,7 +29,7 @@ function execute(args) {
 }
 
 function run(externalCustomerId, emailAddress, include) {
-	var LpResponse = require('../helper/model/LpResponse');
+	var ShowCustomerResponse = require('../helper/model/ShowCustomerResponse');
 	var response = {};
 	var validationResult = {};
 	try {
@@ -40,16 +40,16 @@ function run(externalCustomerId, emailAddress, include) {
 		}
 		var result = require('../helper/service/CustomerShowService').run(emailAddress, externalCustomerId, include);
 		if (result.object) {
-			response = new LpResponse(result.object.success, result.object.data,
+			response = new ShowCustomerResponse(result.object.success, result.object.data,
 					result.errorMessage);
 		} else {
-			response = new LpResponse(false, null, result.errorMessage);
+			response = new ShowCustomerResponse(false, null, result.errorMessage);
 		}
 	} catch (e) {
 		var exception = e;
 		var errMessage = exception.message + "\n" + exception.stack;
 		logger.error(errMessage);
-		response = new LpResponse(false, null, errMessage);
+		response = new ShowCustomerResponse(false, null, errMessage);
 	}
 	logger.debug("response: " + JSON.stringify(response));
 	return response;
