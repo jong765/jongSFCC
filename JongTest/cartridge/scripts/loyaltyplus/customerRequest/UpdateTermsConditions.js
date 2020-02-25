@@ -11,9 +11,6 @@
  * @output errorMessage : String
  */
 
-var UpdateAttributesService = require('../helper/service/UpdateAttributesService');
-var LpResponse = require('../helper/model/LpResponse');
-var Util = require('../helper/util/Util');
 var logger = require('dw/system/Logger').getLogger("loyaltyplus-error", "UpdateTermsConditions.js");
 
 function execute(args) {
@@ -24,6 +21,7 @@ function execute(args) {
 }
 
 function run(externalCustomerId, emailAddress, acceptedTermsConditions) {
+	var LpResponse = require('../helper/model/LpResponse');
 	var response = {};
 	var validationResult = {};
 	try {
@@ -32,7 +30,7 @@ function run(externalCustomerId, emailAddress, acceptedTermsConditions) {
 			validationResult.errorMessage = "Either externalCustomerId or emailAddress is required.";
 			return validationResult;
 		}
-		var result = UpdateAttributesService.run(externalCustomerId, emailAddress, 'replace',
+		var result = require('../helper/service/UpdateAttributesService').run(externalCustomerId, emailAddress, 'replace',
 				'/accepted_terms_and_conditions', acceptedTermsConditions);
 		if (result.object) {
 			response = new LpResponse(result.object.success, null, result.errorMessage);

@@ -11,9 +11,6 @@
  * @output errorMessage : String
  */
 
-var CustomerOffersService = require('../helper/service/CustomerOffersService');
-var LpResponse = require('../helper/model/LpResponse');
-var Util = require('../helper/util/Util');
 var logger = require('dw/system/Logger').getLogger("loyaltyplus-error", "GetCustomerOffers.js");
 
 function execute(args) {
@@ -25,6 +22,7 @@ function execute(args) {
 }
 
 function run(externalCustomerId, emailAddress) {
+	var LpResponse = require('../helper/model/LpResponse');
 	var response = {};
 	var validationResult = {};
 	try {
@@ -32,7 +30,7 @@ function run(externalCustomerId, emailAddress) {
 		if (!validationResult.success) {
 			return validationResult;
 		}
-		var result = CustomerOffersService.run(externalCustomerId, emailAddress);
+		var result = require('../helper/service/CustomerOffersService').run(externalCustomerId, emailAddress);
 		if (result.object) {
 			response = new LpResponse(result.object.success, result.object.data,
 					result.errorMessage);

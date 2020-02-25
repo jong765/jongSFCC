@@ -24,8 +24,8 @@ function run() {
 	// var response = calculateProformaPoints();
 	// var response = logIntoLoyalty();
 	// var response = updatePreferredStore();
-	 var response = updateShoppingPreference();
-	// var response = updateTermsConditions();
+	// var response = updateShoppingPreference();
+	 var response = updateTermsConditions();
 	// var response = updateCoupon();
 	// var response = completeProfile();
 	// var response = purchase();
@@ -196,7 +196,7 @@ function updateTermsConditions() {
 	var updateTermsConditions = require('../customerRequest/UpdateTermsConditions');
 	var externalCustomerId = "93301125";
 	var emailAddress = "";
-	var acceptedTermsConditions = false;
+	var acceptedTermsConditions = true;
 	var response = updateTermsConditions.run(externalCustomerId, emailAddress,
 			acceptedTermsConditions);
 	return response;
