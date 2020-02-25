@@ -12,9 +12,6 @@
  */
 'use strict';
 
-var CustomerReactivateService = require('../helper/service/CustomerReactivateService');
-var LpResponse = require('../helper/model/LpResponse');
-var Util = require('../helper/util/Util');
 var logger = require('dw/system/Logger').getLogger("loyaltyplus-error", "ReactivateCustomer.js");
 
 function execute(args) {
@@ -26,6 +23,7 @@ function execute(args) {
 }
 
 function run(externalCustomerId, emailAddress) {
+	var LpResponse = require('../helper/model/LpResponse');
 	var response = {};
 	var validationResult = {};
 	try {
@@ -34,7 +32,7 @@ function run(externalCustomerId, emailAddress) {
 			validationResult.errorMessage = "Either externalCustomerId or emailAddress is required.";
 			return validationResult;
 		}
-		var result = CustomerReactivateService.run(externalCustomerId, emailAddress);
+		var result = require('../helper/service/CustomerReactivateService').run(externalCustomerId, emailAddress);
 		if (result.object) {
 			response = new LpResponse(result.object.success, result.object.data, null);
 		} else {

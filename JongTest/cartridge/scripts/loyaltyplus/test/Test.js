@@ -19,12 +19,12 @@ function run() {
 	// var response = reactivateCustomer();
 	// var response = getCustomerEvents();
 	// var response = getCustomerPointRuleGroups();
-	 var response = GetRedeemedCustomerCoupons();
+	// var response = GetRedeemedCustomerCoupons();
 	// var response = GetCustomerOffers();
 	// var response = calculateProformaPoints();
 	// var response = logIntoLoyalty();
 	// var response = updatePreferredStore();
-	// var response = updateShoppingPreference();
+	 var response = updateShoppingPreference();
 	// var response = updateTermsConditions();
 	// var response = updateCoupon();
 	// var response = completeProfile();
@@ -105,7 +105,7 @@ function updateCustomerInfo() {
 
 function pauseCustomer() {
 	var pauseCustomer = require('../customerRequest/PauseCustomer');
-	var externalCustomerId = "93754186";
+	var externalCustomerId = "93301125";
 	var emailAddress = null;
 	var response = pauseCustomer.run(externalCustomerId, emailAddress);
 	return response;
@@ -114,7 +114,7 @@ function pauseCustomer() {
 function reactivateCustomer() {
 	var reactivateCustomer = require('../customerRequest/ReactivateCustomer');
 	var externalCustomerId = null;
-	var emailAddress = "jktest60@pacsun.com";
+	var emailAddress = "jktest20@pacsun.com";
 	var response = reactivateCustomer.run(externalCustomerId, emailAddress);
 	return response;
 }
@@ -176,8 +176,8 @@ function logIntoLoyalty() {
 function updatePreferredStore() {
 	var updateShoppingPreference = require('../customerRequest/UpdatePreferredStore');
 	var externalCustomerId = null;
-	var emailAddress = null;
-	var preferredStore = "0015";
+	var emailAddress = "jktest20@pacsun.com";
+	var preferredStore = "0075";
 	var response = updateShoppingPreference.run(externalCustomerId, emailAddress, preferredStore);
 	return response;
 }
@@ -186,7 +186,7 @@ function updateShoppingPreference() {
 	var updateShoppingPreference = require('../customerRequest/UpdateShoppingPreference');
 	var externalCustomerId = "93301125";
 	var emailAddress = "";
-	var shoppingPreference = "Female";
+	var shoppingPreference = "Male";
 	var response = updateShoppingPreference.run(externalCustomerId, emailAddress,
 			shoppingPreference);
 	return response;

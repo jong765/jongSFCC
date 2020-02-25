@@ -11,9 +11,6 @@
  * @output errorMessage : String
  */
 
-var UpdateAttributesService = require('../helper/service/UpdateAttributesService');
-var LpResponse = require('../helper/model/LpResponse');
-var Util = require('../helper/util/Util');
 var logger = require('dw/system/Logger').getLogger("loyaltyplus-error",
 		"UpdateShoppingPreference.js");
 
@@ -25,6 +22,7 @@ function execute(args) {
 }
 
 function run(externalCustomerId, emailAddress, shoppingPreference) {
+	var LpResponse = require('../helper/model/LpResponse');
 	var response = {};
 	var validationResult = {};
 	try {
@@ -33,7 +31,7 @@ function run(externalCustomerId, emailAddress, shoppingPreference) {
 			validationResult.errorMessage = "Either externalCustomerId or emailAddress is required.";
 			return validationResult;
 		}
-		var result = UpdateAttributesService.run(externalCustomerId, emailAddress, 'replace',
+		var result = require('../helper/service/UpdateAttributesService').run(externalCustomerId, emailAddress, 'replace',
 				'/shopping_preference', shoppingPreference);
 		if (result.object) {
 			response = new LpResponse(result.object.success, null, result.errorMessage);
