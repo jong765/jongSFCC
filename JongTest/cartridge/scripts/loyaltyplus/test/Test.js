@@ -19,13 +19,13 @@ function run() {
 	// var response = reactivateCustomer();
 	// var response = getCustomerEvents();
 	// var response = getCustomerPointRuleGroups();
-	// var response = GetRedeemedCustomerCoupons();
+	var response = GetCustomerCoupons();
 	// var response = GetCustomerOffers();
 	// var response = calculateProformaPoints();
 	// var response = logIntoLoyalty();
 	// var response = updatePreferredStore();
 	// var response = updateShoppingPreference();
-	 var response = updateTermsConditions();
+	// var response = updateTermsConditions();
 	// var response = updateCoupon();
 	// var response = completeProfile();
 	// var response = purchase();
@@ -142,11 +142,12 @@ function getCustomerPointRuleGroups() {
 	return response;
 }
 
-function GetRedeemedCustomerCoupons() {
-	var getRedeemedCoupons = require('../rewards/GetRedeemedCustomerCoupons');
+function GetCustomerCoupons() {
+	var getCustomerCoupons = require('../rewards/GetCustomerCoupons');
 	var externalCustomerId = "";
-	var emailAddress = "jktest1@pacsun.com";
-	var response = getRedeemedCoupons.run(externalCustomerId, emailAddress);
+	var emailAddress = "jktest20@pacsun.com";
+	var status = "used";
+	var response = getCustomerCoupons.run(externalCustomerId, emailAddress, status);
 	return response;
 }
 
