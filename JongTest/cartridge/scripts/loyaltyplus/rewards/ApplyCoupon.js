@@ -7,10 +7,10 @@
 *   @input externalCustomerId : String
 *   @output success : Boolean
 *   @output priceAdjustment : Number
+*   @output appliedCoupons : Array
 *   @output errorMessage : String
 */
  
- var GetRedeemedCustomerCoupons = require('GetRedeemedCustomerCoupons');
  var Resource = require('dw/web/Resource');
  var logger = require('dw/system/Logger').getLogger("loyaltyplus-error", "ApplyCoupons.js");
  
@@ -18,6 +18,7 @@ function execute(args) {
 	var response = run(args.currentBasket, args.externalCustomerId);
 	args.success = response.success;
 	args.priceAdjustment = response.priceAdjustment;
+	args.appliedCoupons = response.appliedCoupons;
 	args.errorMessage = response.errorMessage;
 	return response.success ? PIPELET_NEXT : PIPELET_ERROR;
 }
@@ -41,12 +42,14 @@ function run(currentBasket, externalCustomerId) {
 		if (result.success) {
 			var couponList = result.coupons;
 			
-			var totalRewards : Number = 0;
+			var totalRewards = 0;
+			var appliedCoupons = [];
 			
 			for (var i = 0; i < couponList.length; i++){
 				totalRewards += couponList[i].amount;
+				appliedCoupons[i] = couponList[i].code;
 			} 
-			var initDiscount : Number; 
+			var initDiscount = 0; 
 			if(totalRewards <= cartTotal) {
 				initDiscount = totalRewards;	
 			} else {
@@ -65,15 +68,15 @@ function run(currentBasket, externalCustomerId) {
 			newPriceAdjustment.updateTax(0);
 			basket.custom.reward = discount;
 			basket.updateTotals();
-			response = new ApplyCouponResponse(true, discount, result.errorMessage);
+			response = new ApplyCouponResponse(true, discount, appliedCoupons, result.errorMessage);
 		} else {
-			response = new ApplyCouponResponse(false, 0.00, result.errorMessage);
+			response = new ApplyCouponResponse(false, 0.00, null, result.errorMessage);
 		}
 	} catch(e) {
 		var exception = e;
 		var errMessage = exception.message + "\n" + exception.stack;
 		logger.error(errMessage);
-		response = new ApplyCouponResponse(false, 0.00, errMessage);
+		response = new ApplyCouponResponse(false, 0.00, null, errMessage);
 	}
 		
    return response;
