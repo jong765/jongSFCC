@@ -6,7 +6,7 @@
 *   @input externalCustomerId : String
 *   @input numberOfDays : Number
 *   @output success : Boolean
-*   @output usedAwardAmount : Object
+*   @output usedAwardAmount : Number
 *   @output errorMessage : String
 */
 
@@ -18,40 +18,41 @@ var logger = require('dw/system/Logger').getLogger("loyaltyplus-error", "GetUsed
 function execute(args) {
 	var response = run(args.externalCustomerId, args.numberOfDays);
 	args.success = response.success;
-	args.usedAwardAmount = response.usedAwardAmount;
+	args.usedAwardAmount = response.data.usedAwardAmount;
 	args.errorMessage = response.errorMessage;
 	return response.success ? PIPELET_NEXT : PIPELET_ERROR;
 }
 
 function run(externalCustomerId, numberOfDays) {
-
-    var redeemedAwardAmount = {};
-    var awardActivity = [];
-
+	var LpResponse = require('../helper/model/LpResponse');
+	var response = {};
+	var status = "used";
     try {
-        redeemedAwardAmount.value = calculateUsedAwardAmount(awardActivity);
-        return redeemedAwardAmount;
+    	var result = require('../rewards/GetCustomerCoupons').run(externalCustomerId, null, "used");
+    	if (result.success) {
+    		var usedAwardAmount = calculateUsedAwardAmount(result.coupons, numberOfDays);
+    		response = new LpResponse(result.success, {usedAwardAmount:usedAwardAmount}, result.errorMessage);
+		} else {
+			response = new LpResponse(false, null, result.errorMessage);
+		}
     } catch(e) {
-        let errmsg = "";
-        if (e.faultDetail) {
-            errmsg = e.faultDetail + " Line number: " + e.lineNumber;
-        } else {
-            errmsg = "Error in line number: " + e.lineNumber;
-        }
-        
-        Logger.error(errmsg + "\nCardNumber=" + cardNumber);
-        redeemedAwardAmount.error = true;
+    	var exception = e;
+		var errMessage = exception.message + "\n" + exception.stack;
+		logger.error(errMessage);
+		response = new LpResponse(false, null, errMessage);
     }
 
-    return redeemedAwardAmount;
+    return response;
 
 };
 
-function calculateUsedAwardAmount(awardActivity) {
-    let amountTotal = 0.00;
-    for (var i = 0; i < awardActivity.length; i++){
-       if (awardActivity[i].transactionType == 'AutomaticRedeem' && awardActivity[i].errorCode == null){
-            amountTotal += awardActivity[i].activityAmount;
+function calculateUsedAwardAmount(coupons, numberOfDays) {
+	var DateUtil = require('../helper/util/DateUtil');
+	var lastNDate = DateUtil.addDays(new Date(), numberOfDays * -1);
+    var amountTotal = 0.00;
+    for (var i = 0; i < coupons.length; i++){
+       if (DateUtil.getDifferenceInDays(coupons[i].usedAt, lastNDate) <= 30){
+            amountTotal += coupons[i].amount;
         }
     }
     return amountTotal;

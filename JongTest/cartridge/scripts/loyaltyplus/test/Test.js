@@ -19,7 +19,8 @@ function run() {
 	// var response = reactivateCustomer();
 	// var response = getCustomerEvents();
 	// var response = getCustomerPointRuleGroups();
-	var response = GetCustomerCoupons();
+	// var response = getCustomerCoupons();
+	 var response = getUsedAwardAmount(); 
 	// var response = GetCustomerOffers();
 	// var response = calculateProformaPoints();
 	// var response = logIntoLoyalty();
@@ -41,6 +42,15 @@ function run() {
 
 	logResponse(response);
 	return true;
+}
+
+function getUsedAwardAmount() {
+	var getUsedAwardAmount = require('../rewards/GetUsedAwardAmount');
+	var externalCustomerId = "93301125";
+	var numberOfDays = 30;
+	var response = getUsedAwardAmount.run(externalCustomerId, numberOfDays);
+	var usedAwardAmount = response.data.usedAwardAmount;
+	return response;
 }
 
 function enrollCustomer() {
@@ -142,7 +152,7 @@ function getCustomerPointRuleGroups() {
 	return response;
 }
 
-function GetCustomerCoupons() {
+function getCustomerCoupons() {
 	var getCustomerCoupons = require('../rewards/GetCustomerCoupons');
 	var externalCustomerId = "";
 	var emailAddress = "jktest20@pacsun.com";
