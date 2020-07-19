@@ -9,17 +9,87 @@ var BasketMgr = require('dw/order/BasketMgr');
 var OrderMgr = require('dw/order/OrderMgr');
 var ProductMgr = require('dw/catalog/ProductMgr');
 var PromotionMgr = require('dw/campaign/PromotionMgr');
-var Transaction = require('dw/system/Transaction');
+var txn = require('dw/system/Transaction');
+var Calendar = require('dw/util/Calendar');
 var SFTPClient = require('dw/net/SFTPClient');
 var logger = require('dw/system/Logger').getLogger("jk-test", "Test.js");
 
 function run() {
-	var postalCode = "92503";
-	var currentRequest = null;
-	var maxDistance = 70;
-	var nearestStoreMap = searchStores(postalCode, currentRequest, maxDistance);
-	iterateEntries(nearestStoreMap);
-	return true;
+	inspectOrder();
+}
+
+function inspectOrder() {
+	var orderNumber = "70046452";
+	var order = OrderMgr.getOrder(orderNumber);
+	
+	var txn = require('dw/system/Transaction');
+	txn.wrap(function(){
+		order.shipments[0].shippingAddress.phone = null;
+	});
+
+	return;
+}
+
+function inspectProduct() {
+	var productId = "8577934";
+	var product = ProductMgr.getProduct(productId);
+	var isOnline = product.isOnline();
+	var onlineFlag = product.onlineFlag;
+	var onlineFrom = product.onlineFrom;
+	var onlineTo = product.onlineTo;
+	var productOnline = isProductOnline(product);
+	var qty = product.availabilityModel.inventoryRecord != null ? product.availabilityModel.inventoryRecord.ATS.value : 0;
+	var inStock = ((product.availabilityModel.inStock && qty > 0) ? '1' : '0');
+	
+	return;
+}
+
+function isProductOnline(product) {
+	var isProductOnline = false;
+	try {
+		var onlineFlag = product.onlineFlag;
+		
+		if (onlineFlag) {
+			var onlineFrom = product.onlineFrom? new Calendar(product.onlineFrom) : null;
+			var onlineTo = product.onlineTo? new Calendar(product.onlineTo) : null;
+			var currentDate = new Calendar(new Date());
+			currentDate.add(Calendar.HOUR, 7);
+			
+			var isAfterOnlineFromDate = onlineFrom == null || currentDate.after(onlineFrom)? true : false;
+			var isBeforeOnlineToDate = onlineTo == null || currentDate.before(onlineTo)? true : false; 
+		
+		    isProductOnline = isAfterOnlineFromDate && isBeforeOnlineToDate;
+		} else {
+			isProductOnline = false;
+		}
+	} catch(e) {
+		var exception = e;
+	    var errMessage = exception.message + "\n" + exception.stack;
+	    logger.error(errMessage);
+		isProductOnline = product.isOnline();
+	}
+	
+	return isProductOnline;
+}
+
+function debugBasketHook() {
+	var basketHook = require('int_predictspring_ocapi/cartridge/scripts/basket_hook_scripts.js');
+	var orderNumber = "70045330";
+	var order = OrderMgr.getOrder(orderNumber);
+	var shipment = order.shipments[0];
+	var status = basketHook.beforePATCH(order, shipment, null);
+	
+	return;
+}
+
+function fixInvalidData(order: Order) {
+	try {
+		order.customerName = order.customerName.replace(/[^0-9a-z ]/gi, "");
+	} catch(e) {
+		var exception = e;
+        var errMessage = exception.message + "\n" + exception.stack;
+        logger.error(errMessage);
+	}
 }
 
 function iterateEntries(hashMap) {
