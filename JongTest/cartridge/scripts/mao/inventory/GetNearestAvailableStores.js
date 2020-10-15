@@ -49,7 +49,7 @@ function getNearestStoreMap(postalCode, currentRequest) {
     } else {
         var latitude = currentRequest.geolocation.latitude;
         var longitude = currentRequest.geolocation.longitude;
-        nearestStoreMap = dw.catalog.StoreMgr. searchStoresByCoordinates(latitude, longitude, distanceUnit, maxDistance);
+        nearestStoreMap = dw.catalog.StoreMgr.searchStoresByCoordinates(latitude, longitude, distanceUnit, maxDistance);
     }
 
     return nearestStoreMap;

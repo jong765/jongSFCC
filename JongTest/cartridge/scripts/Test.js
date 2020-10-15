@@ -12,10 +12,18 @@ var PromotionMgr = require('dw/campaign/PromotionMgr');
 var txn = require('dw/system/Transaction');
 var Calendar = require('dw/util/Calendar');
 var SFTPClient = require('dw/net/SFTPClient');
+var OrderHook = require('int_predictspring_ocapi/cartridge/scripts/order_hook_scripts.js');
 var logger = require('dw/system/Logger').getLogger("jk-test", "Test.js");
 
 function run() {
-	inspectOrder();
+	test();
+}
+
+function test() {
+	var orderNumber = "70046452";
+	var order = OrderMgr.getOrder(orderNumber);
+	OrderHook.beforePOST(order);
+	return;
 }
 
 function inspectOrder() {
